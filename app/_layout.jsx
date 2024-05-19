@@ -1,8 +1,14 @@
-import { View } from "react-native";
-import "./nativewind-output";
+import React, { useEffect } from "react";
+import { Slot, SplashScreen, Stack } from "expo-router";
+import { useFonts } from "expo-font";
 
-export default function RootLayout({ children }) {
-    return (
-        <View className="flex-1">{children}</View>
-    );
-}
+const RootLayout = () => {
+  return (
+    <Stack>
+      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+    </Stack>
+  );
+};
+
+export default RootLayout;

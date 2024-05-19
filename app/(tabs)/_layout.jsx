@@ -1,5 +1,6 @@
 import { Text, View, Image } from 'react-native'
 import {Tabs, Redirect} from 'expo-router'
+import icons from '../../constants/icons'
 
 const TabIcon = ({ icon, color, name, focused }) => {
     return (
@@ -8,7 +9,7 @@ const TabIcon = ({ icon, color, name, focused }) => {
                 source={icon}
                 resizeMode="contain"
                 tintColor={color}
-                className="w-6 h-6"
+                className={`px-5 py-3 border rounded-[3px] flex items-center  w-7 h-7`}
             />
             <Text 
                 className={`${(focused) ? "" : ""}}`}
@@ -20,6 +21,8 @@ const TabIcon = ({ icon, color, name, focused }) => {
     )
 }
 
+
+
 const TabsLayout = () => {
   return (
     <Tabs
@@ -28,7 +31,7 @@ const TabsLayout = () => {
             tabBarActiveTintColor: '',
             tabBarInactiveTintColor: '',
             tabBarStyle: {
-                backgroundColor: '',
+                backgroundColor: '#F3F3F3',
                 borderTopWidth: 1,
                 borderTopColor: '',
                 height: 84
@@ -40,29 +43,29 @@ const TabsLayout = () => {
             options={{ 
                 title: 'Events',
                 headerShown: false,
-                // tabBarIcon: ({ color, focused }) => (
-                //     <TabIcon
-                //         icon={icons.events}
-                //         color={color}
-                //         name="Events"
-                //         focused={focused}
-                //     />
-                // ) 
+                tabBarIcon: ({ color, focused }) => (
+                    <TabIcon
+                        icon={icons.event}
+                        color={color}
+                        name="Events"
+                        focused={focused}
+                    />
+                ) 
             }}
         />
-        <Tabs.Screen
+         <Tabs.Screen
             name="dms"
             options={{ 
                 title: 'DMs',
                 headerShown: false,
-                // tabBarIcon: ({ color, focused }) => (
-                //     <TabIcon
-                //         icon={icons.dms}
-                //         color={color}
-                //         name="DMs"
-                //         focused={focused}
-                //     />
-                // ) 
+                tabBarIcon: ({ color, focused }) => (
+                    <TabIcon
+                        icon={icons.dm}
+                        color={color}
+                        name="DMs"
+                        focused={focused}
+                    />
+                ) 
             }}
         />
         <Tabs.Screen
@@ -70,31 +73,32 @@ const TabsLayout = () => {
             options={{ 
                 title: 'Calendar',
                 headerShown: false,
-                // tabBarIcon: ({ color, focused }) => (
-                //     <TabIcon
-                //         icon={icons.calendar}
-                //         color={color}
-                //         name="Calendar"
-                //         focused={focused}
-                //     />
-                // ) 
+                tabBarIcon: ({ color, focused }) => (
+                    <TabIcon
+                        icon={icons.calendar}
+                        color={color}
+                        name="Calendar"
+                        focused={focused}
+                    />
+                ) 
             }}
         />
         <Tabs.Screen
-            name="activites"
+            name="activities"
             options={{ 
                 title: 'Activities',
                 headerShown: false,
-                // tabBarIcon: ({ color, focused }) => (
-                //     <TabIcon
-                //         icon={icons.activities}
-                //         color={color}
-                //         name="Activities"
-                //         focused={focused}
-                //     />
-                // ) 
+                tabBarIcon: ({ color, focused }) => (
+                    <TabIcon
+                        icon={icons.activity}
+                        color={color}
+                        name="Activities"
+                        focused={focused}
+                    />
+                ) 
             }}
         />
+        
     </Tabs>
   )
 }
