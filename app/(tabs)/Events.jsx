@@ -1,11 +1,15 @@
-import { View, Text } from 'react-native'
+import { SafeAreaView,ScrollView,View, Text } from 'react-native'
 import React from 'react'
 
 const Events = () => {
     return (
-        <View>
-            <Text>Events</Text>
-        </View>
+       <SafeAreaView className='bg-white h-full'>
+        <ScrollView>
+            <View className='flex justify-center px-4 my-6'>
+                <Text className='text-3xl'>Events Page</Text>
+            </View>
+        </ScrollView>
+       </SafeAreaView> 
     )
 }
 
