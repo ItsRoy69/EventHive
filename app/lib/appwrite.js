@@ -1,10 +1,10 @@
 import { Client, Account, ID, Avatars, Databases, Query } from 'react-native-appwrite'
 
 export const config = {
-    endpoint: '',
-    platform: '',
-    projectId: '',
-    databaseId: '',
+    endpoint: 'https://cloud.appwrite.io/v1',
+    platform: 'com.fueled.eventhive',
+    projectId: '66499453000d1687fadf',
+    databaseId: '664996160001a6d38b0d',
     userCollectionId: ''
 }
 
@@ -19,9 +19,9 @@ const {
 const client = new Client();
 
 client
-    .setEndpoint(config.endpoint) // Your Appwrite Endpoint
-    .setProject(config.projectId) // Your project ID
-    .setPlatform(config.platform) // Your application ID or bundle ID.
+    .setEndpoint(endpoint) // Your Appwrite Endpoint
+    .setProject(projectId) // Your project ID
+    .setPlatform(platform) // Your application ID or bundle ID.
 ;
 
 const account = new Account(client);
@@ -35,8 +35,8 @@ export const getCurrentUser = async () => {
         if (!currentAccount) throw Error
 
         const currentUser = await databases.listDocuments(
-            config.databaseId,
-            config.userCollectionId,
+            databaseId,
+            userCollectionId,
             [
                 Query.equal('accountId', currentAccount.$id)
             ] 
