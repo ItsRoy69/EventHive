@@ -11,6 +11,8 @@ import React, { useState } from "react";
 import { Image } from "react-native";
 import icons from "../../constants/icons";
 import images from "../../constants/images";
+import { useNavigation } from "@react-navigation/native";
+import Invitation from "../(screens)/invitation";
 
 const Events = () => {
   const todo = [
@@ -30,10 +32,16 @@ const Events = () => {
 
   const [expandedItem, setExpandedItem] = useState(null);
   const [selected, setSelected] = useState(false);
-
+  const [selectedSubItem, setSelectedSubItem] = useState(null);
+  
+  const [invitationPressed, setInvitationPressed] = useState(false)
   const toggleExpand = (itemId) => {
     setExpandedItem(expandedItem === itemId ? null : itemId);
   };
+
+  const handleInvitationPress = () =>{
+   setInvitationPressed(!invitationPressed)
+  }
 
   const parentItems = [
     {
@@ -42,29 +50,59 @@ const Events = () => {
       notification: 65,
       name: "Venue Decoration",
     },
-    { id: 2, image: `${images.food}`,notification: 24, name: "Food and Catering" },
-    { id: 3, image: `${images.dummyVenue}`, notification: 10,name: "Priest" },
+    {
+      id: 2,
+      image: `${images.food}`,
+      notification: 24,
+      name: "Food and Catering",
+    },
+    {
+      id: 3,
+      image: `${images.dummyVenue}`,
+      notification: 10,
+      name: "Priest and Rituals",
+    },
   ];
 
   const subItems = {
     1: [
-      { id: "1-1", image: `${icons.groupChat}`, notification: 60, data: "Group chat" },
+      {
+        id: "1-1",
+        image: `${icons.groupChat}`,
+        notification: 60,
+        data: "Group chat",
+      },
       { id: "1-2", image: `${icons.florist}`, data: "Florist Bimal Da" },
       { id: "1-3", image: `${icons.venue}`, data: "Venue Decorator" },
       { id: "1-4", image: `${icons.florist}`, data: "Photographer" },
     ],
     2: [
-        { id: "1-1", image: `${icons.groupChat}`, notification: 60, data: "Group chat" },
-        { id: "1-2", image: `${icons.florist}`, data: "Florist Bimal Da" },
-        { id: "1-3", image: `${icons.venue}`, data: "Venue Decorator" },
-        { id: "1-4", image: `${icons.florist}`, data: "Photographer" },
+      {
+        id: "1-1",
+        image: `${icons.groupChat}`,
+        notification: 60,
+        data: "Group chat",
+      },
+      { id: "1-2", image: `${icons.florist}`, data: "Florist Bimal Da" },
+      { id: "1-3", image: `${icons.venue}`, data: "Venue Decorator" },
+      { id: "1-4", image: `${icons.florist}`, data: "Photographer" },
     ],
     3: [
-        { id: "1-1", image: `${icons.groupChat}`, notification: 60, data: "Group chat" },
-        { id: "1-2", image: `${icons.florist}`, data: "Florist Bimal Da" },
-        { id: "1-3", image: `${icons.venue}`, data: "Venue Decorator" },
-        { id: "1-4", image: `${icons.florist}`, data: "Photographer" },
+      {
+        id: "1-1",
+        image: `${icons.groupChat}`,
+        notification: 60,
+        data: "Group chat",
+      },
+      { id: "1-2", image: `${icons.florist}`, data: "Florist Bimal Da" },
+      { id: "1-3", image: `${icons.venue}`, data: "Venue Decorator" },
+      { id: "1-4", image: `${icons.florist}`, data: "Photographer" },
     ],
+  };
+
+  const handleSelectSubItem = ({ itemId }) => {
+    setSelected(!selected);
+    setSelectedSubItem(itemId);
   };
 
   const renderSubItems = (itemId) => {
@@ -72,23 +110,38 @@ const Events = () => {
       <SectionList
         sections={[{ data: subItems[itemId] }]}
         renderItem={({ item }) => (
-          <View className="py-3 px-2 border-b-[0.5px] flex flex-row justify-between items-center border-gray-300">
-          <View className='gap-[10px] flex flex-row items-center'>
-            <Image
-              source={item.image}
-              resizeMode="contain"
-              className="w-[35px] h-[35px]"
-            />
-            <Text className="text-md font-semibold text-gray-700">
-              {item.data}
-            </Text>
-            </View>
-            {item.notification > 0 && (
-              <View className="px-[10px] py-1 bg-[#A34342] rounded-[15px]">
-                <Text className="font-semibold text-white">{item.notification} +</Text>
+          <TouchableOpacity
+            onPress={() => handleSelectSubItem({ itemId: item.id })}
+          >
+            <View className="py-3 px-2 border-b-[0.5px] flex flex-row justify-between items-center border-gray-300">
+              <View className="gap-[10px] flex flex-row items-center">
+                {selected && selectedSubItem === item.id ? (
+                  <Image
+                    source={icons.right}
+                    resizeMode="contain"
+                    className="w-[35px] h-[35px]"
+                  />
+                ) : (
+                  <Image
+                    source={item.image}
+                    resizeMode="contain"
+                    className="w-[35px] h-[35px]"
+                  />
+                )}
+
+                <Text className="text-md font-semibold text-gray-700">
+                  {item.data}
+                </Text>
               </View>
-            )}
-          </View>
+              {item.notification > 0 && (
+                <View className="px-[10px] py-1 bg-[#A34342] rounded-[15px]">
+                  <Text className="font-semibold text-white">
+                    {item.notification} +
+                  </Text>
+                </View>
+              )}
+            </View>
+          </TouchableOpacity>
         )}
         keyExtractor={(item) => item.id}
       />
@@ -126,6 +179,8 @@ const Events = () => {
       </TouchableOpacity>
     </View>
   );
+
+
   return (
     <SafeAreaView className="bg-white h-full">
       <View className="flex justify-center px-4">
@@ -136,18 +191,44 @@ const Events = () => {
               resizeMode="contain"
               className="w-[40px] h-[40px]"
             />
-            <View className="flex flex-row gap-[3px]">
-              <Image
-                source={icons.search}
-                resizeMode="contain"
-                className="w-[45px] h-[45px]"
-              />
-              <Image
-                source={images.dummyPic}
-                resizeMode="contain"
-                className="w-[45px] h-[45px]"
-              />
-            </View>
+            {!selected ? (
+              <View className="flex flex-row gap-[3px]">
+                <Image
+                  source={icons.search}
+                  resizeMode="contain"
+                  className="w-[45px] h-[45px]"
+                />
+                <Image
+                  source={images.dummyPic}
+                  resizeMode="contain"
+                  className="w-[45px] h-[45px]"
+                />
+              </View>
+            ) : (
+              <View className="h-[42px] w-[140px] rounded-[8px] flex flex-row items-center justify-evenly py-2 bg-[#FFAD65]/[0.14]">
+              <TouchableOpacity>
+                <Image
+                  source={icons.userCross}
+                  resizeMode="contain"
+                  className="w-[24px] px-3 h-[24px]"
+                />
+              </TouchableOpacity>
+              <TouchableOpacity>
+                <Image
+                  source={icons.remove}
+                  resizeMode="contain"
+                  className="w-[24px] px-3 h-[24px]"
+                />
+                </TouchableOpacity>
+                <TouchableOpacity>
+                <Image
+                  source={icons.notification}
+                  resizeMode="contain"
+                  className="w-[22px] px-3 h-[22px]"
+                />
+                </TouchableOpacity>
+              </View>
+            )}
           </View>
           <View className="flex flex-row justify-between">
             <View className="flex  flex-col">
@@ -159,7 +240,9 @@ const Events = () => {
 
               <View className="border w-[216px] border-[4px] rounded-[3px]  border-[#FFAD65]"></View>
             </View>
-            <TouchableOpacity>
+            <TouchableOpacity
+            onPress={handleInvitationPress}
+            >
               <Image
                 source={icons.invite}
                 resizeMode="contain"
@@ -168,6 +251,8 @@ const Events = () => {
             </TouchableOpacity>
           </View>
         </View>
+        {!invitationPressed ? (
+        <>
         <View className="reminders flex h-[165px] mt-1 mb-3">
           <Text className="text-sm text-slate-400">Reminders</Text>
           <View className="mt-1">
@@ -214,7 +299,12 @@ const Events = () => {
           keyExtractor={(item) => item.id}
           className="mt-2"
         />
+        </>
+        ):(
+          <Invitation/>
+        )}
       </View>
+    
     </SafeAreaView>
   );
 };

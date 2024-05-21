@@ -10,7 +10,15 @@ import invite from '../assets/icons/invite.png'
 import groupChat from '../assets/icons/groupChat.png'
 import florist from '../assets/icons/florist.png'
 import venue from '../assets/icons/venue.png'
+import right from '../assets/icons/right.png'
 import phone from '../assets/icons/phone.png'
+import remove from '../assets/icons/remove.png'
+import notification from '../assets/icons/notification.png'
+import userCross from '../assets/icons/userCross.png'
+import accepted from '../assets/icons/accepted.png'
+import rejected from '../assets/icons/rejected.png'
+import pending from '../assets/icons/pending.png'
+
 
 
 export default{
@@ -26,5 +34,12 @@ export default{
     groupChat,
     florist,
     venue,
-    phone
+    phone,
+    right,
+    remove,
+    userCross,
+    notification,
+    accepted,
+    rejected,
+    pending
 }
