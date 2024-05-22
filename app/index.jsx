@@ -13,7 +13,7 @@ export default function App () {
 
     
     return (
-       <SafeAreaView className = "bg-black-300 h-full">
+       <SafeAreaView className = "h-full">
            <ScrollView contentContainerStyle={{height:'100%'}}>
                 <View className='w-full items-center flex'>
                     <Text>This is index page</Text>

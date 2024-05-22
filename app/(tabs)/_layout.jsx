@@ -9,10 +9,10 @@ const TabIcon = ({ icon, color, name, focused }) => {
                 source={icon}
                 resizeMode="contain"
                 tintColor={color}
-                className={`px-5 py-3 border rounded-[3px] flex items-center  w-7 h-7`}
+                className={`px-7 py-3 mb-1 rounded-[10px] ${focused? "bg-[#FFAD65]/[0.48]":""} flex items-center  w-5 h-5`}
             />
             <Text 
-                className={`${(focused) ? "" : ""}}`}
+                className={`${focused ? "" : ""}}`}
                 style={{ color: color }}
             >
                 {name}
