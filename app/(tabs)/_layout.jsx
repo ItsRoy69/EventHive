@@ -1,6 +1,9 @@
-import { Text, View, Image } from 'react-native'
+import { Text, View, Image, Button } from 'react-native'
+import { useContext } from 'react'
 import {Tabs, Redirect} from 'expo-router'
 import icons from '../../constants/icons'
+import { InvitationContext } from '../context/InvitationContext'
+
 
 const TabIcon = ({ icon, color, name, focused }) => {
     return (
@@ -22,9 +25,19 @@ const TabIcon = ({ icon, color, name, focused }) => {
 }
 
 
-
 const TabsLayout = () => {
+    const {sendInvitation,setSendInvitation} = useContext(InvitationContext)
+    console.log("from layout: ",sendInvitation)
+    // if(sendInvitation){
+    //     return (
+    //         <View className='fixed bottom'>
+    //             <Button title='send'>Send Invitation</Button>
+    //         </View>
+    //     )
+    // }
+   
   return (
+   
     <Tabs
         screenOptions={{
             tabBarShowLabel: false,
@@ -37,7 +50,13 @@ const TabsLayout = () => {
                 height: 84
             }
         }}
+        
     >
+    {sendInvitation && (
+        <Tabs.Screen className='fixed bottom'>
+                <Button title='send'>Send Invitation</Button>
+        </Tabs.Screen> 
+    )}
         <Tabs.Screen
             name="events"
             options={{ 
@@ -100,6 +119,9 @@ const TabsLayout = () => {
         />
         
     </Tabs>
+  
+    
+   
   )
 }
 

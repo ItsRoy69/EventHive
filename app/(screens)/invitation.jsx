@@ -5,9 +5,10 @@ import {
   TouchableOpacity,
   Image,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState,useContext, useEffect } from "react";
 import icons from "../../constants/icons";
 import images from "../../constants/images";
+import { InvitationContext } from "../context/InvitationContext";
 
 const Invitation = () => {
   const categories = ["All", "Not Sent", "Accepted", "Rejected", "Pending"];
@@ -15,11 +16,23 @@ const Invitation = () => {
   const [selected, setSelected] = useState(false);
   const [category, setCategory] = useState("All");
 
+  const {sendInvitation,setSendInvitation} = useContext(InvitationContext)
+
   const handleSelectPeople = ({ personId }) => {
     setSelectedPeople(personId);
     setSelected(!selected);
+    console.log(category)
+    if(selected && category === 'Not Sent'){
+      setSendInvitation(true)
+      
+    }
   };
-
+  useEffect(()=>{
+    if(sendInvitation){
+      console.log("From Invitation: ",sendInvitation)
+    }
+  },[sendInvitation])
+ 
   const people = [
     {
       id: 1,
@@ -86,7 +99,7 @@ const Invitation = () => {
               >
               <TouchableOpacity
                     onPress={() => handleSelectPeople({ personId: person.id })}
-                  >
+              >
                 <View className="flex flex-row items-center gap-[13px]">
                   
                     {selected &&

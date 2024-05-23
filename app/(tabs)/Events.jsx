@@ -13,6 +13,7 @@ import icons from "../../constants/icons";
 import images from "../../constants/images";
 import { useNavigation } from "@react-navigation/native";
 import Invitation from "../(screens)/invitation";
+import { InvitationProvider } from "../context/InvitationContext";
 
 const Events = () => {
   const todo = [
@@ -33,7 +34,8 @@ const Events = () => {
   const [expandedItem, setExpandedItem] = useState(null);
   const [selected, setSelected] = useState(false);
   const [selectedSubItem, setSelectedSubItem] = useState(null);
-  
+  const [sendInvitation, setSendInvitation] = useState(false);
+
   const [invitationPressed, setInvitationPressed] = useState(false)
   const toggleExpand = (itemId) => {
     setExpandedItem(expandedItem === itemId ? null : itemId);
@@ -301,7 +303,9 @@ const Events = () => {
         />
         </>
         ):(
-          <Invitation/>
+          <InvitationProvider value={{sendInvitation,setSendInvitation}}>
+            <Invitation/>
+          </InvitationProvider>
         )}
       </View>
     
