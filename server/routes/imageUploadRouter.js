@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const { uploadImageMiddleware, handleUploadResponse } = require('../utils/multerConfig')
+const { uploadImageMiddleware, handleUploadResponse } = require('../config/multerConfig')
 const imageUploader = require('../controllers/imageUploadController')
 
 router.post('/', uploadImageMiddleware, handleUploadResponse, imageUploader)
