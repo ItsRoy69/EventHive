@@ -1,0 +1,316 @@
+import {
+  SafeAreaView,
+  ScrollView,
+  View,
+  Text,
+  TouchableOpacity,
+  FlatList,
+  SectionList,
+} from "react-native";
+import React, { useState } from "react";
+import { Image } from "react-native";
+import icons from "../../constants/icons";
+import images from "../../constants/images";
+import { useNavigation } from "@react-navigation/native";
+import Invitation from "../(screens)/invitation";
+import { InvitationProvider } from "../context/InvitationContext";
+
+const Events = () => {
+  const todo = [
+    {
+      name: "Meeting with Bimal Da - Florist",
+      location: "Rajarhat",
+      time: "10:30",
+    },
+    {
+      name: "Venue visit and discussion",
+      location: "Holiday Inn",
+      time: "Chinar Park - 17:30",
+    },
+  ];
+
+  const [reminders, setReminders] = useState(todo);
+
+  const [expandedItem, setExpandedItem] = useState(null);
+  const [selected, setSelected] = useState(false);
+  const [selectedSubItem, setSelectedSubItem] = useState(null);
+  const [sendInvitation, setSendInvitation] = useState(false);
+
+  const [invitationPressed, setInvitationPressed] = useState(false)
+  const toggleExpand = (itemId) => {
+    setExpandedItem(expandedItem === itemId ? null : itemId);
+  };
+
+  const handleInvitationPress = () =>{
+   setInvitationPressed(!invitationPressed)
+  }
+
+  const parentItems = [
+    {
+      id: 1,
+      image: `${images.dummyVenue}`,
+      notification: 65,
+      name: "Venue Decoration",
+    },
+    {
+      id: 2,
+      image: `${images.food}`,
+      notification: 24,
+      name: "Food and Catering",
+    },
+    {
+      id: 3,
+      image: `${images.dummyVenue}`,
+      notification: 10,
+      name: "Priest and Rituals",
+    },
+  ];
+
+  const subItems = {
+    1: [
+      {
+        id: "1-1",
+        image: `${icons.groupChat}`,
+        notification: 60,
+        data: "Group chat",
+      },
+      { id: "1-2", image: `${icons.florist}`, data: "Florist Bimal Da" },
+      { id: "1-3", image: `${icons.venue}`, data: "Venue Decorator" },
+      { id: "1-4", image: `${icons.florist}`, data: "Photographer" },
+    ],
+    2: [
+      {
+        id: "1-1",
+        image: `${icons.groupChat}`,
+        notification: 60,
+        data: "Group chat",
+      },
+      { id: "1-2", image: `${icons.florist}`, data: "Florist Bimal Da" },
+      { id: "1-3", image: `${icons.venue}`, data: "Venue Decorator" },
+      { id: "1-4", image: `${icons.florist}`, data: "Photographer" },
+    ],
+    3: [
+      {
+        id: "1-1",
+        image: `${icons.groupChat}`,
+        notification: 60,
+        data: "Group chat",
+      },
+      { id: "1-2", image: `${icons.florist}`, data: "Florist Bimal Da" },
+      { id: "1-3", image: `${icons.venue}`, data: "Venue Decorator" },
+      { id: "1-4", image: `${icons.florist}`, data: "Photographer" },
+    ],
+  };
+
+  const handleSelectSubItem = ({ itemId }) => {
+    setSelected(!selected);
+    setSelectedSubItem(itemId);
+  };
+
+  const renderSubItems = (itemId) => {
+    return (
+      <SectionList
+        sections={[{ data: subItems[itemId] }]}
+        renderItem={({ item }) => (
+          <TouchableOpacity
+            onPress={() => handleSelectSubItem({ itemId: item.id })}
+          >
+            <View className="py-3 px-2 border-b-[0.5px] flex flex-row justify-between items-center border-gray-300">
+              <View className="gap-[10px] flex flex-row items-center">
+                {selected && selectedSubItem === item.id ? (
+                  <Image
+                    source={icons.right}
+                    resizeMode="contain"
+                    className="w-[35px] h-[35px]"
+                  />
+                ) : (
+                  <Image
+                    source={item.image}
+                    resizeMode="contain"
+                    className="w-[35px] h-[35px]"
+                  />
+                )}
+
+                <Text className="text-md font-semibold text-gray-700">
+                  {item.data}
+                </Text>
+              </View>
+              {item.notification > 0 && (
+                <View className="px-[10px] py-1 bg-[#A34342] rounded-[15px]">
+                  <Text className="font-semibold text-white">
+                    {item.notification} +
+                  </Text>
+                </View>
+              )}
+            </View>
+          </TouchableOpacity>
+        )}
+        keyExtractor={(item) => item.id}
+      />
+    );
+  };
+  const renderItem = ({ item }) => (
+    <View className="">
+      <TouchableOpacity
+        onPress={() => toggleExpand(item.id)}
+        style={["py-4 border-b-[0.5px] border-gray-300 "]}
+      >
+        <View
+          className={`flex py-3 px-2  ${
+            expandedItem === item.id
+              ? "bg-[#FFAD65]/[0.14]"
+              : "bg-[#D9D9D9]/[0.1]"
+          }   flex-row justify-between items-center`}
+        >
+          <View className="flex flex-row gap-[8px] items-center">
+            <Image source={item.image} resizeMode="contain" />
+            <Text className="text-lg font-semibold">{item.name}</Text>
+          </View>
+          <View className="flex flex-row">
+            {item.notification > 0 && (
+              <View className="px-[10px] py-1 bg-[#FFAD65]/[0.31] rounded-[50px]">
+                <Text className="font-semibold">{item.notification} +</Text>
+              </View>
+            )}
+
+            <Image source={icons.menu} className="h-6" resizeMode="contain" />
+          </View>
+        </View>
+
+        {expandedItem === item.id && renderSubItems(item.id)}
+      </TouchableOpacity>
+    </View>
+  );
+
+
+  return (
+    <SafeAreaView className="bg-white h-full">
+      <View className="flex justify-center px-4">
+        <View className=" gap-[24px]  mt-8 ">
+          <View className="flex flex-row justify-between mt-8 ">
+            <Image
+              source={icons.ham}
+              resizeMode="contain"
+              className="w-[40px] h-[40px]"
+            />
+            {!selected ? (
+              <View className="flex flex-row gap-[3px]">
+                <Image
+                  source={icons.search}
+                  resizeMode="contain"
+                  className="w-[45px] h-[45px]"
+                />
+                <Image
+                  source={images.dummyPic}
+                  resizeMode="contain"
+                  className="w-[45px] h-[45px]"
+                />
+              </View>
+            ) : (
+              <View className="h-[42px] w-[140px] rounded-[8px] flex flex-row items-center justify-evenly py-2 bg-[#FFAD65]/[0.14]">
+              <TouchableOpacity>
+                <Image
+                  source={icons.userCross}
+                  resizeMode="contain"
+                  className="w-[24px] px-3 h-[24px]"
+                />
+              </TouchableOpacity>
+              <TouchableOpacity>
+                <Image
+                  source={icons.remove}
+                  resizeMode="contain"
+                  className="w-[24px] px-3 h-[24px]"
+                />
+                </TouchableOpacity>
+                <TouchableOpacity>
+                <Image
+                  source={icons.notification}
+                  resizeMode="contain"
+                  className="w-[22px] px-3 h-[22px]"
+                />
+                </TouchableOpacity>
+              </View>
+            )}
+          </View>
+          <View className="flex flex-row justify-between">
+            <View className="flex  flex-col">
+              <View className="flex flex-row justify-between">
+                <Text className="text-3xl font-semibold">
+                  Rajarshi's Wedding
+                </Text>
+              </View>
+
+              <View className="border w-[216px] border-[4px] rounded-[3px]  border-[#FFAD65]"></View>
+            </View>
+            <TouchableOpacity
+            onPress={handleInvitationPress}
+            >
+              <Image
+                source={icons.invite}
+                resizeMode="contain"
+                className="w-[42px] h-[35px]"
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
+        {!invitationPressed ? (
+        <>
+        <View className="reminders flex h-[165px] mt-1 mb-3">
+          <Text className="text-sm text-slate-400">Reminders</Text>
+          <View className="mt-1">
+            {reminders.map((item, index) => (
+              <View
+                className="bg-[#FFAD65]/[0.14] h-[58px] rounded-[8px]  flex flex-row border-l-8 border-[#FFAD65] justify-between items-center  w-full px-3 mb-3 py-2"
+                key={index}
+              >
+                <View className="flex  justify-start">
+                  <Text className="text-black font-bold"> {item.name}</Text>
+
+                  <View className="flex flex-row gap-[2px]">
+                    <Text>{item.location}</Text>
+                    <Text>-</Text>
+                    <Text>{item.time}</Text>
+                  </View>
+                </View>
+
+                <Image
+                  source={icons.menu}
+                  className="h-6"
+                  resizeMode="contain"
+                />
+              </View>
+            ))}
+          </View>
+        </View>
+        <View className="border border-[0.5px] border-slate-400" />
+        <View className="py-2 flex flex-row gap-[5px]">
+          <View className="px-3 py-1  bg-slate-100 rounded-[10px] text-black">
+            <Text>Unread</Text>
+          </View>
+          <View className="px-3 py-1  bg-slate-100 rounded-[10px] text-black">
+            <Text>Calls</Text>
+          </View>
+          <View className="px-3 py-1  bg-slate-100 rounded-[10px] text-black">
+            <Text>Groups</Text>
+          </View>
+        </View>
+
+        <FlatList
+          data={parentItems}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id}
+          className="mt-2"
+        />
+        </>
+        ):(
+          <InvitationProvider value={{sendInvitation,setSendInvitation}}>
+            <Invitation/>
+          </InvitationProvider>
+        )}
+      </View>
+    
+    </SafeAreaView>
+  );
+};
+
+export default Events;

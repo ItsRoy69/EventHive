@@ -1,7 +1,8 @@
 import { ScrollView, StatusBar } from 'react-native'
 import {  Text, View } from 'react-native'
-import { Link ,Redirect,router} from 'expo-router'
+import { Link ,Redirect,Tabs,router} from 'expo-router'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import TabsLayout from './(tabs)/_layout'
 
 
 import React from 'react'
@@ -13,7 +14,7 @@ export default function App () {
 
     
     return (
-       <SafeAreaView className = "bg-black-300 h-full">
+       <SafeAreaView className = "h-full">
            <ScrollView contentContainerStyle={{height:'100%'}}>
                 <View className='w-full items-center flex'>
                     <Text>This is index page</Text>
