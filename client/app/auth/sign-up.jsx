@@ -71,7 +71,7 @@ const SignUp = () => {
           </StyledView>
           <StyledTouchableOpacity
             className="bg-[#FFAD65] w-64 rounded-md py-2"
-            onPress={() => navigation.navigate("SpouseName")}
+            onPress={() => navigation.navigate("TabsLayout")}
           >
             <StyledText className="text-white text-center">
               Let the fun begin
