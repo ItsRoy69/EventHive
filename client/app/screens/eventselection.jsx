@@ -1,10 +1,19 @@
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, Image } from "react-native";
+import { useNavigation } from '@react-navigation/native';
 import { styled } from "nativewind";
 const StyledView = styled(View);
 const StyledImage = styled(Image);
 const EventSelection = () => {
   const [selectedEvent, setSelectedEvent] = useState("");
+  const navigation = useNavigation();
+
+  const handleEventSelection = (event) => {
+    setSelectedEvent(event);
+    if (event === 'Wedding') {
+      navigation.navigate('BrideGroom');
+    }
+  };
 
   const eventTypes = [
     "Wedding",
@@ -16,10 +25,6 @@ const EventSelection = () => {
     "Birthday",
     "Other",
   ];
-
-  const handleEventSelection = (event) => {
-    setSelectedEvent(event);
-  };
 
   return (
     <View className="flex-1 items-center bg-white">
