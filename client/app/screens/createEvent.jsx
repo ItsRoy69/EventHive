@@ -6,7 +6,7 @@ import {
   Image,
   TouchableOpacity,
 } from "react-native";
-import {Picker} from '@react-native-picker/picker';
+import { Picker } from "@react-native-picker/picker";
 import React, { useState } from "react";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import icons from "../../constants/icons";
@@ -19,7 +19,7 @@ const CreateEvent = ({ onChangeEvent }) => {
   const [eventName, setEventName] = useState(null);
   const [dateOfEvent, setDateOfEvent] = useState("");
   const [timeOfEvent, setTimeOfEvent] = useState("");
-  const [location, setLocation] = useState(null)
+  const [location, setLocation] = useState(null);
 
   const onChangeDate = ({ type }, selectedDate) => {
     if (type == "set") {
@@ -40,15 +40,13 @@ const CreateEvent = ({ onChangeEvent }) => {
       setTime(currentTime);
       if (Platform.OS === "android") {
         showTimepicker();
-        setTimeOfEvent(
-          formatTime(currentTime.toTimeString())
-        );
+        setTimeOfEvent(formatTime(currentTime.toTimeString()));
       }
     } else {
       showTimepicker();
     }
   };
-  
+
   const handleAddEventClicked = () => {
     const newEvent = {
       name: eventName,
@@ -56,8 +54,7 @@ const CreateEvent = ({ onChangeEvent }) => {
       location: location,
       time: timeOfEvent,
     };
-    onChangeEvent(newEvent)
-   
+    onChangeEvent(newEvent);
   };
 
   const showDatepicker = () => {
@@ -73,23 +70,21 @@ const CreateEvent = ({ onChangeEvent }) => {
     let year = date.getFullYear();
     let month = date.getMonth() + 1;
     let day = date.getDate();
-   
-  if (month < 10) {
-    month = `0${month}`;
-  }
+
+    if (month < 10) {
+      month = `0${month}`;
+    }
     return `${year}-${month}-${day}`;
   };
 
   const formatTime = (timeString) => {
-   
-    const hours = timeString.split(':')[0]
-    const minutes =timeString.split(':')[1];
+    const hours = timeString.split(":")[0];
+    const minutes = timeString.split(":")[1];
     let parsedHours = parseInt(hours, 10);
-    const suffix = parsedHours >= 12 ? 'PM' : 'AM';
+    const suffix = parsedHours >= 12 ? "PM" : "AM";
     parsedHours = parsedHours % 12 || 12;
     return `${parsedHours}:${minutes} ${suffix}`;
   };
-  
 
   return (
     <View className="flex gap-[20px] px-2 ">
@@ -158,19 +153,18 @@ const CreateEvent = ({ onChangeEvent }) => {
           </TouchableOpacity>
         )}
       </View>
-      <View className='mb-3'>
-      <Text>Where is it happening</Text>
-      <Picker
-        selectedValue={location}
-        className="border-b border-[#1F2E2A]/[0.41] h-[37px]  bg-[#1F2E2A]/[0.01] text-md text-black "
-        onValueChange={(itemValue, itemIndex) => setLocation(itemValue)}
-      >
-        <Picker.Item label="Home" value="home" />
-        <Picker.Item label="Hall" value="hall" />
-        <Picker.Item label="Banquet" value="banquet" />
-       
-      </Picker>
-    </View>
+      <View className="mb-3">
+        <Text>Where is it happening</Text>
+        <Picker
+          selectedValue={location}
+          className="border-b border-[#1F2E2A]/[0.41] h-[37px]  bg-[#1F2E2A]/[0.01] text-md text-black "
+          onValueChange={(itemValue, itemIndex) => setLocation(itemValue)}
+        >
+          <Picker.Item label="Home" value="home" />
+          <Picker.Item label="Hall" value="hall" />
+          <Picker.Item label="Banquet" value="banquet" />
+        </Picker>
+      </View>
 
       <TouchableOpacity
         className="bg-[#FFAD65] border border-[#FFAD65] rounded-md flex items-center  p-2"
