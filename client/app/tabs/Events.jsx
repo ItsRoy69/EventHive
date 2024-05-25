@@ -12,7 +12,7 @@ import { Image } from "react-native";
 import icons from "../../constants/icons";
 import images from "../../constants/images";
 import { useNavigation } from "@react-navigation/native";
-import Invitation from "../(screens)/invitation";
+import Invitation from "../screens/invitation";
 import { InvitationProvider } from "../context/InvitationContext";
 
 const Events = () => {

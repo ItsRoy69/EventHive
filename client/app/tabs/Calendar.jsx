@@ -6,7 +6,7 @@ import {
   Image,
   TouchableOpacity,
 } from "react-native";
-import CreateEvent from "../(screens)/createEvent";
+import CreateEvent from "../screens/createEvent";
 import React, { useEffect, useState } from "react";
 import icons from "../../constants/icons";
 import images from "../../constants/images";
