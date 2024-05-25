@@ -8,7 +8,7 @@ const groupChatSchema = new mongoose.Schema({
     },
     senderId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: ['Host', 'Guest', 'Vendor'],
+        // ref: ['Host', 'Guest', 'Vendor'],
         required: true
     },
     type: {

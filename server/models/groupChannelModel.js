@@ -12,7 +12,7 @@ const groupChannelSchema = new mongoose.Schema({
     },
     members: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: ['Host', 'Guest', 'Vendor'],
+        // ref: ['Host', 'Guest', 'Vendor'],
         required: true
     }],
     avatar: {
