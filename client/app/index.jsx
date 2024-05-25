@@ -7,6 +7,7 @@ import BrideGroom from "./screens/bridegroom"
 import RegisterName from "./screens/registername"
 import SpouseName from "./screens/spousename"
 import WeddingDate from "./screens/weddingdate"
+import SignUp from "./auth/sign-up"
 
 const Stack = createNativeStackNavigator();
 
@@ -23,6 +24,7 @@ const App = () => {
           <Stack.Screen name="RegisterName" component={RegisterName} />
           <Stack.Screen name="SpouseName" component={SpouseName} />
           <Stack.Screen name="WeddingDate" component={WeddingDate} />
+          <Stack.Screen name="SignUp" component={SignUp} />
         </Stack.Navigator>
       ) : null}
     </>

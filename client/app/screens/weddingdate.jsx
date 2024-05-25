@@ -6,11 +6,12 @@ const StyledView = styled(View);
 const StyledText = styled(Text);
 const StyledTouchableOpacity = styled(TouchableOpacity);
 const StyledImage = styled(Image);
+import { useNavigation } from "@react-navigation/native";
 
 const WeddingDate = () => {
   const [weddingDate, setWeddingDate] = useState("");
   const [showDatePicker, setShowDatePicker] = useState(false);
-
+  const navigation = useNavigation();
   const handleDateChange = (event, selectedDate) => {
     const currentDate = selectedDate || weddingDate;
     setShowDatePicker(false);
@@ -66,7 +67,10 @@ const WeddingDate = () => {
               onChange={handleDateChange}
             />
           )}
-          <StyledTouchableOpacity className="bg-[#FFAD65] w-44 rounded-md py-2">
+          <StyledTouchableOpacity
+            className="bg-[#FFAD65] w-44 rounded-md py-2"
+            onPress={() => navigation.navigate("SignUp")}
+          >
             <StyledText className="text-white text-center">Next</StyledText>
           </StyledTouchableOpacity>
         </View>
