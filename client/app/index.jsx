@@ -20,7 +20,7 @@ export default function App () {
                     <Text>This is index page</Text>
                     <Link href='/events' className='text-blue-700'>Go to events</Link>
                     <Link href='/floor' className='text-red-300 mt-5'>View Floor PLan</Link>
-
+                    <Link href='/contact' className='text-red-300 mt-5'>Go to contact page</Link>
                 </View>
            </ScrollView>
            
