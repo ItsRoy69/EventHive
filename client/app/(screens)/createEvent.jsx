@@ -5,8 +5,8 @@ import {
   Platform,
   Image,
   TouchableOpacity,
-  Button,
 } from "react-native";
+import {Picker} from '@react-native-picker/picker';
 import React, { useState } from "react";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import icons from "../../constants/icons";
@@ -37,7 +37,6 @@ const CreateEvent = ({ onChangeEvent }) => {
   const onChangeTime = ({ type }, selectedTime) => {
     if (type == "set") {
       const currentTime = selectedTime;
-      // console.log(currentTime.toTimeString([], { hour: "2-digit", minute: "2-digit" }))
       setTime(currentTime);
       if (Platform.OS === "android") {
         showTimepicker();
@@ -49,7 +48,7 @@ const CreateEvent = ({ onChangeEvent }) => {
       showTimepicker();
     }
   };
-  //   console.log(eventName);
+  
   const handleAddEventClicked = () => {
     const newEvent = {
       name: eventName,
@@ -58,7 +57,7 @@ const CreateEvent = ({ onChangeEvent }) => {
       time: timeOfEvent,
     };
     onChangeEvent(newEvent)
-    // console.log(newEvent);
+   
   };
 
   const showDatepicker = () => {
@@ -159,15 +158,19 @@ const CreateEvent = ({ onChangeEvent }) => {
           </TouchableOpacity>
         )}
       </View>
-      <View className="mb-3">
-        <Text>Where is it happening</Text>
-        <TextInput
-          className="border-b border-[#1F2E2A]/[0.41] h-[37px]  bg-[#1F2E2A]/[0.01] text-md "
-          placeholder="Venue"
-          value={location}
-          onChangeText={(text) => setLocation(text)}
-        />
-      </View>
+      <View className='mb-3'>
+      <Text>Where is it happening</Text>
+      <Picker
+        selectedValue={location}
+        className="border-b border-[#1F2E2A]/[0.41] h-[37px]  bg-[#1F2E2A]/[0.01] text-md text-black "
+        onValueChange={(itemValue, itemIndex) => setLocation(itemValue)}
+      >
+        <Picker.Item label="Home" value="home" />
+        <Picker.Item label="Hall" value="hall" />
+        <Picker.Item label="Banquet" value="banquet" />
+       
+      </Picker>
+    </View>
 
       <TouchableOpacity
         className="bg-[#FFAD65] border border-[#FFAD65] rounded-md flex items-center  p-2"
