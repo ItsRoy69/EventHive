@@ -19,6 +19,8 @@ export default function App () {
                 <View className='w-full items-center flex'>
                     <Text>This is index page</Text>
                     <Link href='/events' className='text-blue-700'>Go to events</Link>
+                    <Link href='/floor' className='text-red-300 mt-5'>View Floor PLan</Link>
+
                 </View>
            </ScrollView>
            

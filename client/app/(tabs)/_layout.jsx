@@ -27,7 +27,7 @@ const TabIcon = ({ icon, color, name, focused }) => {
 
 const TabsLayout = () => {
     const {sendInvitation,setSendInvitation} = useContext(InvitationContext)
-    console.log("from layout: ",sendInvitation)
+    // console.log("from layout: ",sendInvitation)
     // if(sendInvitation){
     //     return (
     //         <View className='fixed bottom'>
@@ -52,11 +52,11 @@ const TabsLayout = () => {
         }}
         
     >
-    {sendInvitation && (
+    {/* {sendInvitation && (
         <Tabs.Screen className='fixed bottom'>
                 <Button title='send'>Send Invitation</Button>
         </Tabs.Screen> 
-    )}
+    )} */}
         <Tabs.Screen
             name="events"
             options={{ 
