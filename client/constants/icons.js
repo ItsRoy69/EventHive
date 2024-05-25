@@ -18,7 +18,7 @@ import userCross from '../assets/icons/userCross.png'
 import accepted from '../assets/icons/accepted.png'
 import rejected from '../assets/icons/rejected.png'
 import pending from '../assets/icons/pending.png'
-
+import date from '../assets/icons/date.png'
 
 
 export default{
@@ -41,5 +41,6 @@ export default{
     notification,
     accepted,
     rejected,
-    pending
+    pending,
+    date
 }
