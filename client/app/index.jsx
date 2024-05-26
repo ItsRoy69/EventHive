@@ -29,7 +29,6 @@ const App = () => {
           <Stack.Screen name="SignUp" component={SignUp} />
           <Stack.Screen name="Floor" component={Floor} />
           <Stack.Screen name="TabsLayout" component={TabsLayout} />
-         
         </Stack.Navigator>
       ) : null}
     </>
