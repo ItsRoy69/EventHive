@@ -6,6 +6,9 @@ import BrideGroom from "./screens/bridegroom";
 import RegisterName from "./screens/registername";
 import SpouseName from "./screens/spousename";
 import WeddingDate from "./screens/weddingdate";
+import GuestInvite from "./screens/guestinvite";
+import VendorInvite from "./screens/vendorinvite";
+import GuestDetails from "./screens/guestdetails";
 import SignUp from "./auth/sign-up";
 import Floor from "./floor";
 import TabsLayout from "./tabs/_layout";
@@ -29,7 +32,10 @@ const App = () => {
           <Stack.Screen name="SignUp" component={SignUp} />
           <Stack.Screen name="Floor" component={Floor} />
           <Stack.Screen name="TabsLayout" component={TabsLayout} />
-         
+          <Stack.Screen name="GuestInvite" component={GuestInvite} />
+          <Stack.Screen name="VendorInvite" component={VendorInvite} />
+          <Stack.Screen name="GuestDetails" component={GuestDetails} />
+
         </Stack.Navigator>
       ) : null}
     </>

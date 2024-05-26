@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, Image } from "react-native";
 import { styled } from "nativewind";
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation } from "@react-navigation/native";
 const StyledView = styled(View);
 const StyledText = styled(Text);
 const StyledTouchableOpacity = styled(TouchableOpacity);
@@ -70,7 +70,7 @@ const BrideGroom = () => {
               onPress={() => handleAnswerSelection("The Groom")}
             >
               <StyledText
-                className={`text-lg font-semibold  ${
+                className={`text-lg font-bold text-center  ${
                   selectedAnswer === "The Groom"
                     ? "text-white"
                     : "text-gray-800"
@@ -80,6 +80,27 @@ const BrideGroom = () => {
                   source={require("../../assets/images/signup/groom-icon.png")}
                 />
                 The Groom
+              </StyledText>
+            </StyledTouchableOpacity>
+            <StyledTouchableOpacity
+              className={`px-6 py-3 w-100 mb-2 rounded-md ${
+                selectedAnswer === "Event Manager"
+                  ? "bg-[#FFAD65]"
+                  : "bg-gray-200"
+              }`}
+              onPress={() => handleAnswerSelection("Event Manager")}
+            >
+              <StyledText
+                className={`text-lg font-bold text-center ${
+                  selectedAnswer === "Event Manager"
+                    ? "text-white"
+                    : "text-black"
+                }`}
+              >
+                <StyledImage
+                  source={require("../../assets/images/signup/manager-icon.png")}
+                />
+                Event Manager
               </StyledText>
             </StyledTouchableOpacity>
           </StyledView>
