@@ -12,7 +12,7 @@ import { InvitationContext } from "../context/InvitationContext";
 
 const Invitation = () => {
   const categories = ["All", "Not Sent", "Accepted", "Rejected", "Pending"];
-  const [selectedPoeple, setSelectedPeople] = useState(null);
+  const [selectedPeople, setSelectedPeople] = useState(null);
   const [selected, setSelected] = useState(false);
   const [category, setCategory] = useState("All");
 
@@ -24,7 +24,7 @@ const Invitation = () => {
     console.log(category)
     if(selected && category === 'Not Sent'){
       setSendInvitation(true)
-      
+      navigation.navigate('GuestInvite', { person });
     }
   };
   useEffect(()=>{
@@ -103,7 +103,7 @@ const Invitation = () => {
                 <View className="flex flex-row items-center gap-[13px]">
                   
                     {selected &&
-                    selectedPoeple === person.id &&
+                    selectedPeople === person.id &&
                     person.status === "Not Sent" ? (
                       <Image
                         source={icons.right}
