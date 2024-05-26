@@ -1,5 +1,6 @@
 import React from "react";
-import { View, Text, TouchableOpacity, Image } from "react-native";
+import Link from "@react-navigation/native";
+import { View, Text, TouchableOpacity, Image, Linking } from "react-native";
 import { styled } from "nativewind";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { useNavigation } from "@react-navigation/native";
@@ -52,11 +53,14 @@ export default function OnboardingScreen() {
         Have it setup already?{" "}
         <StyledText
           className="text-orange-800"
-          onPress={() => navigation.navigate("Login")}
+          onPress={() => navigation.navigate("Events")}
         >
           Login
         </StyledText>
+
       </StyledText>
+      {/* <Link href='/events' className='text-blue-200 text-xl' >Go to events</Link> */}
+      
 
       <StyledView className="mt-8 w-full px-4">
         <StyledImage
