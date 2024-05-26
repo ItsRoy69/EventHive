@@ -12,6 +12,7 @@ import GuestDetails from "./screens/guestdetails";
 import SignUp from "./auth/sign-up";
 import Floor from "./floor";
 import TabsLayout from "./tabs/_layout";
+import Event from './tabs/Events'
 
 const Stack = createNativeStackNavigator();
 
@@ -34,6 +35,7 @@ const App = () => {
           <Stack.Screen name="GuestInvite" component={GuestInvite} />
           <Stack.Screen name="VendorInvite" component={VendorInvite} />
           <Stack.Screen name="GuestDetails" component={GuestDetails} />
+
         </Stack.Navigator>
       ) : null}
     </>

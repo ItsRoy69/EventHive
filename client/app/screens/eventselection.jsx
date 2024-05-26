@@ -13,6 +13,9 @@ const EventSelection = () => {
     if (event === 'Wedding') {
       navigation.navigate('BrideGroom');
     }
+    if(event === 'Funeral'){
+      navigation.navigate('Event');
+    }
   };
 
   const eventTypes = [
