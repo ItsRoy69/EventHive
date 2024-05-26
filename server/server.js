@@ -19,6 +19,7 @@ const imageChannelRouter = require('./routes/imageChannelRouter.js')
 const imageRouter = require('./routes/imageRouter.js')
 const imageUploadRouter = require('./routes/imageUploadRouter.js')
 const meetingRouter = require('./routes/meetingRouter.js')
+const notificationRouter = require('./routes/notificationRouter.js')
 const paymentRouter = require('./routes/paymentRouter.js')
 const rsvpRouter = require('./routes/rsvpRouter.js')
 const subEventRouter = require('./routes/subEventRouter.js')
@@ -36,6 +37,7 @@ app.use('/image-channel', imageChannelRouter)
 app.use('/image', imageRouter)
 app.use('/image-upload', imageUploadRouter)
 app.use('/meeting', meetingRouter)
+app.use('/notification', notificationRouter)
 app.use('/payment', paymentRouter)
 app.use('/rsvp', rsvpRouter)
 app.use('/subEvent', subEventRouter)
@@ -44,6 +46,30 @@ app.use('/vendor', vendorRouter)
 app.use('/venue', venueRouter)
 
 connectToDB()
+
+const firebaseConfig = require('./config/firebaseConfig')
+
+app.post('/send-notification', async (req, res) => {
+    const { token, title, body } = req.body;
+  
+    const message = {
+        notification: {
+            title,
+            body,
+        },
+        token,
+    };
+  
+    try {
+      const responseNoti = await firebaseConfig.messaging().send(message);
+      res.status(200).send('Notification sent successfully', responseNoti);
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Error sending notification');
+    }
+});
+
+
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
