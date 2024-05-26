@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import { Text, View, ScrollView, TextInput } from "react-native";
+import React, { useState, useRef } from "react";
+import { Text, View, ScrollView, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform } from "react-native";
 import { styled } from "nativewind";
-
+import EmojiSelector, { Categories } from 'react-native-emoji-selector';
 const StyledView = styled(View);
 const StyledText = styled(Text);
 const StyledScrollView = styled(ScrollView);
@@ -13,6 +13,7 @@ import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 
 const GroupChats = () => {
   const [message, setMessage] = useState("");
+  const [showEmojiKeyboard, setShowEmojiKeyboard] = useState(false);
   const [messages, setMessages] = useState([
     { id: 1, text: "Hey, how are you?", sender: "John" },
     { id: 2, text: "I'm good, thanks! How about you?", sender: "Jane" },
@@ -30,8 +31,18 @@ const GroupChats = () => {
       setMessage("");
     }
   };
+  const scrollViewRef = useRef(null);
+
+  const scrollToBottom = () => {
+    scrollViewRef.current.scrollToEnd({ animated: true });
+  };
+
 
   return (
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={{ flex: 1 }}
+    >
     <StyledView className="flex-1 bg-white">
       <StyledView
         className="flex-row items-center justify-between h-24 "
@@ -69,64 +80,86 @@ const GroupChats = () => {
           </StyledView>
         </StyledView>
       </StyledView>
-      <StyledScrollView className="flex-1 px-4 py-2">
-        {messages.map((message) => (
-          <StyledView
-            key={message.id}
-            className={`my-2 rounded-lg p-2 ${
-              message.sender === "John"
-                ? "bg-blue-500 self-end"
-                : "bg-gray-200 self-start"
-            }`}
-          >
-            <StyledText
-              className={`text-sm ${
-                message.sender === "John" ? "text-white" : "text-gray-800"
+      <StyledScrollView ref={scrollViewRef} className="flex-1 px-4 py-2">
+          {messages.map((message) => (
+            <StyledView
+              key={message.id}
+              className={`my-2 rounded-lg p-2 ${
+                message.sender === "John"
+                  ? "bg-blue-500 self-end"
+                  : "bg-gray-200 self-start"
               }`}
             >
-              {message.text}
-            </StyledText>
-          </StyledView>
-        ))}
-      </StyledScrollView>
-      <StyledView
-        className="flex-row items-center justify-between px-2 py-2"
-        style={{ backgroundColor: "#F3F3F3" }}
-      >
+              <StyledText
+                className={`text-sm ${
+                  message.sender === "John" ? "text-white" : "text-gray-800"
+                }`}
+              >
+                {message.text}
+              </StyledText>
+            </StyledView>
+          ))}
+        </StyledScrollView>
         <StyledView
-          className="flex-row items-center justify-between bg-white rounded-lg"
+          className="flex-row items-center justify-between px-2 py-2"
+          style={{ backgroundColor: "#F3F3F3" }}
         >
-          <StyledView className="flex-row items-center flex-1 rounded-full pl-4 p-2">
-            <TextInput
-              className="flex-1 text-gray-800"
-              placeholder="Message..."
-              placeholderTextColor="#888"
-              value={message}
-              onChangeText={setMessage}
-            />
-            {message.length === 0 && (
-              <StyledView className="ml-auto">
-                <MaterialIcons
-                  name="currency-exchange"
+          <StyledView className="flex-row items-center justify-between bg-white rounded-lg">
+            <StyledView className="flex-row items-center flex-1 rounded-full pl-4 p-2">
+              <TouchableOpacity onPress={() => setShowEmojiKeyboard(!showEmojiKeyboard)}>
+                <Entypo name="emoji-happy" size={20} color="#888" />
+              </TouchableOpacity>
+              <TextInput
+                className="flex-1 text-gray-800 ml-2"
+                placeholder="Message..."
+                placeholderTextColor="#888"
+                value={message}
+                onChangeText={setMessage}
+                onSubmitEditing={sendMessage}
+              />
+              {message.length === 0 && (
+                <StyledView className="ml-auto">
+                  <MaterialIcons
+                    name="currency-exchange"
+                    size={20}
+                    color="#888"
+                  />
+                </StyledView>
+              )}
+            </StyledView>
+            <StyledView className="m-2">
+              <AntDesign name="paperclip" size={20} color="#888" />
+            </StyledView>
+            <StyledView className="mr-2">
+              {message.length === 0 ? (
+                <Feather name="mic" size={20} color="#888" />
+              ) : (
+                <Feather
+                  name="send"
                   size={20}
                   color="#888"
+                  onPress={sendMessage}
                 />
-              </StyledView>
-            )}
-          </StyledView>
-          <StyledView className="m-2">
-            <AntDesign name="paperclip" size={20} color="#888" />
-          </StyledView>
-          <StyledView className="mr-2">
-            {message.length === 0 ? (
-              <Feather name="mic" size={20} color="#888" />
-            ) : (
-              <Feather name="send" size={20} color="#888" onPress={sendMessage} />
-            )}
+              )}
+            </StyledView>
           </StyledView>
         </StyledView>
+        {showEmojiKeyboard && (
+          <EmojiSelector
+            onEmojiSelected={(emoji) => {
+              setMessage(message + emoji);
+              scrollToBottom();
+            }}
+            columns={8}
+            showSearchBar={false}
+            showTabs={false}
+            showHistory={false}
+            showSectionTitles={false}
+            category={Categories.all}
+          />
+        )}
       </StyledView>
-    </StyledView>
+    </KeyboardAvoidingView>
   );
 };
 
