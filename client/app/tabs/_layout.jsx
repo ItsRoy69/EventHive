@@ -1,4 +1,4 @@
-import { View, Image } from "react-native";
+import { View, Image,Text } from "react-native";
 import { useContext } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import icons from "../../constants/icons";
@@ -7,12 +7,15 @@ import Events from "./Events";
 import Calendar from "./Calendar";
 import DMs from "./dms";
 import Activities from "./activities";
+import EventPlan from "./EventPlan";
 
 const Tab = createBottomTabNavigator();
 
-const TabIcon = ({ icon, color, focused }) => {
+const TabIcon = ({ name, icon, color, focused }) => {
+    console.log(name)
+
   return (
-    <View className="items-center justify-center">
+    <View className="items-center flex justify-center">
       <Image
         source={icon}
         resizeMode="contain"
@@ -21,12 +24,14 @@ const TabIcon = ({ icon, color, focused }) => {
           focused ? "bg-[#FFAD65]/[0.48]" : ""
         } flex items-center  w-5 h-5`}
       />
+      <Text className='text-black text-md'>{name}</Text>
     </View>
   );
 };
 
 const TabsLayout = () => {
   const { sendInvitation, setSendInvitation } = useContext(InvitationContext);
+  const type = 'host'
 
   return (
     <Tab.Navigator
@@ -47,26 +52,39 @@ const TabsLayout = () => {
         name="Events"
         component={Events}
         options={{
-          tabBarIcon: ({ color, focused }) => (
-            <TabIcon icon={icons.event} color={color} focused={focused} />
+          tabBarIcon: ({ name, color, focused }) => (
+            <TabIcon icon={icons.event}  name="Events" color={color} focused={focused} />
           ),
         }}
       />
-      <Tab.Screen
+      {type === 'host' ? (
+        <Tab.Screen
+        name="EventPlan"
+        component={EventPlan}
+        options={{
+          tabBarIcon: ({name, color, focused }) => (
+            <TabIcon icon={icons.eventPlan} name="Event Plan" color={color} focused={focused} />
+          ),
+        }}
+      />
+      ):(
+        <Tab.Screen
         name="DMs"
         component={DMs}
         options={{
-          tabBarIcon: ({ color, focused }) => (
-            <TabIcon icon={icons.dm} color={color} focused={focused} />
+          tabBarIcon: ({ name,color, focused }) => (
+            <TabIcon icon={icons.dm} name ="DMs" color={color} focused={focused} />
           ),
         }}
       />
+      )}
+     
       <Tab.Screen
         name="Calendar"
         component={Calendar}
         options={{
-          tabBarIcon: ({ color, focused }) => (
-            <TabIcon icon={icons.calendar} color={color} focused={focused} />
+          tabBarIcon: ({ name,color, focused }) => (
+            <TabIcon icon={icons.calendar} name= "Calendar" color={color} focused={focused} />
           ),
         }}
       />
@@ -74,8 +92,8 @@ const TabsLayout = () => {
         name="Activities"
         component={Activities}
         options={{
-          tabBarIcon: ({ color, focused }) => (
-            <TabIcon icon={icons.activity} color={color} focused={focused} />
+          tabBarIcon: ({ name,color, focused }) => (
+            <TabIcon icon={icons.activity} name="Activities" color={color} focused={focused} />
           ),
         }}
       />
