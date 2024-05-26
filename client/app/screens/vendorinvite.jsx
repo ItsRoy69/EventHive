@@ -1,13 +1,14 @@
 import React from "react";
 import { View, Text, TouchableOpacity, Image } from "react-native";
 import { styled } from "nativewind";
-
+import { useNavigation } from "@react-navigation/native";
 const StyledView = styled(View);
 const StyledText = styled(Text);
 const StyledButton = styled(TouchableOpacity);
 const StyledImage = styled(Image);
 
 const VendorInvite = () => {
+  const navigation = useNavigation();
   return (
     <View className="flex-1 items-center bg-white">
       <StyledView className="flex-row w-full mt-8">
@@ -68,7 +69,10 @@ const VendorInvite = () => {
               />
             </StyledView>
             <StyledView className="flex-col h-32">
-              <StyledButton className="flex-1 bg-[#A34342] mb-2 rounded-lg py-4">
+              <StyledButton
+                className="flex-1 bg-[#A34342] mb-2 rounded-lg py-4"
+                onPress={() => navigation.navigate("GuestDetails")}
+              >
                 <StyledText className="text-center text-white font-bold">
                   Accept invite
                 </StyledText>
