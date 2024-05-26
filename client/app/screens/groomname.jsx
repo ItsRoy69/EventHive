@@ -2,13 +2,14 @@ import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, Image } from "react-native";
 import { styled } from "nativewind";
 import { useNavigation, useRoute } from "@react-navigation/native";
+
 const StyledView = styled(View);
 const StyledText = styled(Text);
 const StyledTextInput = styled(TextInput);
 const StyledTouchableOpacity = styled(TouchableOpacity);
 const StyledImage = styled(Image);
 
-const RegisterName = () => {
+const GroomName = () => {
   const [name, setName] = useState("");
   const navigation = useNavigation();
   const route = useRoute();
@@ -42,22 +43,20 @@ const RegisterName = () => {
             />
           </StyledView>
           <Text className="text-xl color-[#A34342] font-bold mb-4">
-            What should we call you?
+            Who is the lucky groom?
           </Text>
           <StyledTextInput
             className="w-64 border-b border-gray-300 px-4 py-2 mb-8 rounded-md bg-gray-100"
-            placeholder="Enter your Name"
+            placeholder="Enter the Groom’s name"
             value={name}
             onChangeText={setName}
           />
           <StyledTouchableOpacity
             className="bg-[#FFAD65] w-44 rounded-md py-2"
-            onPress={() =>
-              navigation.navigate(
-                selectedAnswer === "Event Manager" ? "GroomName" : "SpouseName",
+            onPress={() => navigation.navigate(
+                selectedAnswer === "Event Manager" ? "SpouseName" : "",
                 { selectedAnswer }
-              )
-            }
+              )}
           >
             <StyledText className="text-white text-center">Next</StyledText>
           </StyledTouchableOpacity>
@@ -65,16 +64,8 @@ const RegisterName = () => {
       </StyledView>
       <StyledView className="bottom-0 -translate-x-1/2 m-4">
         <StyledImage
-          className="h-18"
-          source={
-            selectedAnswer === "The Bride"
-              ? require("../../assets/images/signup/registername2.png")
-              : selectedAnswer === "The Groom"
-              ? require("../../assets/images/signup/registername.png")
-              : selectedAnswer === "Event Manager"
-              ? require("../../assets/images/signup/registername3.png")
-              : null
-          }
+          source={require("../../assets/images/signup/registername.png")}
+          className="w-34 h-34"
           resizeMode="contain"
         />
       </StyledView>
@@ -82,4 +73,4 @@ const RegisterName = () => {
   );
 };
 
-export default RegisterName;
+export default GroomName;

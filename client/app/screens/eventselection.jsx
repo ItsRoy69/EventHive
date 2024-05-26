@@ -13,8 +13,11 @@ const EventSelection = () => {
     if (event === 'Wedding') {
       navigation.navigate('BrideGroom');
     }
-    if(event === 'Funeral'){
-      navigation.navigate('Event');
+    if (event === 'Marriage anniversary') {
+      navigation.navigate('GuestInvite');
+    }
+    if (event === 'Farewell') {
+      navigation.navigate('VendorInvite');
     }
   };
 

@@ -12,7 +12,7 @@ const BrideGroom = () => {
   const navigation = useNavigation();
   const handleAnswerSelection = (answer) => {
     setSelectedAnswer(answer);
-    navigation.navigate('RegisterName');
+    navigation.navigate('RegisterName', { selectedAnswer: answer });
   };
 
   return (

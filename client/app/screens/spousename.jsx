@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, Image } from "react-native";
 import { styled } from "nativewind";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
+
 const StyledView = styled(View);
 const StyledText = styled(Text);
 const StyledTextInput = styled(TextInput);
@@ -11,6 +12,9 @@ const StyledImage = styled(Image);
 const SpouseName = () => {
   const [name, setName] = useState("");
   const navigation = useNavigation();
+  const route = useRoute();
+  const selectedAnswer = route.params?.selectedAnswer;
+
   return (
     <View className="flex-1 items-center bg-white">
       <StyledView className="flex-row w-full mt-8">
@@ -39,22 +43,38 @@ const SpouseName = () => {
             />
           </StyledView>
           <Text className="text-xl color-[#A34342] font-bold mb-4">
-            Who is the lucky groom?
+            {selectedAnswer === "The Bride"
+              ? "Who is the lucky groom?"
+              : selectedAnswer === "The Groom"
+              ? "Who is the lucky bride?"
+              : selectedAnswer === "Event Manager"
+              ? "Who is the lucky bride?"
+              : ""}
           </Text>
           <StyledTextInput
             className="w-64 border-b border-gray-300 px-4 py-2 mb-8 rounded-md bg-gray-100"
-            placeholder="Enter the Groom’s name"
+            placeholder="Enter the name"
             value={name}
             onChangeText={setName}
           />
-          <StyledTouchableOpacity className="bg-[#FFAD65] w-44 rounded-md py-2" onPress={() => navigation.navigate("WeddingDate")} >
+          <StyledTouchableOpacity
+            className="bg-[#FFAD65] w-44 rounded-md py-2"
+            onPress={() => navigation.navigate("WeddingDate")}
+          >
             <StyledText className="text-white text-center">Next</StyledText>
           </StyledTouchableOpacity>
         </View>
       </StyledView>
       <StyledView className="bottom-0 -translate-x-1/2 m-4">
         <StyledImage
-          source={require("../../assets/images/signup/spousename.png")}
+          source={
+            selectedAnswer === "The Bride"
+              ? require("../../assets/images/signup/spousename.png")
+              : selectedAnswer === "Event Manager"
+              ? require("../../assets/images/signup/registername2.png")
+              : null
+          }
+          resizeMode="contain"
           className="w-34 h-34"
           resizeMode="contain"
         />
