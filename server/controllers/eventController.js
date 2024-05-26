@@ -150,8 +150,22 @@ const createEvent = async (req, res) => {
 
 const updateEvent = async (req, res) => {
     try {
-        const { userId } = req.body
-
+        const { venue, datetime, eventId } = req.body
+        if (!eventId) {
+            return res.status(400).json({ message: 'Must provide event id' })
+        }
+        const existingEvent = await Event.findById(eventId)
+        if (!existingEvent) {
+            return res.status(400).json({ message: 'Event not found' })
+        }
+        if (venue) {
+            existingEvent.venue = venue
+        }
+        if (datetime) {
+            existingEvent.datetime = datetime
+        }
+        await existingEvent.save()
+        return res.status(200).json({ message: 'Event updated successfully' })
     } catch (error) {
         console.log(error)
         return res.status(500).json({ message: 'Internal server error' })
