@@ -19,6 +19,9 @@ import accepted from '../assets/icons/accepted.png'
 import rejected from '../assets/icons/rejected.png'
 import pending from '../assets/icons/pending.png'
 import date from '../assets/icons/date.png'
+import eventPlan from '../assets/icons/eventPlan.png'
+import sideArrow from '../assets/icons/sideArrow.png'
+import downArrow from '../assets/icons/downArrow.png'
 
 
 export default{
@@ -42,5 +45,8 @@ export default{
     accepted,
     rejected,
     pending,
-    date
+    date,
+    eventPlan,
+    sideArrow,
+    downArrow
 }

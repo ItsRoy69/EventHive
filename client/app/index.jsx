@@ -1,30 +1,45 @@
-import { ScrollView, StatusBar } from 'react-native'
-import {  Text, View } from 'react-native'
-import { Link ,Redirect,Tabs,router} from 'expo-router'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import TabsLayout from './(tabs)/_layout'
+import React from "react";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import OnboardingScreen from "./screens/onboarding";
+import EventSelection from "./screens/eventselection";
+import BrideGroom from "./screens/bridegroom";
+import RegisterName from "./screens/registername";
+import SpouseName from "./screens/spousename";
+import WeddingDate from "./screens/weddingdate";
+import GuestInvite from "./screens/guestinvite";
+import VendorInvite from "./screens/vendorinvite";
+import GuestDetails from "./screens/guestdetails";
+import GroomName from "./screens/groomname";
+import SignUp from "./auth/sign-up";
+import Floor from "./floor";
+import TabsLayout from "./tabs/_layout";
 
+const Stack = createNativeStackNavigator();
 
-import React from 'react'
+const App = () => {
+  const [hideSplashScreen, setHideSplashScreen] = React.useState(true);
 
+  return (
+    <>
+      {hideSplashScreen ? (
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="OnboardingScreen" component={OnboardingScreen} />
+          <Stack.Screen name="EventSelection" component={EventSelection} />
+          <Stack.Screen name="BrideGroom" component={BrideGroom} />
+          <Stack.Screen name="RegisterName" component={RegisterName} />
+          <Stack.Screen name="SpouseName" component={SpouseName} />
+          <Stack.Screen name="WeddingDate" component={WeddingDate} />
+          <Stack.Screen name="SignUp" component={SignUp} />
+          <Stack.Screen name="Floor" component={Floor} />
+          <Stack.Screen name="TabsLayout" component={TabsLayout} />
+          <Stack.Screen name="GuestInvite" component={GuestInvite} />
+          <Stack.Screen name="VendorInvite" component={VendorInvite} />
+          <Stack.Screen name="GuestDetails" component={GuestDetails} />
+          <Stack.Screen name="GroomName" component={GroomName} />
+        </Stack.Navigator>
+      ) : null}
+    </>
+  );
+};
 
-export default function App () {
-    // const {loading,isLogged } = useGlobalContext();
-    // if(!loading && isLogged) return <Redirect href='/home'/>
-
-    
-    return (
-       <SafeAreaView className = "h-full">
-           <ScrollView contentContainerStyle={{height:'100%'}}>
-                <View className='w-full items-center flex'>
-                    <Text>This is index page</Text>
-                    <Link href='/events' className='text-blue-700'>Go to events</Link>
-                    <Link href='/floor' className='text-red-300 mt-5'>View Floor PLan</Link>
-
-                </View>
-           </ScrollView>
-           
-       </SafeAreaView>
-    )
-}
-
+export default App;
