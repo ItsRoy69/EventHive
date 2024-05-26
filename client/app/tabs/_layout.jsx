@@ -31,6 +31,7 @@ const TabsLayout = () => {
   return (
     <Tab.Navigator
       screenOptions={{
+        headerShown: false,
         tabBarShowLabel: false,
         tabBarActiveTintColor: "",
         tabBarInactiveTintColor: "",
@@ -47,11 +48,7 @@ const TabsLayout = () => {
         component={Events}
         options={{
           tabBarIcon: ({ color, focused }) => (
-            <TabIcon
-              icon={icons.event}
-              color={color}
-              focused={focused}
-            />
+            <TabIcon icon={icons.event} color={color} focused={focused} />
           ),
         }}
       />
@@ -69,11 +66,7 @@ const TabsLayout = () => {
         component={Calendar}
         options={{
           tabBarIcon: ({ color, focused }) => (
-            <TabIcon
-              icon={icons.calendar}
-              color={color}
-              focused={focused}
-            />
+            <TabIcon icon={icons.calendar} color={color} focused={focused} />
           ),
         }}
       />
@@ -82,11 +75,7 @@ const TabsLayout = () => {
         component={Activities}
         options={{
           tabBarIcon: ({ color, focused }) => (
-            <TabIcon
-              icon={icons.activity}
-              color={color}
-              focused={focused}
-            />
+            <TabIcon icon={icons.activity} color={color} focused={focused} />
           ),
         }}
       />
