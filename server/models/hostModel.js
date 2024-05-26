@@ -11,10 +11,10 @@ const hostSchema = new mongoose.Schema({
         ref: 'Event',
         required: true
     },
-    role: {
-        type: String,
-        required: true
-    }
+    // role: {
+    //     type: String,
+    //     required: true
+    // }
 })
 
 module.exports = mongoose.model('Host', hostSchema)

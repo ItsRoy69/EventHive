@@ -22,6 +22,8 @@ const loginUser = async (req, res) => {
             } else {
                 return res.status(400).json({ message: "Password didn't match" })
             }
+        } else {
+            return res.status(404).json({ message: 'Account not found' })
         }
     } catch (error) {
         console.log(error)
