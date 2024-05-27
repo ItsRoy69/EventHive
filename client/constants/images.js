@@ -9,6 +9,7 @@ import venue_5 from '../assets/images/Venue/venue 5.png'
 import venue_360 from '../assets/images/Venue/venue 360.png'
 import angle from '../assets/images/Venue/angle.png'
 import foodMenu from '../assets/images/foodMenu.png'
+import haldi from '../assets/images/haldi.png'
 
 
 
@@ -24,5 +25,6 @@ export default {
     venue_5,
     venue_360,
     angle,
-    foodMenu
+    foodMenu,
+    haldi
 }

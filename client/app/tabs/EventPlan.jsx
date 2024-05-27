@@ -28,6 +28,7 @@ const EventPlan = () => {
   const handleCheckBox = () => {
     setShowPreference(!showPreference);
   };
+  const type ='guest'
 
   const invitees = [
     {
@@ -325,6 +326,7 @@ const EventPlan = () => {
         </View>
       ),
     },
+   
     {
       id: 3,
       name: "Event Vendors",
