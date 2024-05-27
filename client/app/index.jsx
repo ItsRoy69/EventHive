@@ -12,7 +12,7 @@ import GuestDetails from "./screens/guestdetails";
 import SignUp from "./auth/sign-up";
 import Floor from "./floor";
 import TabsLayout from "./tabs/_layout";
-import Event from './tabs/Events'
+
 
 const Stack = createNativeStackNavigator();
 

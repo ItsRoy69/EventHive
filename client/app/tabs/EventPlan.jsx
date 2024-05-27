@@ -99,6 +99,7 @@ const EventPlan = () => {
 
         <TouchableOpacity onPress={() => setSelectedChair(!selectedChair)}>
           <View className="items-center relative top-[-150px] mt-1 h-[74px] flex justify-center">
+          
             <TableArea />
           </View>
         </TouchableOpacity>
