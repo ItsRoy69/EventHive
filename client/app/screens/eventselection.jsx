@@ -19,6 +19,9 @@ const EventSelection = () => {
     if (event === 'Farewell') {
       navigation.navigate('VendorInvite');
     }
+    if (event === 'Retirement function') {
+      navigation.navigate('GroupChats');
+    }
   };
 
   const eventTypes = [

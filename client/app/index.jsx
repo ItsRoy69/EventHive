@@ -10,6 +10,7 @@ import GuestInvite from "./screens/guestinvite";
 import VendorInvite from "./screens/vendorinvite";
 import GuestDetails from "./screens/guestdetails";
 import GroomName from "./screens/groomname";
+import GroupChats from "./screens/groupchats";
 import SignUp from "./auth/sign-up";
 import Floor from "./floor";
 import TabsLayout from "./tabs/_layout";
@@ -36,6 +37,7 @@ const App = () => {
           <Stack.Screen name="VendorInvite" component={VendorInvite} />
           <Stack.Screen name="GuestDetails" component={GuestDetails} />
           <Stack.Screen name="GroomName" component={GroomName} />
+          <Stack.Screen name="GroupChats" component={GroupChats} />
         </Stack.Navigator>
       ) : null}
     </>
