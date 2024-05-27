@@ -150,13 +150,16 @@ const createEvent = async (req, res) => {
 
 const updateEvent = async (req, res) => {
     try {
-        const { venue, datetime, eventId } = req.body
+        const { role, venue, datetime, eventId } = req.body
         if (!eventId) {
             return res.status(400).json({ message: 'Must provide event id' })
         }
         const existingEvent = await Event.findById(eventId)
         if (!existingEvent) {
             return res.status(400).json({ message: 'Event not found' })
+        }
+        if (role !== 'hosts') {
+            return res.status(400).json({ message: 'You are not authorized to perform this action' })
         }
         if (venue) {
             existingEvent.venue = venue

@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const dateTimeSchema = require('./dateTimeSchema')
 
 const subEventSchema = new mongoose.Schema({
     eventId: {
@@ -12,18 +13,11 @@ const subEventSchema = new mongoose.Schema({
     },
     venue: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Venue',
-        required: true
+        ref: 'Venue'
     },
     datetime: {
-        start: {
-            type: Date,
-            required: true
-        },
-        end: {
-            type: Date,
-            required: true
-        }
+        type: dateTimeSchema,
+        required: true
     }
 })
 
