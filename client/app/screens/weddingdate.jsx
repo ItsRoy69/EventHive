@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, Image } from "react-native";
+import { View, Text, TouchableOpacity, Image } from "react-native";
 import { styled } from "nativewind";
 import DateTimePicker from "@react-native-community/datetimepicker";
 const StyledView = styled(View);
@@ -9,17 +9,28 @@ const StyledImage = styled(Image);
 import { useNavigation } from "@react-navigation/native";
 
 const WeddingDate = () => {
-  const [weddingDate, setWeddingDate] = useState("");
-  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+  const [showStartDatePicker, setShowStartDatePicker] = useState(false);
+  const [showEndDatePicker, setShowEndDatePicker] = useState(false);
+  const [isNextDisabled, setIsNextDisabled] = useState(true);
   const navigation = useNavigation();
-  const handleDateChange = (event, selectedDate) => {
-    const currentDate = selectedDate || weddingDate;
-    setShowDatePicker(false);
-    setWeddingDate(currentDate);
+
+  const handleStartDateChange = (event, selectedDate) => {
+    setShowStartDatePicker(false);
+    setStartDate(selectedDate);
+    setShowEndDatePicker(true);
+    setIsNextDisabled(!selectedDate || !endDate);
   };
 
-  const openDatePicker = () => {
-    setShowDatePicker(true);
+  const handleEndDateChange = (event, selectedDate) => {
+    setShowEndDatePicker(false);
+    setEndDate(selectedDate);
+    setIsNextDisabled(!startDate || !selectedDate);
+  };
+
+  const openStartDatePicker = () => {
+    setShowStartDatePicker(true);
   };
   return (
     <View className="flex-1 items-center bg-white">
@@ -49,27 +60,40 @@ const WeddingDate = () => {
             />
           </StyledView>
           <Text className="text-xl color-[#A34342] font-bold mb-4">
-            When’s the wedding?
+            When's the wedding?
           </Text>
           <TouchableOpacity
-            onPress={openDatePicker}
+            onPress={openStartDatePicker}
             className="w-64 border-b border-gray-300 px-4 py-2 mb-8 rounded-md bg-gray-100"
           >
             <Text>
-              {weddingDate ? weddingDate.toDateString() : "Select date"}
+              {startDate && endDate
+                ? `${startDate.toDateString()} - ${endDate.toDateString()}`
+                : "Select start and end dates"}
             </Text>
           </TouchableOpacity>
-          {showDatePicker && (
+          {showStartDatePicker && (
             <DateTimePicker
-              value={weddingDate || new Date()}
+              value={startDate || new Date()}
               mode="date"
               display="default"
-              onChange={handleDateChange}
+              onChange={handleStartDateChange}
+            />
+          )}
+          {showEndDatePicker && (
+            <DateTimePicker
+              value={endDate || new Date()}
+              mode="date"
+              display="default"
+              onChange={handleEndDateChange}
             />
           )}
           <StyledTouchableOpacity
-            className="bg-[#FFAD65] w-44 rounded-md py-2"
+            className={`bg-[#FFAD65] w-44 rounded-md py-2 ${
+              isNextDisabled ? "opacity-50" : ""
+            }`}
             onPress={() => navigation.navigate("SignUp")}
+            disabled={isNextDisabled}
           >
             <StyledText className="text-white text-center">Next</StyledText>
           </StyledTouchableOpacity>
