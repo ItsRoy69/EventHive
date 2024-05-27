@@ -12,12 +12,15 @@ const getUserRoleInEvent = async(req, res, next) => {
     const vendor = await Vendor.findOne({ userId, eventId })
     if (host) {
         req.body.role = 'host'
+        req.body.hostId = host._id
         next()
     } else if (guest) {
         req.body.role = 'guest'
+        req.body.guestId = guest._id
         next()
     } else if (vendor) {
         req.body.role = 'vendor'
+        req.body.vendorId = vendor._id
         next()
     } 
     return res.status(400).json({ message: 'You are not authorized to perform this action' })
