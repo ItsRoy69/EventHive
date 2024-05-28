@@ -98,6 +98,7 @@ const getEvents = async (req, res) => {
 const createEvent = async (req, res) => {
     try {
         let { user, event } = req.body
+        console.log(req.body)
         let userId
         if (!user) {
             const token = req.headers.authorization.split(' ')[1]
