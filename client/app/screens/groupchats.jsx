@@ -1,5 +1,6 @@
 import React, { useState, useRef } from "react";
 import { Text, View, ScrollView, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform } from "react-native";
+import { useNavigation } from "expo-router";
 import { styled } from "nativewind";
 import EmojiSelector, { Categories } from 'react-native-emoji-selector';
 const StyledView = styled(View);
@@ -13,6 +14,7 @@ import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { useRoute } from '@react-navigation/native';
 
 const GroupChats = () => {
+  const navigation = useNavigation()
   const route = useRoute();
   const { name } = route.params || {};
   console.log(name)
@@ -49,25 +51,25 @@ const GroupChats = () => {
     >
     <StyledView className="flex-1 bg-white">
       <StyledView
-        className="flex-row items-center justify-between h-24 "
+        className="flex-row pt-10 pb-3 px-1  items-center justify-between h-24 "
         style={{
           backgroundColor: "rgba(255, 173, 101, 0.14)",
         }}
       >
-        <StyledView className="flex-row items-center">
+        <StyledView className="flex-row  items-center">
           <StyledView
             style={{
               backgroundColor: "rgba(255, 173, 101, 0.29)",
             }}
             className="flex-row items-center justify-center w-10 m-2 h-10 border-2 border-[#FFAD65] rounded-xl"
           >
-            <FontAwesome6 name="arrow-left-long" size={20} color="#888" />
+            <FontAwesome6 name="arrow-left-long" size={16} color="#888" onPress={()=>navigation.goBack()} />
           </StyledView>
           <StyledView className="flex-col items-start justify-left">
             <StyledText className="text-xs font-bold text-gray-400">
               {name}
             </StyledText>
-            <StyledText className="text-lg font-bold text-gray-800">
+            <StyledText className="text-2xl font-bold text-gray-800">
               Group Chat
             </StyledText>
           </StyledView>
