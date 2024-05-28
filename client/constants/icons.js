@@ -22,6 +22,10 @@ import date from '../assets/icons/date.png'
 import eventPlan from '../assets/icons/eventPlan.png'
 import sideArrow from '../assets/icons/sideArrow.png'
 import downArrow from '../assets/icons/downArrow.png'
+import messagePhone from '../assets/icons/messagePhone.png'
+import nonveg from '../assets/icons/nonveg.png'
+import gallery from '../assets/icons/gallery.png'
+import announcement from '../assets/icons/announcement.png'
 
 
 export default{
@@ -48,5 +52,9 @@ export default{
     date,
     eventPlan,
     sideArrow,
-    downArrow
+    downArrow,
+    messagePhone,
+    nonveg,
+    gallery,
+    announcement
 }

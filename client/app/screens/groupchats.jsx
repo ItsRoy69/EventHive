@@ -10,8 +10,12 @@ import Feather from "react-native-vector-icons/Feather";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import Entypo from "react-native-vector-icons/Entypo";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import { useRoute } from '@react-navigation/native';
 
 const GroupChats = () => {
+  const route = useRoute();
+  const { name } = route.params;
+  console.log(name)
   const [message, setMessage] = useState("");
   const [showEmojiKeyboard, setShowEmojiKeyboard] = useState(false);
   const [messages, setMessages] = useState([
@@ -61,7 +65,7 @@ const GroupChats = () => {
           </StyledView>
           <StyledView className="flex-col items-start justify-left">
             <StyledText className="text-xs font-bold text-gray-400">
-              Venue Decorations
+              {name}
             </StyledText>
             <StyledText className="text-lg font-bold text-gray-800">
               Group Chat
