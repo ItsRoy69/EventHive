@@ -6,6 +6,8 @@ import {
   TouchableOpacity,
   FlatList,
   SectionList,
+  Modal,
+  Button,
 } from "react-native";
 import React, { useState } from "react";
 import { Image } from "react-native";
@@ -14,10 +16,11 @@ import images from "../../constants/images";
 import { useNavigation } from "@react-navigation/native";
 import Invitation from "../screens/invitation";
 import { InvitationProvider } from "../context/InvitationContext";
+import EventMenu from "../screens/eventMenu";
 
 const Events = () => {
-  const navigator = useNavigation()
-  const type = 'guest'
+  const navigator = useNavigation();
+  const type = "host";
   const todo = [
     {
       name: "Meeting with Bimal Da - Florist",
@@ -37,7 +40,7 @@ const Events = () => {
   const [selected, setSelected] = useState(false);
   const [selectedSubItem, setSelectedSubItem] = useState(null);
   const [sendInvitation, setSendInvitation] = useState(false);
-
+  const [menuOpen, setMenuOpen] = useState(false);
   const [invitationPressed, setInvitationPressed] = useState(false);
   const toggleExpand = (itemId) => {
     setExpandedItem(expandedItem === itemId ? null : itemId);
@@ -45,6 +48,10 @@ const Events = () => {
 
   const handleInvitationPress = () => {
     setInvitationPressed(!invitationPressed);
+  };
+
+  const handleMenuPressed = () => {
+    setMenuOpen(!menuOpen);
   };
 
   const parentItems = [
@@ -128,12 +135,12 @@ const Events = () => {
     setSelectedSubItem(itemId);
   };
 
-  const renderCommonItems = ({itemId,itemName}) => {
-    console.log("from events",itemName)
+  const renderCommonItems = ({ itemId, itemName }) => {
+    console.log("from events", itemName);
     return (
       <View className="flex">
         <TouchableOpacity
-         onPress={() => navigator.navigate('GroupChats', { name: itemName })}
+          onPress={() => navigator.navigate("GroupChats", { name: itemName })}
         >
           <View className="py-3 px-2 border-b-[0.5px] flex flex-row justify-between items-center border-gray-300">
             <View className="gap-[10px] flex flex-row items-center">
@@ -152,7 +159,7 @@ const Events = () => {
           </View>
         </TouchableOpacity>
         <TouchableOpacity>
-        <View className="py-3 px-2 border-b-[0.5px] flex flex-row justify-between items-center border-gray-300">
+          <View className="py-3 px-2 border-b-[0.5px] flex flex-row justify-between items-center border-gray-300">
             <View className="gap-[10px] flex flex-row items-center">
               <Image
                 source={icons.announcement}
@@ -169,7 +176,7 @@ const Events = () => {
           </View>
         </TouchableOpacity>
         <TouchableOpacity>
-        <View className="py-3 px-2 border-b-[0.5px] flex flex-row justify-between items-center border-gray-300">
+          <View className="py-3 px-2 border-b-[0.5px] flex flex-row justify-between items-center border-gray-300">
             <View className="gap-[10px] flex flex-row items-center">
               <Image
                 source={icons.gallery}
@@ -232,8 +239,8 @@ const Events = () => {
     );
   };
 
-  const renderGuestItem = ({ item }) => (    
-  <View>
+  const renderGuestItem = ({ item }) => (
+    <View>
       <TouchableOpacity
         onPress={() => toggleExpand(item.id)}
         style={["py-4 border-b-[0.5px] border-gray-300 "]}
@@ -259,7 +266,8 @@ const Events = () => {
             <Image source={icons.menu} className="h-6" resizeMode="contain" />
           </View>
         </View>
-        {expandedItem === item.id && renderCommonItems(item.id,item.name)}
+        {expandedItem === item.id &&
+          renderCommonItems({ itemId: item.id, itemName: item.name })}
       </TouchableOpacity>
     </View>
   );
@@ -295,7 +303,7 @@ const Events = () => {
       </TouchableOpacity>
     </View>
   );
- 
+
   return (
     <SafeAreaView className="bg-white h-full">
       <View className="flex justify-center px-4">
@@ -348,9 +356,28 @@ const Events = () => {
           <View className="flex flex-row justify-between">
             <View className="flex  flex-col">
               <View className="flex flex-row justify-between">
-                <Text className="text-3xl font-semibold">
-                  Rajarshi's Wedding
-                </Text>
+                <View className="flex flex-row items-center gap-[2px]">
+                  <Text className="text-3xl font-semibold">
+                    Rajarshi's Wedding
+                  </Text>
+                  {type === "host" && (
+                    <TouchableOpacity onPress={handleMenuPressed}>
+                      <View>
+                        <Image
+                          source={icons.downEvent}
+                          resizeMode="contain"
+                          className="w-[20px] h-[20px]"
+                        />
+                      </View>
+                      {menuOpen && (
+                        <EventMenu
+                          setMenuOpen={setMenuOpen}
+                          menuOpen={menuOpen}
+                        />
+                      )}
+                    </TouchableOpacity>
+                  )}
+                </View>
               </View>
 
               <View className="border w-[216px] border-[4px] rounded-[3px]  border-[#FFAD65]"></View>
@@ -405,22 +432,21 @@ const Events = () => {
                 <Text>Groups</Text>
               </View>
             </View>
-            {type === 'host'? (
+            {type === "host" ? (
               <FlatList
-              data={parentItems}
-              renderItem={renderItem}
-              keyExtractor={(item) => item.id}
-              className="mt-2"
-            />
-            ):(
+                data={parentItems}
+                renderItem={renderItem}
+                keyExtractor={(item) => item.id}
+                className="mt-2"
+              />
+            ) : (
               <FlatList
-              data={guestParentItem}
-              renderItem={renderGuestItem}
-              keyExtractor={(item) => item.id}
-              className="mt-2"
-            />
+                data={guestParentItem}
+                renderItem={renderGuestItem}
+                keyExtractor={(item) => item.id}
+                className="mt-2"
+              />
             )}
-            
           </>
         ) : (
           <InvitationProvider value={{ sendInvitation, setSendInvitation }}>

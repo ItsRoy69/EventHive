@@ -26,6 +26,7 @@ import messagePhone from '../assets/icons/messagePhone.png'
 import nonveg from '../assets/icons/nonveg.png'
 import gallery from '../assets/icons/gallery.png'
 import announcement from '../assets/icons/announcement.png'
+import downEvent from '../assets/icons/downEvent.png'
 
 
 export default{
@@ -56,5 +57,6 @@ export default{
     messagePhone,
     nonveg,
     gallery,
-    announcement
+    announcement,
+    downEvent
 }

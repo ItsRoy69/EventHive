@@ -9,7 +9,7 @@ module.exports = {
         },
       },
       fontFamily: {
-        
+        times: ['"Times New Roman"', 'serif'],
       },
     },
   },
