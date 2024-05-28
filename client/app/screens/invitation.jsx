@@ -4,17 +4,21 @@ import {
   SafeAreaView,
   TouchableOpacity,
   Image,
+  Animated,
 } from "react-native";
+import { useRef } from "react";
 import React, { useState, useContext, useEffect } from "react";
 import icons from "../../constants/icons";
 import images from "../../constants/images";
 import { InvitationContext } from "../context/InvitationContext";
 import { useNavigation } from "@react-navigation/native";
+import EvilIcons from "react-native-vector-icons/EvilIcons";
 
 const Invitation = () => {
   const navigation = useNavigation();
   const categories = ["All", "Not Sent", "Accepted", "Rejected", "Pending"];
-  const [selected, setSelected] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
+  const popupAnimation = useRef(new Animated.Value(0)).current;
   const [category, setCategory] = useState("All");
   const [selectedPeople, setSelectedPeople] = useState([]);
   const [buttonVisible, setButtonVisible] = useState(false);
@@ -29,6 +33,22 @@ const Invitation = () => {
       setSelectedPeople([...selectedPeople, personId]);
     }
   };
+
+  useEffect(() => {
+    if (showPopup) {
+      Animated.timing(popupAnimation, {
+        toValue: -50,
+        duration: 500,
+        useNativeDriver: true,
+      }).start();
+    } else {
+      Animated.timing(popupAnimation, {
+        toValue: 0,
+        duration: 500,
+        useNativeDriver: true,
+      }).start();
+    }
+  }, [showPopup]);
 
   useEffect(() => {
     setButtonVisible(selectedPeople.length > 0);
@@ -193,14 +213,38 @@ const Invitation = () => {
         <TouchableOpacity
           onPress={() => {
             setSendInvitation(true);
-            navigation.navigate("GuestInvite", {
-              people: people.filter((p) => selectedPeople.includes(p.id)),
-            });
+            setShowPopup(true);
+            setTimeout(() => {
+              setShowPopup(false);
+              navigation.navigate("GuestInvite", {
+                people: people.filter((p) => selectedPeople.includes(p.id)),
+              });
+            }, 1000);
           }}
-          className="bg-yellow-500 py-2 px-4 rounded-lg"
+          className="bg-[#FFAD65] py-2 px-4 rounded-xl flex items-center justify-center"
         >
-          <Text className="text-white font-bold">Send Invites</Text>
+          <Text className="text-white font-bold text-center text-lg">
+            Send Invites
+          </Text>
         </TouchableOpacity>
+      )}
+      {showPopup && (
+        <Animated.View
+          style={{ transform: [{ translateY: popupAnimation }] }}
+          className="absolute bottom-20 left-0 right-0 justify-center items-center"
+        >
+          <View className="bg-white p-4 rounded-xl shadow-lg flex-row items-center">
+            <EvilIcons
+              name="envelope"
+              size={26}
+              color="green"
+              style={{ marginRight: 8 }}
+            />
+            <Text className="text-center text-lg font-bold flex-row items-center">
+              Invitations sent successfully
+            </Text>
+          </View>
+        </Animated.View>
       )}
     </SafeAreaView>
   );
