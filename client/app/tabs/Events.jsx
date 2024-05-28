@@ -16,6 +16,7 @@ import Invitation from "../screens/invitation";
 import { InvitationProvider } from "../context/InvitationContext";
 
 const Events = () => {
+  const navigator = useNavigation()
   const type = 'guest'
   const todo = [
     {
@@ -127,10 +128,13 @@ const Events = () => {
     setSelectedSubItem(itemId);
   };
 
-  const renderCommonItems = (itemId) => {
+  const renderCommonItems = ({itemId,itemName}) => {
+    console.log("from events",itemName)
     return (
       <View className="flex">
-        <TouchableOpacity>
+        <TouchableOpacity
+         onPress={() => navigator.navigate('GroupChats', { name: itemName })}
+        >
           <View className="py-3 px-2 border-b-[0.5px] flex flex-row justify-between items-center border-gray-300">
             <View className="gap-[10px] flex flex-row items-center">
               <Image
@@ -255,7 +259,7 @@ const Events = () => {
             <Image source={icons.menu} className="h-6" resizeMode="contain" />
           </View>
         </View>
-        {expandedItem === item.id && renderCommonItems(item.id)}
+        {expandedItem === item.id && renderCommonItems(item.id,item.name)}
       </TouchableOpacity>
     </View>
   );

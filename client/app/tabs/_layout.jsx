@@ -5,7 +5,6 @@ import icons from "../../constants/icons";
 import { InvitationContext } from "../context/InvitationContext";
 import Events from "./Events";
 import Calendar from "./Calendar";
-import DMs from "./dms";
 import Activities from "./activities";
 import EventPlan from "./EventPlan";
 

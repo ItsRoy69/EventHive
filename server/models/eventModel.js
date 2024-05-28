@@ -1,22 +1,17 @@
 const mongoose = require('mongoose');
+const dateTimeSchema = require('./dateTimeSchema');
 
 const eventSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true
     },
-    hosts: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Host',
-        required: true
-    }],
     venue: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Venue',
-        required: true
+        ref: 'Venue'
     },
     datetime: {
-        type: Date,
+        type: dateTimeSchema,
         required: true
     },
     budget: {

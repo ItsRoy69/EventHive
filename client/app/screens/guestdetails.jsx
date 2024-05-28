@@ -15,11 +15,13 @@ const GuestDetails = () => {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("+91");
   const [password, setPassword] = useState("");
-  const [isHaldiAttending, setIsHaldiAttending] = useState(false);
-  const [isWeddingAttending, setIsWeddingAttending] = useState(false);
+  const [isHaldiCeremony, setIsHaldiCeremony] = useState(false);
+  const [isWeddingCeremony, setIsWeddingCeremony] = useState(false);
   const [isReceptionAttending, setIsReceptionAttending] = useState(false);
   const [isVegetarian, setIsVegetarian] = useState(false);
+  const [isNonVegetarian, setIsNonVegetarian] = useState(false);
   const navigation = useNavigation();
+
   return (
     <View className="flex-1 items-center bg-white">
       <StyledView className="flex-row w-full">
@@ -99,8 +101,8 @@ const GuestDetails = () => {
               <StyledView className="flex-row justify-center mb-[-30]">
                 <StyledView className="flex-row items-center">
                   <StyledCheckBox
-                    checked={isHaldiAttending}
-                    onPress={() => setIsHaldiAttending(!isHaldiAttending)}
+                    checked={isHaldiCeremony}
+                    onPress={() => setIsHaldiCeremony(!isHaldiCeremony)}
                   />
                   <StyledText style={{ marginLeft: -15 }}>
                     {" "}
@@ -109,8 +111,8 @@ const GuestDetails = () => {
                 </StyledView>
                 <StyledView className="flex-row items-center">
                   <StyledCheckBox
-                    checked={isWeddingAttending}
-                    onPress={() => setIsWeddingAttending(!isWeddingAttending)}
+                    checked={isWeddingCeremony}
+                    onPress={() => setIsWeddingCeremony(!isWeddingCeremony)}
                   />
                   <StyledText style={{ marginLeft: -15 }}>
                     {" "}
@@ -140,8 +142,8 @@ const GuestDetails = () => {
             <StyledView className="items-center flex-row justify-left">
               <StyledView className="flex-row items-center justify-left">
                 <StyledCheckBox
-                  checked={isHaldiAttending}
-                  onPress={() => setIsHaldiAttending(!isHaldiAttending)}
+                  checked={isNonVegetarian}
+                  onPress={() => setIsNonVegetarian(!isNonVegetarian)}
                 />
                 <StyledText style={{ marginLeft: -15 }}>
                   {" "}
@@ -150,8 +152,8 @@ const GuestDetails = () => {
               </StyledView>
               <StyledView className="flex-row items-center">
                 <StyledCheckBox
-                  checked={isWeddingAttending}
-                  onPress={() => setIsWeddingAttending(!isWeddingAttending)}
+                  checked={isVegetarian}
+                  onPress={() => setIsVegetarian(!isVegetarian)}
                 />
                 <StyledText style={{ marginLeft: -15 }}>
                   {" "}
