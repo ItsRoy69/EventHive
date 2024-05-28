@@ -5,34 +5,34 @@ import {
   TouchableOpacity,
   Image,
 } from "react-native";
-import React, { useState,useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import icons from "../../constants/icons";
 import images from "../../constants/images";
 import { InvitationContext } from "../context/InvitationContext";
+import { useNavigation } from "@react-navigation/native";
 
 const Invitation = () => {
+  const navigation = useNavigation();
   const categories = ["All", "Not Sent", "Accepted", "Rejected", "Pending"];
-  const [selectedPeople, setSelectedPeople] = useState(null);
   const [selected, setSelected] = useState(false);
   const [category, setCategory] = useState("All");
+  const [selectedPeople, setSelectedPeople] = useState([]);
+  const [buttonVisible, setButtonVisible] = useState(false);
 
-  const {sendInvitation,setSendInvitation} = useContext(InvitationContext)
+  const { sendInvitation, setSendInvitation } = useContext(InvitationContext);
 
-  const handleSelectPeople = ({ personId }) => {
-    setSelectedPeople(personId);
-    setSelected(!selected);
-    console.log(category)
-    if(selected && category === 'Not Sent'){
-      setSendInvitation(true)
-      navigation.navigate('GuestInvite', { person });
+  const handleSelectPeople = (personId) => {
+    const isSelected = selectedPeople.includes(personId);
+    if (isSelected) {
+      setSelectedPeople(selectedPeople.filter((id) => id !== personId));
+    } else {
+      setSelectedPeople([...selectedPeople, personId]);
     }
   };
-  useEffect(()=>{
-    if(sendInvitation){
-      console.log("From Invitation: ",sendInvitation)
-    }
-  },[sendInvitation])
- 
+
+  useEffect(() => {
+    setButtonVisible(selectedPeople.length > 0);
+  }, [selectedPeople]);
   const people = [
     {
       id: 1,
@@ -69,6 +69,41 @@ const Invitation = () => {
       status: "Accepted",
       date: "sent 10d ago",
     },
+    {
+      id: 6,
+      dp: `${images.dummyPic}`,
+      name: "Jyotirmoy Roy",
+      status: "Not Sent",
+      date: "sent 10d ago",
+    },
+    {
+      id: 7,
+      dp: `${images.dummyPic}`,
+      name: "Jyotirmoy Roy",
+      status: "Not Sent",
+      date: "sent 10d ago",
+    },
+    {
+      id: 8,
+      dp: `${images.dummyPic}`,
+      name: "Jyotirmoy Roy",
+      status: "Not Sent",
+      date: "sent 10d ago",
+    },
+    {
+      id: 9,
+      dp: `${images.dummyPic}`,
+      name: "Jyotirmoy Roy",
+      status: "Not Sent",
+      date: "sent 10d ago",
+    },
+    {
+      id: 10,
+      dp: `${images.dummyPic}`,
+      name: "Jyotirmoy Roy",
+      status: "Not Sent",
+      date: "sent 10d ago",
+    },
   ];
 
   return (
@@ -97,14 +132,9 @@ const Invitation = () => {
                 className="flex flex-row px-2 mb-2  items-center bg-white h-[54px] justify-between"
                 key={index}
               >
-              <TouchableOpacity
-                    onPress={() => handleSelectPeople({ personId: person.id })}
-              >
-                <View className="flex flex-row items-center gap-[13px]">
-                  
-                    {selected &&
-                    selectedPeople === person.id &&
-                    person.status === "Not Sent" ? (
+                <TouchableOpacity onPress={() => handleSelectPeople(person.id)}>
+                  <View className="flex flex-row items-center gap-[13px]">
+                    {selectedPeople.includes(person.id) ? (
                       <Image
                         source={icons.right}
                         resizeMode="contain"
@@ -117,16 +147,15 @@ const Invitation = () => {
                         className="w-[35px] h-[35px]"
                       />
                     )}
-                 
-                  <View className="flex flex-col">
-                    <Text className="text-lg">{person.name}</Text>
-                    <Text className="text-md text-slate-400">
-                      {person.date}
-                    </Text>
-                  </View>
-                </View>
-                </TouchableOpacity>
 
+                    <View className="flex flex-col">
+                      <Text className="text-lg">{person.name}</Text>
+                      <Text className="text-md text-slate-400">
+                        {person.date}
+                      </Text>
+                    </View>
+                  </View>
+                </TouchableOpacity>
 
                 {category === "All" && (
                   <>
@@ -160,6 +189,19 @@ const Invitation = () => {
             ))}
         </View>
       </View>
+      {buttonVisible && (
+        <TouchableOpacity
+          onPress={() => {
+            setSendInvitation(true);
+            navigation.navigate("GuestInvite", {
+              people: people.filter((p) => selectedPeople.includes(p.id)),
+            });
+          }}
+          className="bg-yellow-500 py-2 px-4 rounded-lg"
+        >
+          <Text className="text-white font-bold">Send Invites</Text>
+        </TouchableOpacity>
+      )}
     </SafeAreaView>
   );
 };
