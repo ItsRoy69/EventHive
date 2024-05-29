@@ -14,6 +14,7 @@ import GroupChats from "./screens/groupchats";
 import SignUp from "./auth/sign-up";
 import Floor from "./floor";
 import TabsLayout from "./tabs/_layout";
+import Events from './tabs/Events'
 
 const Stack = createNativeStackNavigator();
 
@@ -38,6 +39,7 @@ const App = () => {
           <Stack.Screen name="GuestDetails" component={GuestDetails} />
           <Stack.Screen name="GroomName" component={GroomName} />
           <Stack.Screen name="GroupChats" component={GroupChats} />
+          <Stack.Screen name="Events" component={Events} />
         </Stack.Navigator>
       ) : null}
     </>

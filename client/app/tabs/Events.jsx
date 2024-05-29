@@ -16,9 +16,12 @@ import images from "../../constants/images";
 import { useNavigation } from "@react-navigation/native";
 import Invitation from "../screens/invitation";
 import { InvitationProvider } from "../context/InvitationContext";
+import EventMenu from "../screens/eventMenu";
 
 
 const Events = () => {
+  const navigator = useNavigation();
+  const type = "host";
   const todo = [
     {
       name: "Meeting with Bimal Da - Florist",
@@ -38,15 +41,19 @@ const Events = () => {
   const [selected, setSelected] = useState(false);
   const [selectedSubItem, setSelectedSubItem] = useState(null);
   const [sendInvitation, setSendInvitation] = useState(false);
-
-  const [invitationPressed, setInvitationPressed] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [invitationPressed, setInvitationPressed] = useState(false);
   const toggleExpand = (itemId) => {
     setExpandedItem(expandedItem === itemId ? null : itemId);
   };
 
-  const handleInvitationPress = () =>{
-   setInvitationPressed(!invitationPressed)
-  }
+  const handleInvitationPress = () => {
+    setInvitationPressed(!invitationPressed);
+  };
+
+  const handleMenuPressed = () => {
+    setMenuOpen(!menuOpen);
+  };
 
   const parentItems = [
     {
@@ -68,7 +75,26 @@ const Events = () => {
       name: "Priest and Rituals",
     },
   ];
-
+  const guestParentItem = [
+    {
+      id: 1,
+      image: `${images.haldi}`,
+      notification: 65,
+      name: "Haldi Ceremony",
+    },
+    {
+      id: 2,
+      image: `${images.dummyVenue}`,
+      notification: 65,
+      name: "Wedding Ceremony",
+    },
+    {
+      id: 3,
+      image: `${images.dummyVenue}`,
+      notification: 65,
+      name: "Reception",
+    },
+  ];
   const subItems = {
     1: [
       {
@@ -108,6 +134,67 @@ const Events = () => {
   const handleSelectSubItem = ({ itemId }) => {
     setSelected(!selected);
     setSelectedSubItem(itemId);
+  };
+
+  const renderCommonItems = ({ itemId, itemName }) => {
+    console.log("from events", itemName);
+    return (
+      <View className="flex">
+        <TouchableOpacity
+          onPress={() => navigator.navigate("GroupChats", { name: itemName })}
+        >
+          <View className="py-3 px-2 border-b-[0.5px] flex flex-row justify-between items-center border-gray-300">
+            <View className="gap-[10px] flex flex-row items-center">
+              <Image
+                source={icons.groupChat}
+                resizeMode="contain"
+                className="w-[35px] h-[35px]"
+              />
+              <Text className="text-md font-semibold text-gray-700">
+                Group Chat
+              </Text>
+            </View>
+            <View className="px-[10px] py-1 bg-[#A34342] rounded-[15px]">
+              <Text className="font-semibold text-white">60 +</Text>
+            </View>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity>
+          <View className="py-3 px-2 border-b-[0.5px] flex flex-row justify-between items-center border-gray-300">
+            <View className="gap-[10px] flex flex-row items-center">
+              <Image
+                source={icons.announcement}
+                resizeMode="contain"
+                className="w-[35px] h-[35px]"
+              />
+              <Text className="text-md font-semibold text-gray-700">
+                Announcements
+              </Text>
+            </View>
+            <View className="px-[10px] py-1 bg-[#A34342] rounded-[15px]">
+              <Text className="font-semibold text-white">60 +</Text>
+            </View>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity>
+          <View className="py-3 px-2 border-b-[0.5px] flex flex-row justify-between items-center border-gray-300">
+            <View className="gap-[10px] flex flex-row items-center">
+              <Image
+                source={icons.gallery}
+                resizeMode="contain"
+                className="w-[35px] h-[35px]"
+              />
+              <Text className="text-md font-semibold text-gray-700">
+                Gallery
+              </Text>
+            </View>
+            <View className="px-[10px] py-1 bg-[#A34342] rounded-[15px]">
+              <Text className="font-semibold text-white">60 +</Text>
+            </View>
+          </View>
+        </TouchableOpacity>
+      </View>
+    );
   };
 
   const renderSubItems = (itemId) => {
@@ -152,6 +239,39 @@ const Events = () => {
       />
     );
   };
+
+  const renderGuestItem = ({ item }) => (
+    <View>
+      <TouchableOpacity
+        onPress={() => toggleExpand(item.id)}
+        style={["py-4 border-b-[0.5px] border-gray-300 "]}
+      >
+        <View
+          className={`flex py-3 px-2  ${
+            expandedItem === item.id
+              ? "bg-[#FFAD65]/[0.14]"
+              : "bg-[#D9D9D9]/[0.1]"
+          }   flex-row justify-between items-center`}
+        >
+          <View className="flex flex-row gap-[8px] items-center">
+            <Image source={item.image} resizeMode="contain" />
+            <Text className="text-lg font-semibold">{item.name}</Text>
+          </View>
+          <View className="flex flex-row">
+            {item.notification > 0 && (
+              <View className="px-[10px] py-1 bg-[#FFAD65]/[0.31] rounded-[50px]">
+                <Text className="font-semibold">{item.notification} +</Text>
+              </View>
+            )}
+
+            <Image source={icons.menu} className="h-6" resizeMode="contain" />
+          </View>
+        </View>
+        {expandedItem === item.id &&
+          renderCommonItems({ itemId: item.id, itemName: item.name })}
+      </TouchableOpacity>
+    </View>
+  );
   const renderItem = ({ item }) => (
     <View className="">
       <TouchableOpacity
