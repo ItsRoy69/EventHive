@@ -50,11 +50,12 @@ const SignUp = () => {
           password: creds.password
         }
       }
-      console.log(reqBody)
+      // console.log(reqBody)
       const response = await axios.post("https://eventhive-server.onrender.com/event", { user: reqBody.user, event: reqBody.event })
       console.log("response: ", response.data)
       navigation.navigate("TabsLayout")
     } catch (error) {
+      console.log(error)
       Alert.alert("Error", error.message)
     }
   }
