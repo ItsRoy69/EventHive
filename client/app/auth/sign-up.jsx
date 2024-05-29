@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, Image } from "react-native";
+import React, { useState, useContext } from "react";
+import { View, Text, TextInput, TouchableOpacity, Image, Alert } from "react-native";
 import { styled } from "nativewind";
 import { useNavigation } from "@react-navigation/native";
 const StyledView = styled(View);
@@ -8,9 +8,57 @@ const StyledTextInput = styled(TextInput);
 const StyledTouchableOpacity = styled(TouchableOpacity);
 const StyledImage = styled(Image);
 
+import axios from "axios";
+import { CreateEventContext } from "../context/CreateEventContext";
+
 const SignUp = () => {
   const [name, setName] = useState("");
+  const blankCreds = {
+    email: '', 
+    phone: '', 
+    password: ''
+  }
+  const [creds, setCreds] = useState(blankCreds);
   const navigation = useNavigation();
+  const { user, event } = useContext(CreateEventContext);
+
+  const nameBuilder = (arr, type) => {
+    let res = ""
+    arr.map((name, index) => {
+      if (index < arr.length - 1) {
+        res += name + ' & ' 
+      }
+    })
+    res += arr[arr.length - 1] + `'s ` + type
+    return res 
+  }
+
+  const handleSubmit = async() => {
+    try {
+      const reqBody = {
+        event: {
+          name: nameBuilder(event.names, event.type),
+          datetime: {
+            start: event.startDateTime,
+            end: event.endDateTime
+          }
+        },
+        user: {
+          name: user.name,
+          phone: creds.phone,
+          email: creds.email,
+          password: creds.password
+        }
+      }
+      console.log(reqBody)
+      const response = await axios.post("https://eventhive-server.onrender.com/event", { user: reqBody.user, event: reqBody.event })
+      console.log("response: ", response.data)
+      navigation.navigate("TabsLayout")
+    } catch (error) {
+      Alert.alert("Error", error.message)
+    }
+  }
+
   return (
     <View className="flex-1 items-center bg-white">
       <StyledView className="flex-row w-full mt-8">
@@ -46,8 +94,10 @@ const SignUp = () => {
               Where should we reach out to you?
             </StyledText>
             <StyledTextInput
-              className="rounded-md bg-gray-100 border-b border-gray-300 rounded px-4 py-2 mb-4 w-80"
+              className="rounded-md bg-gray-100 border-b border-gray-300 px-4 py-2 mb-4 w-80"
               placeholder="abc@eventhive.com"
+              value={creds.email}
+              onChangeText={(text) => setCreds({ ...creds, email: text })}
             />
           </StyledView>
           <StyledView className="w-46 flex items-left justify-left">
@@ -55,8 +105,10 @@ const SignUp = () => {
               And your contact number please
             </StyledText>
             <StyledTextInput
-              className="rounded-md bg-gray-100 border-b border-gray-300 rounded px-4 py-2 mb-4 w-80"
+              className="rounded-md bg-gray-100 border-b border-gray-300 px-4 py-2 mb-4 w-80"
               placeholder="+91 1234567891"
+              value={creds.phone}
+              onChangeText={(text) => setCreds({ ...creds, phone: text })}
             />
           </StyledView>
           <StyledView className="w-46 flex items-left justify-left">
@@ -64,14 +116,16 @@ const SignUp = () => {
               Lastly, to secure your event
             </StyledText>
             <StyledTextInput
-              className="rounded-md bg-gray-100 border-b border-gray-300 rounded px-4 py-2 mb-4 w-80"
+              className="rounded-md bg-gray-100 border-b border-gray-300 px-4 py-2 mb-4 w-80"
               placeholder="enter a strong password"
+              value={creds.password}
+              onChangeText={(text) => setCreds({ ...creds, password: text })}
               secureTextEntry
             />
           </StyledView>
           <StyledTouchableOpacity
             className="bg-[#FFAD65] w-64 rounded-md py-2"
-            onPress={() => navigation.navigate("TabsLayout")}
+            onPress={handleSubmit}
           >
             <StyledText className="text-white text-center">
               Let the fun begin

@@ -6,11 +6,6 @@ const meetingSchema = new mongoose.Schema({
         ref: 'Event',
         required: true
     },
-    hostId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Host',
-        required: true
-    },
     vendorId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Vendor',

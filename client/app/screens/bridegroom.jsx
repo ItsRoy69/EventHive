@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { View, Text, TouchableOpacity, Image } from "react-native";
 import { styled } from "nativewind";
 import { useNavigation } from "@react-navigation/native";
@@ -7,11 +7,16 @@ const StyledText = styled(Text);
 const StyledTouchableOpacity = styled(TouchableOpacity);
 const StyledImage = styled(Image);
 
+import { CreateEventContext } from "../context/CreateEventContext";
+
 const BrideGroom = () => {
   const [selectedAnswer, setSelectedAnswer] = useState("");
   const navigation = useNavigation();
+  const {setUser} = useContext(CreateEventContext)
+
   const handleAnswerSelection = (answer) => {
     setSelectedAnswer(answer);
+    setUser(existingUser => ({ ...existingUser, role: answer }));
     navigation.navigate('RegisterName', { selectedAnswer: answer });
   };
 

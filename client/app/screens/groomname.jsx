@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { View, Text, TextInput, TouchableOpacity, Image } from "react-native";
 import { styled } from "nativewind";
 import { useNavigation, useRoute } from "@react-navigation/native";
+
+import { CreateEventContext } from "../context/CreateEventContext";
 
 const StyledView = styled(View);
 const StyledText = styled(Text);
@@ -12,8 +14,17 @@ const StyledImage = styled(Image);
 const GroomName = () => {
   const [name, setName] = useState("");
   const navigation = useNavigation();
+  const {setEvent} = useContext(CreateEventContext)
   const route = useRoute();
   const selectedAnswer = route.params?.selectedAnswer;
+
+  const handleProceed = () => {
+    setEvent(existingEvent => ({ ...existingEvent, names: [...existingEvent.names, name] }));
+    navigation.navigate(
+      selectedAnswer === "Event Manager" ? "SpouseName" : "",
+      { selectedAnswer }
+    )
+  }
 
   return (
     <View className="flex-1 items-center bg-white">
@@ -53,10 +64,7 @@ const GroomName = () => {
           />
           <StyledTouchableOpacity
             className="bg-[#FFAD65] w-44 rounded-md py-2"
-            onPress={() => navigation.navigate(
-                selectedAnswer === "Event Manager" ? "SpouseName" : "",
-                { selectedAnswer }
-              )}
+            onPress={handleProceed}
           >
             <StyledText className="text-white text-center">Next</StyledText>
           </StyledTouchableOpacity>
