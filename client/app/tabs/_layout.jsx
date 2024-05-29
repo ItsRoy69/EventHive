@@ -7,7 +7,7 @@ import Events from "./events";
 import Calendar from "./calendar";
 import DMs from "./dms";
 import Activities from "./activities";
-import EventPlan from "./EventPlan";
+import EventPlan from "./eventPlan";
 
 const Tab = createBottomTabNavigator();
 

@@ -1,15 +1,20 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { View, Text, TouchableOpacity, Image } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 import { styled } from "nativewind";
 const StyledView = styled(View);
 const StyledImage = styled(Image);
+
+import { CreateEventContext } from "../context/CreateEventContext";
+
 const EventSelection = () => {
   const [selectedEvent, setSelectedEvent] = useState("");
   const navigation = useNavigation();
+  const {setEvent} = useContext(CreateEventContext) 
 
   const handleEventSelection = (event) => {
     setSelectedEvent(event);
+    setEvent(existingEvent => ({ ...existingEvent, type: event }));
     if (event === 'Wedding') {
       navigation.navigate('BrideGroom');
     }

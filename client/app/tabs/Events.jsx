@@ -6,14 +6,17 @@ import {
   TouchableOpacity,
   FlatList,
   SectionList,
+  Animated,
+  Easing,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Image } from "react-native";
 import icons from "../../constants/icons";
 import images from "../../constants/images";
 import { useNavigation } from "@react-navigation/native";
 import Invitation from "../screens/invitation";
 import { InvitationProvider } from "../context/InvitationContext";
+
 
 const Events = () => {
   const todo = [
@@ -182,134 +185,179 @@ const Events = () => {
     </View>
   );
 
+  const [ hamOpened, setHamOpened ] = useState(false);
+  // const HamDrawerComponent = () => {
+  //   return (
+  //     <View className="fixed top-0 left-0 h-full w-4/5 border z-10 border-red-500">
+  //       <Text>Ham</Text>
+  //     </View>
+  //   )
+  // }
+  const drawerAnimation = useRef(new Animated.Value(-300)).current;
+
+  useEffect(() => {
+    Animated.timing(drawerAnimation, {
+      toValue: hamOpened ? 0 : -300,
+      duration: 300,
+      easing: Easing.ease,
+      useNativeDriver: false,
+    }).start();
+  }, [hamOpened]);
+
+  const HamDrawerComponent = () => {
+    return (
+    <Animated.View
+      style={{
+        position: "absolute",
+        top: 0,
+        left: drawerAnimation,
+        height: "100%",
+        width: "80%",
+        backgroundColor: "white",
+        zIndex: 10,
+        padding: 20,
+        borderRightWidth: 1,
+        borderColor: "gray",
+      }}
+    >
+      <Text>Ham</Text>
+    </Animated.View>
+  );
+}
 
   return (
-    <SafeAreaView className="bg-white h-full">
-      <View className="flex justify-center px-4">
-        <View className=" gap-[24px]  mt-8 ">
-          <View className="flex flex-row justify-between mt-8 ">
-            <Image
-              source={icons.ham}
-              resizeMode="contain"
-              className="w-[40px] h-[40px]"
-            />
-            {!selected ? (
-              <View className="flex flex-row gap-[3px]">
+      <SafeAreaView className="bg-white h-full">
+        {hamOpened && <HamDrawerComponent />}
+        <View className="flex justify-center px-4">
+          <View className=" gap-[24px]  mt-8 ">
+            <View className="flex flex-row justify-between mt-8 ">
+              <TouchableOpacity nPress={() => {
+                setHamOpened(!hamOpened);
+
+              }}>
                 <Image
-                  source={icons.search}
+                  source={icons.ham}
                   resizeMode="contain"
-                  className="w-[45px] h-[45px]"
-                />
-                <Image
-                  source={images.dummyPic}
-                  resizeMode="contain"
-                  className="w-[45px] h-[45px]"
-                />
-              </View>
-            ) : (
-              <View className="h-[42px] w-[140px] rounded-[8px] flex flex-row items-center justify-evenly py-2 bg-[#FFAD65]/[0.14]">
-              <TouchableOpacity>
-                <Image
-                  source={icons.userCross}
-                  resizeMode="contain"
-                  className="w-[24px] px-3 h-[24px]"
+                  className="w-[40px] h-[40px]"
+                  
                 />
               </TouchableOpacity>
-              <TouchableOpacity>
-                <Image
-                  source={icons.remove}
-                  resizeMode="contain"
-                  className="w-[24px] px-3 h-[24px]"
-                />
+              {!selected ? (
+                <View className="flex flex-row gap-[3px]">
+                  <Image
+                    source={icons.search}
+                    resizeMode="contain"
+                    className="w-[45px] h-[45px]"
+                  />
+                  <Image
+                    source={images.dummyPic}
+                    resizeMode="contain"
+                    className="w-[45px] h-[45px]"
+                  />
+                </View>
+              ) : (
+                <View className="h-[42px] w-[140px] rounded-[8px] flex flex-row items-center justify-evenly py-2 bg-[#FFAD65]/[0.14]">
+                <TouchableOpacity>
+                  <Image
+                    source={icons.userCross}
+                    resizeMode="contain"
+                    className="w-[24px] px-3 h-[24px]"
+                  />
                 </TouchableOpacity>
                 <TouchableOpacity>
-                <Image
-                  source={icons.notification}
-                  resizeMode="contain"
-                  className="w-[22px] px-3 h-[22px]"
-                />
-                </TouchableOpacity>
-              </View>
-            )}
-          </View>
-          <View className="flex flex-row justify-between">
-            <View className="flex  flex-col">
-              <View className="flex flex-row justify-between">
-                <Text className="text-3xl font-semibold">
-                  Rajarshi's Wedding
-                </Text>
-              </View>
-
-              <View className="border w-[216px] border-[4px] rounded-[3px]  border-[#FFAD65]"></View>
+                  <Image
+                    source={icons.remove}
+                    resizeMode="contain"
+                    className="w-[24px] px-3 h-[24px]"
+                  />
+                  </TouchableOpacity>
+                  <TouchableOpacity>
+                  <Image
+                    source={icons.notification}
+                    resizeMode="contain"
+                    className="w-[22px] px-3 h-[22px]"
+                  />
+                  </TouchableOpacity>
+                </View>
+              )}
             </View>
-            <TouchableOpacity
-            onPress={handleInvitationPress}
-            >
-              <Image
-                source={icons.invite}
-                resizeMode="contain"
-                className="w-[42px] h-[35px]"
-              />
-            </TouchableOpacity>
-          </View>
-        </View>
-        {!invitationPressed ? (
-        <>
-        <View className="reminders flex h-[165px] mt-1 mb-3">
-          <Text className="text-sm text-slate-400">Reminders</Text>
-          <View className="mt-1">
-            {reminders.map((item, index) => (
-              <View
-                className="bg-[#FFAD65]/[0.14] h-[58px] rounded-[8px]  flex flex-row border-l-8 border-[#FFAD65] justify-between items-center  w-full px-3 mb-3 py-2"
-                key={index}
-              >
-                <View className="flex  justify-start">
-                  <Text className="text-black font-bold"> {item.name}</Text>
-
-                  <View className="flex flex-row gap-[2px]">
-                    <Text>{item.location}</Text>
-                    <Text>-</Text>
-                    <Text>{item.time}</Text>
-                  </View>
+            <View className="flex flex-row justify-between">
+              <View className="flex  flex-col">
+                <View className="flex flex-row justify-between">
+                  <Text className="text-3xl font-semibold">
+                    Rajarshi's Wedding
+                  </Text>
                 </View>
 
-                <Image
-                  source={icons.menu}
-                  className="h-6"
-                  resizeMode="contain"
-                />
+                <View className="w-[216px] border-[4px] rounded-[3px]  border-[#FFAD65]"></View>
               </View>
-            ))}
+              <TouchableOpacity
+              onPress={handleInvitationPress}
+              >
+                <Image
+                  source={icons.invite}
+                  resizeMode="contain"
+                  className="w-[42px] h-[35px]"
+                />
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
-        <View className="border border-[0.5px] border-slate-400" />
-        <View className="py-2 flex flex-row gap-[5px]">
-          <View className="px-3 py-1  bg-slate-100 rounded-[10px] text-black">
-            <Text>Unread</Text>
-          </View>
-          <View className="px-3 py-1  bg-slate-100 rounded-[10px] text-black">
-            <Text>Calls</Text>
-          </View>
-          <View className="px-3 py-1  bg-slate-100 rounded-[10px] text-black">
-            <Text>Groups</Text>
-          </View>
-        </View>
+          {!invitationPressed ? (
+          <>
+          <View className="reminders flex h-[165px] mt-1 mb-3">
+            <Text className="text-sm text-slate-400">Reminders</Text>
+            <View className="mt-1">
+              {reminders.map((item, index) => (
+                <View
+                  className="bg-[#FFAD65]/[0.14] h-[58px] rounded-[8px]  flex flex-row border-l-8 border-[#FFAD65] justify-between items-center w-full px-3 mb-3 py-2"
+                  key={index}
+                >
+                  <View className="flex  justify-start">
+                    <Text className="text-black font-bold"> {item.name}</Text>
 
-        <FlatList
-          data={parentItems}
-          renderItem={renderItem}
-          keyExtractor={(item) => item.id}
-          className="mt-2"
-        />
-        </>
-        ):(
-          <InvitationProvider value={{sendInvitation,setSendInvitation}}>
-            <Invitation/>
-          </InvitationProvider>
-        )}
-      </View>
-    
-    </SafeAreaView>
+                    <View className="flex flex-row gap-[2px]">
+                      <Text>{item.location}</Text>
+                      <Text>-</Text>
+                      <Text>{item.time}</Text>
+                    </View>
+                  </View>
+
+                  <Image
+                    source={icons.menu}
+                    className="h-6"
+                    resizeMode="contain"
+                  />
+                </View>
+              ))}
+            </View>
+          </View>
+          <View className="border-[0.5px] border-slate-400" />
+          <View className="py-2 flex flex-row gap-[5px]">
+            <View className="px-3 py-1  bg-slate-100 rounded-[10px] text-black">
+              <Text>Unread</Text>
+            </View>
+            <View className="px-3 py-1  bg-slate-100 rounded-[10px] text-black">
+              <Text>Calls</Text>
+            </View>
+            <View className="px-3 py-1  bg-slate-100 rounded-[10px] text-black">
+              <Text>Groups</Text>
+            </View>
+          </View>
+
+          <FlatList
+            data={parentItems}
+            renderItem={renderItem}
+            keyExtractor={(item) => item.id}
+            className="mt-2"
+          />
+          </>
+          ):(
+            <InvitationProvider value={{sendInvitation,setSendInvitation}}>
+              <Invitation/>
+            </InvitationProvider>
+          )}
+        </View>
+      </SafeAreaView>
   );
 };
 
