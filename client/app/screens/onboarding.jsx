@@ -53,7 +53,7 @@ export default function OnboardingScreen() {
         Have it setup already?{" "}
         <StyledText
           className="text-orange-800"
-          onPress={() => navigation.navigate("Events")}
+          onPress={() => navigation.navigate("SignIn")}
         >
           Login
         </StyledText>

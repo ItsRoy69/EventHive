@@ -12,6 +12,7 @@ import GuestDetails from "./screens/guestdetails";
 import GroomName from "./screens/groomname";
 import GroupChats from "./screens/groupchats";
 import SignUp from "./auth/sign-up";
+import SignIn from "./auth/sign-in";
 import Floor from "./floor";
 import TabsLayout from "./tabs/_layout";
 import Events from './tabs/Events'
@@ -33,6 +34,7 @@ const App = () => {
           <Stack.Screen name="SpouseName" component={SpouseName} />
           <Stack.Screen name="WeddingDate" component={WeddingDate} />
           <Stack.Screen name="SignUp" component={SignUp} />
+          <Stack.Screen name="SignIn" component={SignIn} />
           <Stack.Screen name="Floor" component={Floor} />
           <Stack.Screen name="TabsLayout" component={TabsLayout} />
           <Stack.Screen name="GuestInvite" component={GuestInvite} />
