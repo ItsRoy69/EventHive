@@ -1,7 +1,12 @@
 import React from "react";
 import { View, Text, Modal, Button, Image, TouchableOpacity, TouchableWithoutFeedback } from "react-native";
+import { useNavigation } from "expo-router";
 
 const EventMenu = ({ menuOpen, setMenuOpen }) => {
+  const navigation = useNavigation()
+  const handleAddGuest = () =>{
+    navigation.navigate('AddGuest')
+  }
   return (
     <Modal
       animationType="slide"
@@ -15,7 +20,7 @@ const EventMenu = ({ menuOpen, setMenuOpen }) => {
             <View className="w-[300px] items-center flex h-[310px] bg-white p-2 rounded-md">
               <Text className="mt-4 text-2xl font-sansserif">Event Menu</Text>
               <View className="border w-[120px] border-[2px] rounded-[3px] border-[#FFAD65]"></View>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={handleAddGuest}>
                 <View className="p-1 flex gap-[3px] flex-row w-[189px] items-center justify-center h-[40px] mt-8 bg-[#FFAD65] rounded-[8px] text-white">
                   <Image
                     source={require('../../assets/icons/addGuest.png')}
