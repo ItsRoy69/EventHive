@@ -15,6 +15,7 @@ import SignUp from "./auth/sign-up";
 import Floor from "./floor";
 import TabsLayout from "./tabs/_layout";
 import Events from './tabs/Events'
+import AddGuest from "./screens/addGuest";
 
 const Stack = createNativeStackNavigator();
 
@@ -39,7 +40,8 @@ const App = () => {
           <Stack.Screen name="GuestDetails" component={GuestDetails} />
           <Stack.Screen name="GroomName" component={GroomName} />
           <Stack.Screen name="GroupChats" component={GroupChats} />
-          <Stack.Screen name="Events" component={Events} />
+          <Stack.Screen name='AddGuest' component={AddGuest}/>
+
         </Stack.Navigator>
       ) : null}
     </>

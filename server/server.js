@@ -4,7 +4,9 @@ const app = express()
 const PORT = process.env.PORT || 3500
 require('dotenv').config()
 
-app.use(cors())
+app.use(cors({
+  origin: ['http://192.168.18.30:19000','http://localhost:8081']
+}));
 app.use(express.json())
 
 const connectToDB = require('./config/dbConfig')

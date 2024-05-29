@@ -11,7 +11,7 @@ import EventPlan from "./EventPlan";
 const Tab = createBottomTabNavigator();
 
 const TabIcon = ({ name, icon, color, focused }) => {
-  console.log(name);
+  // console.log(name);
 
   return (
     <View className="items-center flex justify-center">
