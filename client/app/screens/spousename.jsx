@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { View, Text, TextInput, TouchableOpacity, Image } from "react-native";
 import { styled } from "nativewind";
 import { useNavigation, useRoute } from "@react-navigation/native";
+
+import { CreateEventContext } from "../context/CreateEventContext";
 
 const StyledView = styled(View);
 const StyledText = styled(Text);
@@ -12,8 +14,18 @@ const StyledImage = styled(Image);
 const SpouseName = () => {
   const [name, setName] = useState("");
   const navigation = useNavigation();
+  const {setEvent} = useContext(CreateEventContext)
   const route = useRoute();
   const selectedAnswer = route.params?.selectedAnswer;
+
+  const handleNameChange = (text) => {
+    setName(text)
+  }
+
+  const handleProceed = () => {
+    setEvent(existingEvent => ({ ...existingEvent, names: [...existingEvent.names, name] }));
+    navigation.navigate("WeddingDate")
+  }
 
   return (
     <View className="flex-1 items-center bg-white">
@@ -55,11 +67,11 @@ const SpouseName = () => {
             className="w-64 border-b border-gray-300 px-4 py-2 mb-8 rounded-md bg-gray-100"
             placeholder="Enter the name"
             value={name}
-            onChangeText={setName}
+            onChangeText={handleNameChange}
           />
           <StyledTouchableOpacity
             className="bg-[#FFAD65] w-44 rounded-md py-2"
-            onPress={() => navigation.navigate("WeddingDate")}
+            onPress={handleProceed}
           >
             <StyledText className="text-white text-center">Next</StyledText>
           </StyledTouchableOpacity>
@@ -76,7 +88,6 @@ const SpouseName = () => {
           }
           resizeMode="contain"
           className="w-34 h-34"
-          resizeMode="contain"
         />
       </StyledView>
     </View>

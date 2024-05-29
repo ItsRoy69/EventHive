@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { View, Text, TouchableOpacity, Image } from "react-native";
 import { styled } from "nativewind";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -8,6 +8,8 @@ const StyledTouchableOpacity = styled(TouchableOpacity);
 const StyledImage = styled(Image);
 import { useNavigation } from "@react-navigation/native";
 
+import { CreateEventContext } from "../context/CreateEventContext";
+
 const WeddingDate = () => {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
@@ -15,6 +17,8 @@ const WeddingDate = () => {
   const [showEndDatePicker, setShowEndDatePicker] = useState(false);
   const [isNextDisabled, setIsNextDisabled] = useState(true);
   const navigation = useNavigation();
+
+  const {setEvent} = useContext(CreateEventContext)
 
   const handleStartDateChange = (event, selectedDate) => {
     setShowStartDatePicker(false);
@@ -32,6 +36,12 @@ const WeddingDate = () => {
   const openStartDatePicker = () => {
     setShowStartDatePicker(true);
   };
+
+  const handleProceed = () => {
+    setEvent(existingEvent => ({ ...existingEvent, startDateTime: startDate, endDateTime: endDate }));
+    navigation.navigate("SignUp")
+  }
+
   return (
     <View className="flex-1 items-center bg-white">
       <StyledView className="flex-row w-full mt-8">
@@ -92,7 +102,7 @@ const WeddingDate = () => {
             className={`bg-[#FFAD65] w-44 rounded-md py-2 ${
               isNextDisabled ? "opacity-50" : ""
             }`}
-            onPress={() => navigation.navigate("SignUp")}
+            onPress={handleProceed}
             disabled={isNextDisabled}
           >
             <StyledText className="text-white text-center">Next</StyledText>

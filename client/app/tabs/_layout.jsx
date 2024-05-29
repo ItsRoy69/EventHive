@@ -6,7 +6,7 @@ import { InvitationContext } from "../context/InvitationContext";
 import Events from "./Events";
 import Calendar from "./Calendar";
 import Activities from "./activities";
-import EventPlan from "./EventPlan";
+import EventPlan from "./eventPlan";
 
 const Tab = createBottomTabNavigator();
 

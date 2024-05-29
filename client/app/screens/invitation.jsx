@@ -4,35 +4,55 @@ import {
   SafeAreaView,
   TouchableOpacity,
   Image,
+  Animated,
 } from "react-native";
-import React, { useState,useContext, useEffect } from "react";
+import { useRef } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import icons from "../../constants/icons";
 import images from "../../constants/images";
 import { InvitationContext } from "../context/InvitationContext";
+import { useNavigation } from "@react-navigation/native";
+import EvilIcons from "react-native-vector-icons/EvilIcons";
 
 const Invitation = () => {
+  const navigation = useNavigation();
   const categories = ["All", "Not Sent", "Accepted", "Rejected", "Pending"];
-  const [selectedPeople, setSelectedPeople] = useState(null);
-  const [selected, setSelected] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
+  const popupAnimation = useRef(new Animated.Value(0)).current;
   const [category, setCategory] = useState("All");
+  const [selectedPeople, setSelectedPeople] = useState([]);
+  const [buttonVisible, setButtonVisible] = useState(false);
 
-  const {sendInvitation,setSendInvitation} = useContext(InvitationContext)
+  const { sendInvitation, setSendInvitation } = useContext(InvitationContext);
 
-  const handleSelectPeople = ({ personId }) => {
-    setSelectedPeople(personId);
-    setSelected(!selected);
-    console.log(category)
-    if(selected && category === 'Not Sent'){
-      setSendInvitation(true)
-      navigation.navigate('GuestInvite', { person });
+  const handleSelectPeople = (personId) => {
+    const isSelected = selectedPeople.includes(personId);
+    if (isSelected) {
+      setSelectedPeople(selectedPeople.filter((id) => id !== personId));
+    } else {
+      setSelectedPeople([...selectedPeople, personId]);
     }
   };
-  useEffect(()=>{
-    if(sendInvitation){
-      console.log("From Invitation: ",sendInvitation)
+
+  useEffect(() => {
+    if (showPopup) {
+      Animated.timing(popupAnimation, {
+        toValue: -50,
+        duration: 500,
+        useNativeDriver: true,
+      }).start();
+    } else {
+      Animated.timing(popupAnimation, {
+        toValue: 0,
+        duration: 500,
+        useNativeDriver: true,
+      }).start();
     }
-  },[sendInvitation])
- 
+  }, [showPopup]);
+
+  useEffect(() => {
+    setButtonVisible(selectedPeople.length > 0);
+  }, [selectedPeople]);
   const people = [
     {
       id: 1,
@@ -69,6 +89,41 @@ const Invitation = () => {
       status: "Accepted",
       date: "sent 10d ago",
     },
+    {
+      id: 6,
+      dp: `${images.dummyPic}`,
+      name: "Jyotirmoy Roy",
+      status: "Not Sent",
+      date: "sent 10d ago",
+    },
+    {
+      id: 7,
+      dp: `${images.dummyPic}`,
+      name: "Jyotirmoy Roy",
+      status: "Not Sent",
+      date: "sent 10d ago",
+    },
+    {
+      id: 8,
+      dp: `${images.dummyPic}`,
+      name: "Jyotirmoy Roy",
+      status: "Not Sent",
+      date: "sent 10d ago",
+    },
+    {
+      id: 9,
+      dp: `${images.dummyPic}`,
+      name: "Jyotirmoy Roy",
+      status: "Not Sent",
+      date: "sent 10d ago",
+    },
+    {
+      id: 10,
+      dp: `${images.dummyPic}`,
+      name: "Jyotirmoy Roy",
+      status: "Not Sent",
+      date: "sent 10d ago",
+    },
   ];
 
   return (
@@ -97,14 +152,9 @@ const Invitation = () => {
                 className="flex flex-row px-2 mb-2  items-center bg-white h-[54px] justify-between"
                 key={index}
               >
-              <TouchableOpacity
-                    onPress={() => handleSelectPeople({ personId: person.id })}
-              >
-                <View className="flex flex-row items-center gap-[13px]">
-                  
-                    {selected &&
-                    selectedPeople === person.id &&
-                    person.status === "Not Sent" ? (
+                <TouchableOpacity onPress={() => handleSelectPeople(person.id)}>
+                  <View className="flex flex-row items-center gap-[13px]">
+                    {selectedPeople.includes(person.id) ? (
                       <Image
                         source={icons.right}
                         resizeMode="contain"
@@ -117,16 +167,15 @@ const Invitation = () => {
                         className="w-[35px] h-[35px]"
                       />
                     )}
-                 
-                  <View className="flex flex-col">
-                    <Text className="text-lg">{person.name}</Text>
-                    <Text className="text-md text-slate-400">
-                      {person.date}
-                    </Text>
-                  </View>
-                </View>
-                </TouchableOpacity>
 
+                    <View className="flex flex-col">
+                      <Text className="text-lg">{person.name}</Text>
+                      <Text className="text-md text-slate-400">
+                        {person.date}
+                      </Text>
+                    </View>
+                  </View>
+                </TouchableOpacity>
 
                 {category === "All" && (
                   <>
@@ -160,6 +209,43 @@ const Invitation = () => {
             ))}
         </View>
       </View>
+      {buttonVisible && (
+        <TouchableOpacity
+          onPress={() => {
+            setSendInvitation(true);
+            setShowPopup(true);
+            setTimeout(() => {
+              setShowPopup(false);
+              navigation.navigate("GuestInvite", {
+                people: people.filter((p) => selectedPeople.includes(p.id)),
+              });
+            }, 1000);
+          }}
+          className="bg-[#FFAD65] py-2 px-4 rounded-xl flex items-center justify-center"
+        >
+          <Text className="text-white font-bold text-center text-lg">
+            Send Invites
+          </Text>
+        </TouchableOpacity>
+      )}
+      {showPopup && (
+        <Animated.View
+          style={{ transform: [{ translateY: popupAnimation }] }}
+          className="absolute bottom-20 left-0 right-0 justify-center items-center"
+        >
+          <View className="bg-white p-4 rounded-xl shadow-lg flex-row items-center">
+            <EvilIcons
+              name="envelope"
+              size={26}
+              color="green"
+              style={{ marginRight: 8 }}
+            />
+            <Text className="text-center text-lg font-bold flex-row items-center">
+              Invitations sent successfully
+            </Text>
+          </View>
+        </Animated.View>
+      )}
     </SafeAreaView>
   );
 };

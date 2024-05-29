@@ -1,5 +1,17 @@
 const mongoose = require('mongoose')
 
+const tagSchema = new mongoose.Schema({
+    subEventId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'SubEvent',
+        required: true
+    },
+    status: {
+        type: String,
+        required: true
+    }
+})
+
 const rsvpSchema = new mongoose.Schema({
     eventId: {
         type: mongoose.Schema.Types.ObjectId,
@@ -21,15 +33,7 @@ const rsvpSchema = new mongoose.Schema({
         }
     },
     tags: [{
-        subEventId: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'SubEvent',
-            required: true
-        },
-        status: {
-            type: String,
-            default: 'pending'
-        }
+        type: tagSchema,
     }]
 })
 

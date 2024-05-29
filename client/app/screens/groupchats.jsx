@@ -16,8 +16,8 @@ import { useRoute } from '@react-navigation/native';
 const GroupChats = () => {
   const navigation = useNavigation()
   const route = useRoute();
-  const { name } = route.params;
- 
+  const { name } = route.params || {};
+  console.log(name)
   const [message, setMessage] = useState("");
   const [showEmojiKeyboard, setShowEmojiKeyboard] = useState(false);
   const [messages, setMessages] = useState([
