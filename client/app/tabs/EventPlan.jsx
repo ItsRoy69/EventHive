@@ -19,6 +19,7 @@ import {
   Stage,
   Entrance,
 } from "../components/FloorComponents";
+import DraggableResizableComponent from '../components/DraggableResizableComponent';
 import HamDrawer from "../components/HamDrawer";
 
 const EventPlan = () => {
@@ -80,29 +81,28 @@ const EventPlan = () => {
     "Floor 1": (
       <View className="border-2 h-[200px] flex border-[#BEBEBE] bg-[#ECECE]">
         <View className="flex flex-row">
-          <Verandah />
-          <Room name="Room for bride" />
+          <DraggableResizableComponent><Verandah /></DraggableResizableComponent>
+          <DraggableResizableComponent><Room name="Room for bride" /></DraggableResizableComponent>
         </View>
 
         <View className="flex items-center h-[40px] relative left-[-10px] top-[-29px]">
-          <Stage />
+          <DraggableResizableComponent><Stage /></DraggableResizableComponent>
         </View>
         <View className="flex ">
           <View className=" h-[55px]  relative top-[-78px]">
-            <Room name="Room for bride" />
+            <DraggableResizableComponent><Room name="Room for bride" /></DraggableResizableComponent>
           </View>
           <View className=" h-[45px] w-[100px]  relative top-[-72px]">
-            <Room name="Drinks and snacks" />
+            <DraggableResizableComponent><Room name="Drinks and snacks" /></DraggableResizableComponent>
           </View>
           <View className=" h-[32px] w-[55px] mt-3  relative top-[-72px]">
-            <Entrance />
+            <DraggableResizableComponent><Entrance /></DraggableResizableComponent>
           </View>
         </View>
 
         <TouchableOpacity onPress={() => setSelectedChair(!selectedChair)}>
           <View className="items-center relative top-[-150px] mt-1 h-[74px] flex justify-center">
-          
-            <TableArea />
+            <DraggableResizableComponent><TableArea /></DraggableResizableComponent>
           </View>
         </TouchableOpacity>
       </View>
@@ -110,24 +110,24 @@ const EventPlan = () => {
     "Floor 2": (
       <View className="border-2 h-[200px] border-[#BEBEBE] bg-[#ECECE]">
         <View className="flex flex-row">
-          <Room name="Room for groom" />
-          <SofaSeating />
+          <DraggableResizableComponent><Room name="Room for groom" /></DraggableResizableComponent>
+          <DraggableResizableComponent><SofaSeating /></DraggableResizableComponent>
         </View>
         <View className="flex flex-row ">
-          <TableArea />
-          <Entrance />
+          <DraggableResizableComponent><TableArea /></DraggableResizableComponent>
+          <DraggableResizableComponent><Entrance /></DraggableResizableComponent>
         </View>
       </View>
     ),
     "Floor 3": (
       <View className="border-2 h-[200px] border-[#BEBEBE] bg-[#ECECE]">
         <View className="flex flex-row">
-          <Room name="VIP Room" />
-          <TableArea />
+          <DraggableResizableComponent><Room name="VIP Room" /></DraggableResizableComponent>
+          <DraggableResizableComponent><TableArea /></DraggableResizableComponent>
         </View>
         <View className="flex flex-row ">
-          <Entrance />
-          <SofaSeating />
+          <DraggableResizableComponent><Entrance /></DraggableResizableComponent>
+          <DraggableResizableComponent><SofaSeating /></DraggableResizableComponent>
         </View>
       </View>
     ),

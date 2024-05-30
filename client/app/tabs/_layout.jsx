@@ -91,7 +91,7 @@ const TabsLayout = () => {
       )} */}
 
       <Tab.Screen
-        name="Calendar"
+        name="calendar"
         component={Calendar}
         options={{
           tabBarIcon: ({ name, color, focused }) => (
@@ -105,7 +105,7 @@ const TabsLayout = () => {
         }}
       />
       <Tab.Screen
-        name="Activities"
+        name="activities"
         component={Activities}
         options={{
           tabBarIcon: ({ name, color, focused }) => (

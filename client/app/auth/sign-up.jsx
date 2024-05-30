@@ -2,6 +2,7 @@ import React, { useState, useContext } from "react";
 import { View, Text, TextInput, TouchableOpacity, Image, Alert } from "react-native";
 import { styled } from "nativewind";
 import { useNavigation } from "@react-navigation/native";
+
 const StyledView = styled(View);
 const StyledText = styled(Text);
 const StyledTextInput = styled(TextInput);
@@ -9,6 +10,7 @@ const StyledTouchableOpacity = styled(TouchableOpacity);
 const StyledImage = styled(Image);
 
 import axios from "axios";
+import { useGlobalContext } from "../context/GlobalProvider";
 import { CreateEventContext } from "../context/CreateEventContext";
 
 const SignUp = () => {
@@ -21,6 +23,8 @@ const SignUp = () => {
   const [creds, setCreds] = useState(blankCreds);
   const navigation = useNavigation();
   const { user, event } = useContext(CreateEventContext);
+
+  // console.log("user: ",user)
 
   const nameBuilder = (arr, type) => {
     let res = ""
@@ -58,6 +62,7 @@ const SignUp = () => {
       console.log(error)
       Alert.alert("Error", error.message)
     }
+    
   }
 
   return (
