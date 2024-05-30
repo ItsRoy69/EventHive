@@ -136,15 +136,18 @@ const Events = () => {
     ],
   };
 
-  const handleSelectSubItem = (item) => {
-    // setSelected(true);
-    // setSelectedSubItem(itemId);
+  const handleNavigateToChat = (item) => {
     if (item.type = "group") {
       navigator.navigate("GroupChats", { name: item.data })
     } else {
       navigator.navigate("DMChats", { name: item.data });
     }
   };
+
+  const handleSelectSubItem = (itemId) => {
+    setSelected(true);
+    setSelectedSubItem(itemId);
+  }
 
   const renderCommonItems = ({ itemId, itemName }) => {
     console.log("from events", itemName);
@@ -213,7 +216,8 @@ const Events = () => {
         sections={[{ data: subItems[itemId] }]}
         renderItem={({ item }) => (
           <TouchableOpacity
-            onPress={() => handleSelectSubItem(item)}
+            onPress={() => handleNavigateToChat(item)}
+            onLongPress={() => handleSelectSubItem(item.id)}
           >
             <View className="py-3 px-2 border-b-[0.5px] flex flex-row justify-between items-center border-gray-300">
               <View className="gap-[10px] flex flex-row items-center">
