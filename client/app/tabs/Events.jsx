@@ -137,6 +137,11 @@ const Events = () => {
   };
 
   const handleNavigateToChat = (item) => {
+    if (selected && selectedSubItem === item.id) {
+      setSelected(false);
+      setSelectedSubItem(null);
+      return;
+    } 
     if (item.type = "group") {
       navigator.navigate("GroupChats", { name: item.data })
     } else {
@@ -145,6 +150,11 @@ const Events = () => {
   };
 
   const handleSelectSubItem = (itemId) => {
+    if (selected && selectedSubItem === itemId) {
+      setSelected(false);
+      setSelectedSubItem(null);
+      return
+    }
     setSelected(true);
     setSelectedSubItem(itemId);
   }
