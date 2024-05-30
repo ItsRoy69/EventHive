@@ -314,6 +314,8 @@ const Events = () => {
 
   const [hamOpened, setHamOpened] = useState(false);
 
+  const [remindersOpen, setRemindersOpen] = useState(true);
+
   return (
     <SafeAreaView className="relative bg-white h-full">
           {hamOpened && <HamDrawer hamOpened={hamOpened} setHamOpened={setHamOpened} />}
@@ -395,34 +397,50 @@ const Events = () => {
             </View>
             {!invitationPressed ? (
             <>
-            <View className="reminders flex h-[165px] mt-1 mb-3">
+            <View className="reminders flex py-2 mt-1">
               <Text className="text-sm text-slate-400">Reminders</Text>
-              <View className="mt-1">
-                {reminders.map((item, index) => (
-                  <View
-                    className="bg-[#FFAD65]/[0.14] h-[58px] rounded-[8px]  flex flex-row border-l-8 border-[#FFAD65] justify-between items-center w-full px-3 mb-3 py-2"
-                    key={index}
-                  >
-                    <View className="flex  justify-start">
-                      <Text className="text-black font-bold"> {item.name}</Text>
+              {
+                remindersOpen && (
+                  <View className="mt-2">
+                    {reminders.map((item, index) => (
+                      <View
+                        className="bg-[#FFAD65]/[0.14] h-[58px] rounded-[8px]  flex flex-row border-l-8 border-[#FFAD65] justify-between items-center w-full px-3 mb-3 py-2"
+                        key={index}
+                      >
+                        <View className="flex  justify-start">
+                          <Text className="text-black font-bold"> {item.name}</Text>
 
-                      <View className="flex flex-row gap-[2px]">
-                        <Text>{item.location}</Text>
-                        <Text>-</Text>
-                        <Text>{item.time}</Text>
+                          <View className="flex flex-row gap-[2px]">
+                            <Text>{item.location}</Text>
+                            <Text>-</Text>
+                            <Text>{item.time}</Text>
+                          </View>
+                        </View>
+
+                        <Image
+                          source={icons.menu}
+                          className="h-6"
+                          resizeMode="contain"
+                        />
                       </View>
-                    </View>
-
-                    <Image
-                      source={icons.menu}
-                      className="h-6"
-                      resizeMode="contain"
-                    />
+                    ))}
                   </View>
-                ))}
-              </View>
+                )
+              }
+              
             </View>
-            <View className="border-[0.5px] border-slate-400" />
+            <View className="relative border-[0.5px] h-0 my-5 border-slate-400">
+              <TouchableOpacity 
+                className="absolute h-7 w-7 right-5 -bottom-[12px]"
+                onPress={() => setRemindersOpen(!remindersOpen)}
+              >
+                <Image
+                  className={`w-full h-full rounded-full ${!remindersOpen && 'rotate-180'}`}
+                  resizeMode="contain"
+                  source={require('../../assets/icons/reminderShow.png')}
+                />
+              </TouchableOpacity>
+            </View>
             <View className="py-2 flex flex-row gap-[5px]">
               <View className="px-3 py-1  bg-slate-100 rounded-[10px] text-black">
                 <Text>Unread</Text>
