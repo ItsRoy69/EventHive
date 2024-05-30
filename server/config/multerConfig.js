@@ -17,7 +17,7 @@ const upload = multer({ storage: cloudinaryStorage });
 const uploadImageMiddleware = upload.single('image'); // Middleware for single file upload
 
 const handleUploadResponse = async (req, res, next) => {
-    if (!req.file) {
+    if (!req.file && req.body?.type === "image") {
         return res.status(400).json({ message: 'No image uploaded' });
     }
     console.log(req.file);
