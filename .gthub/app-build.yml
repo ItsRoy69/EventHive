@@ -28,7 +28,7 @@ jobs:
 
     - name: Build Expo app
       working-directory: ./client
-      run: expo build:android --non-interactive
+      run: expo build:android --non-interactive --release-channel production
 
     - name: Upload artifact
       uses: actions/upload-artifact@v2
