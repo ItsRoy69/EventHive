@@ -13,7 +13,7 @@ import Entypo from "react-native-vector-icons/Entypo";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { useRoute } from '@react-navigation/native';
 
-const GroupChats = () => {
+const DMChats = () => {
   const navigation = useNavigation()
   const route = useRoute();
   const { name } = route.params || {};
@@ -166,4 +166,4 @@ const GroupChats = () => {
   );
 };
 
-export default GroupChats;
+export default DMChats;

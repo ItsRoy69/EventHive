@@ -11,6 +11,7 @@ import VendorInvite from "./screens/vendorinvite";
 import GuestDetails from "./screens/guestdetails";
 import GroomName from "./screens/groomname";
 import GroupChats from "./screens/groupchats";
+import DMChats from "./screens/dmchats";
 import SignUp from "./auth/sign-up";
 import SignIn from "./auth/sign-in";
 import Floor from "./floor";
@@ -42,6 +43,7 @@ const App = () => {
           <Stack.Screen name="GuestDetails" component={GuestDetails} />
           <Stack.Screen name="GroomName" component={GroomName} />
           <Stack.Screen name="GroupChats" component={GroupChats} />
+          <Stack.Screen name="DMChats" component={DMChats}/>
           <Stack.Screen name='AddGuest' component={AddGuest}/>
 
         </Stack.Navigator>
