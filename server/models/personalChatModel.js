@@ -1,12 +1,15 @@
 const mongoose = require('mongoose')
 
-const groupChatSchema = new mongoose.Schema({
-    groupChannelId: {
+const personalChatSchema = new mongoose.Schema({
+    eventId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'GroupChannel',
         required: true
     },
     senderId: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true
+    },
+    receiverId: {
         type: mongoose.Schema.Types.ObjectId,
         required: true
     },
@@ -28,4 +31,4 @@ const groupChatSchema = new mongoose.Schema({
     }
 })
 
-module.exports = mongoose.model('GroupChat', groupChatSchema)
+module.exports = mongoose.model('PersonalChat', personalChatSchema)

@@ -7,6 +7,9 @@ const RSVP = require('../models/rsvpModel')
 
 const getUserRoleInEvent = async(req, res, next) => {
     const { userId, eventId } = req.body
+    if (!eventId) {
+        return res.status(400).json({ message: 'Missing required fields' })
+    }
     const host = await Host.findOne({ userId, eventId })
     const guest = await Guest.findOne({ userId, eventId })
     const vendor = await Vendor.findOne({ userId, eventId })
