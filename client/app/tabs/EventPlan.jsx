@@ -429,7 +429,7 @@ const EventPlan = () => {
             <View className="flex flex-row justify-between">
               <Text className="text-3xl font-semibold">Wedding Plan</Text>
             </View>
-            <View className="border w-[158px] border-[4px] rounded-[3px] border-[#FFAD65]" />
+            <View className="w-[158px] border-[4px] rounded-[3px] border-[#FFAD65]" />
           </View>
           <View className="flex gap-[5px]">
             {elements.map((element) => (
