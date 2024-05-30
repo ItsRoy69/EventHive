@@ -12,6 +12,7 @@ import icons from "../../constants/icons";
 import images from "../../constants/images";
 import { Calendar, Agenda } from "react-native-calendars";
 import { useRouter } from "expo-router";
+import HamDrawer from "../components/HamDrawer";
 
 const CalendarItem = () => {
   const weddingDate = "2024-05-31";
@@ -84,16 +85,24 @@ const CalendarItem = () => {
   }
   console.log("Items",items)
 
+  const [hamOpened, setHamOpened] = useState(false)
+
   return (
     <SafeAreaView className="h-full">
+      {hamOpened && <HamDrawer hamOpened={hamOpened} setHamOpened={setHamOpened} />}
       <ScrollView>
         <View className="flex justify-center px-4">
           <View className="flex flex-row justify-between mt-14">
-            <Image
-              source={icons.ham}
-              resizeMode="contain"
-              className="w-[40px] h-[40px]"
-            />
+            <TouchableOpacity onPress={() => {
+              setHamOpened(!hamOpened);
+            }}>
+              <Image
+                source={icons.ham}
+                resizeMode="contain"
+                className="w-[40px] h-[40px]"
+                
+              />
+            </TouchableOpacity>
             <View className="flex flex-row gap-[3px]">
               <Image
                 source={icons.search}

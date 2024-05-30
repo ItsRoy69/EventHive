@@ -20,6 +20,7 @@ import {
   Entrance,
 } from "../components/FloorComponents";
 import DraggableResizableComponent from '../components/DraggableResizableComponent';
+import HamDrawer from "../components/HamDrawer";
 
 const EventPlan = () => {
   const [showPreference, setShowPreference] = useState(false);
@@ -393,16 +394,24 @@ const EventPlan = () => {
     setSelectedId(selectedId === id ? null : id);
   };
 
+  const [hamOpened, setHamOpened] = useState(false);
+
   return (
     <SafeAreaView className="bg-white h-full">
+      {hamOpened && <HamDrawer hamOpened={hamOpened} setHamOpened={setHamOpened} />}
       <View className="flex justify-center px-4">
         <View className="gap-[24px] mt-8">
           <View className="flex flex-row justify-between mt-8">
-            <Image
-              source={icons.ham}
-              resizeMode="contain"
-              className="w-[40px] h-[40px]"
-            />
+            <TouchableOpacity onPress={() => {
+              setHamOpened(!hamOpened);
+            }}>
+              <Image
+                source={icons.ham}
+                resizeMode="contain"
+                className="w-[40px] h-[40px]"
+                
+              />
+            </TouchableOpacity>
             <View className="flex flex-row gap-[3px]">
               <Image
                 source={icons.search}
@@ -420,7 +429,7 @@ const EventPlan = () => {
             <View className="flex flex-row justify-between">
               <Text className="text-3xl font-semibold">Wedding Plan</Text>
             </View>
-            <View className="border w-[158px] border-[4px] rounded-[3px] border-[#FFAD65]" />
+            <View className="w-[158px] border-[4px] rounded-[3px] border-[#FFAD65]" />
           </View>
           <View className="flex gap-[5px]">
             {elements.map((element) => (
