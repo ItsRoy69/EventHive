@@ -40,13 +40,13 @@ const HamDrawer = ({ hamOpened, setHamOpened }) => {
         style={{
           transform: [{ translateX: drawerAnimation }],
         }}
-        className="absolute h-full w-full flex flex-col justify-start z-10 pt-8"
+        className="absolute h-full w-full flex flex-col justify-start z-10"
       >
         <View
-          className="w-4/5 h-full flex flex-col gap-2 bg-[#FFFDF7]"
+          className="relative top-4 left-2 w-4/5 h-full flex flex-col gap-2 bg-[#FFFDF7]"
         >
           <View
-            className="left-2 w-full bg-[#FFAD65]/[0.11] py-4 flex flex-row justify-center items-center gap-2"
+            className="-left-2 top-2 w-full bg-[#FFAD65]/[0.11] py-4 flex flex-row justify-center items-center gap-2"
           >
             <Image
               source={require('../../assets/images/signup/eventselectiontop.png')}
@@ -88,7 +88,7 @@ const HamDrawer = ({ hamOpened, setHamOpened }) => {
           </View>
         </View>
         <TouchableOpacity
-          className="absolute top-0 right-0 p-5 h-full w-1/5 bg-[#F3F3F3] opacity-10"
+          className="absolute top-0 right-0 p-5 h-full  w-1/5 bg-[#F3F3F3] opacity-10"
           onPress={() => setHamOpened(!hamOpened)}
         ></TouchableOpacity>
       </Animated.View>
