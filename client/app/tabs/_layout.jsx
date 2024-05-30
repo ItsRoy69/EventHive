@@ -6,7 +6,8 @@ import { InvitationContext } from "../context/InvitationContext";
 import Events from "./Events";
 import Calendar from "./calendar";
 import Activities from "./activities";
-import EventPlan from "./EventPlan";
+import EventPlan from "./eventPlan";
+import { StatusBar } from "expo-status-bar";
 
 const Tab = createBottomTabNavigator();
 
@@ -33,6 +34,7 @@ const TabsLayout = () => {
   const type = "guest";
 
   return (
+    <>
     <Tab.Navigator
       screenOptions={{
         headerShown: false,
@@ -117,6 +119,8 @@ const TabsLayout = () => {
         }}
       />
     </Tab.Navigator>
+    <StatusBar backgroundColor="#F3F3F3" style='dark'/>
+    </>
   );
 };
 
