@@ -29,6 +29,10 @@ export const GlobalProvider = ({ children }) => {
             setIsLoading(false)
         })
     }, [])
+    const setUserContext = (userData) => {
+        setUser(userData);
+        setIsLoggedIn(true);
+      };
 
     return (
         <GlobalContext.Provider 
@@ -37,7 +41,8 @@ export const GlobalProvider = ({ children }) => {
                 setIsLoggedIn,
                 user, 
                 setUser,
-                isLoading
+                isLoading,
+                setUserContext
             }}
         >
             {children}

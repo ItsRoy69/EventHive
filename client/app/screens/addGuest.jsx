@@ -12,7 +12,7 @@ const AddGuest = () => {
   const openGmail = () => {
     console.log("Mail clicked")
     const email = 'example@gmail.com';
-    const subject = inviteLink
+    const subject = "You are invited"
     const body = inviteLink
     const mailtoUrl = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 
@@ -65,7 +65,7 @@ const AddGuest = () => {
                 </TouchableOpacity>
               </View>
               <Text className='text-slate-700 mt-3'>or</Text>
-              <View className='flex flex-row mt-3 gap-[16px]'>
+              <View className='flex flex-row top-[12px] gap-[16px]'>
                 <TouchableOpacity onPress={openGmail}>
                   <Image source = {require('../../assets/icons/mail.png')} resizeMode="contain" className='w-[24px] h-[24px]'/>
                 </TouchableOpacity>

@@ -9,7 +9,7 @@ import {
   Animated,
   Easing,
 } from "react-native";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState,useContext } from "react";
 import { Image } from "react-native";
 import icons from "../../constants/icons";
 import images from "../../constants/images";
@@ -17,11 +17,30 @@ import { useNavigation } from "@react-navigation/native";
 import Invitation from "../screens/invitation";
 import { InvitationProvider } from "../context/InvitationContext";
 import EventMenu from "../screens/eventMenu";
+import { CreateEventContext } from "../context/CreateEventContext";
 
 
 const Events = () => {
   const navigator = useNavigation();
-  const type = "host";
+  const { user, event } = useContext(CreateEventContext);
+  console.log("user form event:",user)
+  let type='';
+  if(user.role =='The Bride' || user.role == 'The Groom'){
+    type = 'host'
+  }
+  else{
+    type ='guest'
+  }
+  const makeName = () => {
+    const name = user.name;
+    if (name.endsWith('s')) {
+      return `${name}'`;
+    } else {
+      return `${name}'s`;
+    }
+  };
+  
+
   const todo = [
     {
       name: "Meeting with Bimal Da - Florist",
@@ -408,7 +427,7 @@ const Events = () => {
                 <View className="flex flex-row justify-between">
                 <View className="flex flex-row items-center gap-[2px]">
                   <Text className="text-3xl font-semibold">
-                    Rajarshi's Wedding
+                    {makeName()} Wedding
                   </Text>
                   {type === "host" && (
                     <TouchableOpacity onPress={handleMenuPressed}>
@@ -485,13 +504,22 @@ const Events = () => {
               <Text>Groups</Text>
             </View>
           </View>
-
-          <FlatList
+          {type=== 'host' ? (
+            <FlatList
             data={parentItems}
             renderItem={renderItem}
             keyExtractor={(item) => item.id}
             className="mt-2"
           />
+          ):(
+            <FlatList
+            data={guestParentItem}
+            renderItem={renderGuestItem}
+            keyExtractor={(item) => item.id}
+            className="mt-2"
+          />
+          )}
+          
           </>
           ):(
             <InvitationProvider value={{sendInvitation,setSendInvitation}}>
