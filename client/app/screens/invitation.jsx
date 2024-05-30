@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   Image,
   Animated,
+  ScrollView,
 } from "react-native";
 import { useRef } from "react";
 import React, { useState, useContext, useEffect } from "react";
@@ -128,87 +129,93 @@ const Invitation = () => {
 
   return (
     <SafeAreaView>
-      <View className="mt-4">
-        <View className="flex flex-row gap-[10px]">
-          {categories.map((item, index) => (
-            <TouchableOpacity key={index} onPress={() => setCategory(item)}>
-              <Text
-                className={`px-3 py-2 items-center ${
-                  category === item ? "bg-[#FFAD65]/[0.41]" : "bg-[#F3F3F3]"
-                } rounded-[10px]`}
-              >
-                {item}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-        <View className="people-list bg-[#F3F3F3]/[0.5]  px-0 justify-center flex flex-col mt-6 shadow-md ">
-          {people
-            .filter(
-              (person) => category === "All" || person.status === category
-            )
-            .map((person, index) => (
-              <View
-                className="flex flex-row px-2 mb-2  items-center bg-white h-[54px] justify-between"
-                key={index}
-              >
-                <TouchableOpacity onPress={() => handleSelectPeople(person.id)}>
-                  <View className="flex flex-row items-center gap-[13px]">
-                    {selectedPeople.includes(person.id) ? (
-                      <Image
-                        source={icons.right}
-                        resizeMode="contain"
-                        className="w-[35px] h-[35px]"
-                      />
-                    ) : (
-                      <Image
-                        source={person.dp}
-                        resizeMode="contain"
-                        className="w-[35px] h-[35px]"
-                      />
-                    )}
-
-                    <View className="flex flex-col">
-                      <Text className="text-lg">{person.name}</Text>
-                      <Text className="text-md text-slate-400">
-                        {person.date}
-                      </Text>
-                    </View>
-                  </View>
-                </TouchableOpacity>
-
-                {category === "All" && (
-                  <>
-                    <View>
-                      {person.status === "Accepted" && (
-                        <Image
-                          source={icons.accepted}
-                          resizeMode="contain"
-                          className="w-[29px] h-[29px]"
-                        />
-                      )}
-                      {(person.status === "Rejected" ||
-                        person.status === "Not Sent") && (
-                        <Image
-                          source={icons.rejected}
-                          resizeMode="contain"
-                          className="w-[29px] h-[29px]"
-                        />
-                      )}
-                      {person.status === "Pending" && (
-                        <Image
-                          source={icons.pending}
-                          resizeMode="contain"
-                          className="w-[29px] h-[29px]"
-                        />
-                      )}
-                    </View>
-                  </>
-                )}
-              </View>
+      
+        <View className="mt-4  ">
+          <View className="flex flex-row gap-[10px]">
+            {categories.map((item, index) => (
+              <TouchableOpacity key={index} onPress={() => setCategory(item)}>
+                <Text
+                  className={`px-3 py-2 items-center ${
+                    category === item ? "bg-[#FFAD65]/[0.41]" : "bg-[#F3F3F3]"
+                  } rounded-[10px]`}
+                >
+                  {item}
+                </Text>
+              </TouchableOpacity>
             ))}
+          </View>
+          <ScrollView className="people-list bg-[#F3F3F3]/[0.5] px-0  flex flex-col mt-6 shadow-md "
+           contentContainerStyle={{ justifyContent: "center" }} 
+          >
+            {people
+              .filter(
+                (person) => category === "All" || person.status === category
+              )
+              .map((person, index) => (
+                <View
+                  className="flex flex-row px-2 mb-2 items-center bg-white h-[54px] justify-between"
+                  key={index}
+                >
+                  <TouchableOpacity
+                    onPress={() => handleSelectPeople(person.id)}
+                  >
+                    <View className="flex flex-row items-center gap-[13px]">
+                      {selectedPeople.includes(person.id) ? (
+                        <Image
+                          source={icons.right}
+                          resizeMode="contain"
+                          className="w-[35px] h-[35px]"
+                        />
+                      ) : (
+                        <Image
+                          source={person.dp}
+                          resizeMode="contain"
+                          className="w-[35px] h-[35px]"
+                        />
+                      )}
+
+                      <View className="flex flex-col">
+                        <Text className="text-lg">{person.name}</Text>
+                        <Text className="text-md text-slate-400">
+                          {person.date}
+                        </Text>
+                      </View>
+                    </View>
+                  </TouchableOpacity>
+
+                  {category === "All" && (
+                    <>
+                      <View>
+                        {person.status === "Accepted" && (
+                          <Image
+                            source={icons.accepted}
+                            resizeMode="contain"
+                            className="w-[29px] h-[29px]"
+                          />
+                        )}
+                        {(person.status === "Rejected" ||
+                          person.status === "Not Sent") && (
+                          <Image
+                            source={icons.rejected}
+                            resizeMode="contain"
+                            className="w-[29px] h-[29px]"
+                          />
+                        )}
+                        {person.status === "Pending" && (
+                          <Image
+                            source={icons.pending}
+                            resizeMode="contain"
+                            className="w-[29px] h-[29px]"
+                          />
+                        )}
+                      </View>
+                    </>
+                  )}
+                </View>
+              ))}
+          </ScrollView>
         </View>
-      </View>
+      
       {buttonVisible && (
         <TouchableOpacity
           onPress={() => {

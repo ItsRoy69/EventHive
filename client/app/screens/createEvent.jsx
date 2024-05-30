@@ -87,8 +87,11 @@ const CreateEvent = ({ onChangeEvent }) => {
   };
 
   return (
-    <View className="flex gap-[20px] px-2 ">
+    <View className="flex gap-[15px] px-2 ">
       <View className="mb-3">
+        <Text className="text-2xl font-bold ">Create Event</Text>
+        <View className="w-[117px] border-[2px] rounded-[3px] mb-3  border-[#FFAD65]"></View>
+
         <Text>Event Name</Text>
         <TextInput
           className="border-b border-[#1F2E2A]/[0.41] h-[37px]  bg-[#1F2E2A]/[0.01] text-md "
@@ -155,15 +158,18 @@ const CreateEvent = ({ onChangeEvent }) => {
       </View>
       <View className="mb-3">
         <Text>Where is it happening</Text>
-        <Picker
-          selectedValue={location}
+        <TextInput
           className="border-b border-[#1F2E2A]/[0.41] h-[37px]  bg-[#1F2E2A]/[0.01] text-md text-black "
-          onValueChange={(itemValue, itemIndex) => setLocation(itemValue)}
-        >
-          <Picker.Item label="Home" value="home" />
-          <Picker.Item label="Hall" value="hall" />
-          <Picker.Item label="Banquet" value="banquet" />
-        </Picker>
+          value={location}
+          onChangeText={(text) => setLocation(text)}
+          placeholder="Holiday Inn"
+        />
+      </View>
+      <View className="flex flex-row items-center ">
+        <TouchableOpacity>
+          <View className="border w-3 h-3 mr-3 "></View>
+        </TouchableOpacity>
+        <Text>Create channel for this event</Text>
       </View>
 
       <TouchableOpacity
