@@ -306,6 +306,7 @@ const Events = () => {
   );
 
   const [ hamOpened, setHamOpened ] = useState(false);
+
   // const HamDrawerComponent = () => {
   //   return (
   //     <View className="fixed top-0 left-0 h-full w-4/5 border z-10 border-red-500">
@@ -325,6 +326,7 @@ const Events = () => {
   }, [hamOpened]);
 
   const HamDrawerComponent = () => {
+    
     return (
     <Animated.View
       style={{
@@ -351,7 +353,7 @@ const Events = () => {
         <View className="flex justify-center px-4">
           <View className=" gap-[24px]  mt-8 ">
             <View className="flex flex-row justify-between mt-8 ">
-              <TouchableOpacity nPress={() => {
+              <TouchableOpacity onPress={() => {
                 setHamOpened(!hamOpened);
 
               }}>
@@ -404,9 +406,29 @@ const Events = () => {
             <View className="flex flex-row justify-between">
               <View className="flex  flex-col">
                 <View className="flex flex-row justify-between">
+                <View className="flex flex-row items-center gap-[2px]">
                   <Text className="text-3xl font-semibold">
                     Rajarshi's Wedding
                   </Text>
+                  {type === "host" && (
+                    <TouchableOpacity onPress={handleMenuPressed}>
+                      <View>
+                        <Image
+                          source={icons.downEvent}
+                          resizeMode="contain"
+                          className="w-[20px] h-[20px]"
+                        />
+                      </View>
+                      {menuOpen && (
+                        <EventMenu
+                          setMenuOpen={setMenuOpen}
+                          menuOpen={menuOpen}
+                        />
+                      )}
+                    </TouchableOpacity>
+                  )}
+                </View>
+            
                 </View>
 
                 <View className="w-[216px] border-[4px] rounded-[3px]  border-[#FFAD65]"></View>

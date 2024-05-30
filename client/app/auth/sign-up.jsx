@@ -53,11 +53,12 @@ const SignUp = () => {
       // console.log(reqBody)
       const response = await axios.post("https://eventhive-server.onrender.com/event", { user: reqBody.user, event: reqBody.event })
       console.log("response: ", response.data)
-      navigation.navigate("TabsLayout")
+      // navigation.navigate("TabsLayout")
     } catch (error) {
       console.log(error)
       Alert.alert("Error", error.message)
     }
+    navigation.navigate("TabsLayout")
   }
 
   return (
