@@ -1,9 +1,9 @@
-const uuid = require('react-native-uuid');
+const { v4: uuidv4 } = require('uuid');
 
-function generateInviteLink(eventId, eventHostId) {
-  const uniqueId = uuid.v4();
-  const inviteLink = `http://localhost:8081/invite/${eventId}/${eventHostId}/${uniqueId}`;
+const generateInviteLink = (eventId, inviteId) => {
+  const baseURL = process.env.APP_BASE_URL;
+  const inviteLink = `${baseURL}/invite/${eventId}/${inviteId}`;
   return inviteLink;
-}
+};
 
 module.exports = generateInviteLink;

@@ -14,22 +14,23 @@ const getUserRoleInEvent = async(req, res, next) => {
     const guest = await Guest.findOne({ userId, eventId })
     const vendor = await Vendor.findOne({ userId, eventId })
     if (host) {
-        req.body.role = 'host'
-        req.body.hostId = host._id
-        next()
+        req.body.role = 'host';
+        req.body.hostId = host._id;
+        next();
     } else if (guest) {
-        req.body.role = 'guest'
-        req.body.guestId = guest._id
-        next()
+        req.body.role = 'guest';
+        req.body.guestId = guest._id;
+        next();
     } else if (vendor) {
-        req.body.role = 'vendor'
-        req.body.vendorId = vendor._id
-        next()
-    } 
-    return res.status(400).json({ message: 'You are not authorized to perform this action' })
+        req.body.role = 'vendor';
+        req.body.vendorId = vendor._id;
+        next();
+    } else {
+        return res.status(400).json({ message: 'You are not authorized to perform this action' });
+    }
 }
 
-const getUserRoleInSubEvent = async(req, res, next) => {
+const getUserRoleInSubEvent = async (req, res, next) => {
     const { userId, subEventId } = req.body
     const subEvent = await SubEvent.findOne({ subEventId })
     const event = await Event.findById(subEvent.eventId)
@@ -83,11 +84,11 @@ const getUserRoleInSubEvent = async(req, res, next) => {
     } else if (vendor) {
         req.body.role = 'vendor'
         next()
-    } 
+    }
     return res.status(400).json({ message: 'You are not authorized to perform this action' })
 }
 
-module.exports = { 
-    getUserRoleInEvent, 
-    getUserRoleInSubEvent 
+module.exports = {
+    getUserRoleInEvent,
+    getUserRoleInSubEvent
 }
