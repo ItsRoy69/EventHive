@@ -5,6 +5,7 @@ const Guest = require('../models/guestModel')
 const Vendor = require('../models/vendorModel')
 const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
+const getJWTToken = require('../utils/getJWTToken')
 
 const getEvents = async (req, res) => {
     try {
@@ -130,6 +131,8 @@ const createEvent = async (req, res) => {
             userId = newUser._id
             user = newUser
         }
+        const userData = { userId: user._id, name: user.name, phone: user.phone }
+        const token = getJWTToken('1d', userData)
         let newEvent = await Event.create({
             name: event.name,
             datetime: event.datetime
@@ -139,6 +142,7 @@ const createEvent = async (req, res) => {
             eventId: newEvent._id
         })
         const data = {
+            token:token,
             user: user,
             event: newEvent
         }
