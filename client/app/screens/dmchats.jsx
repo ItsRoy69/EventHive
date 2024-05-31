@@ -1,8 +1,17 @@
 import React, { useState, useRef } from "react";
-import { Text, View, ScrollView, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform } from "react-native";
+import {
+  Text,
+  View,
+  ScrollView,
+  Button,
+  TextInput,
+  TouchableOpacity,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
 import { useNavigation } from "expo-router";
 import { styled } from "nativewind";
-import EmojiSelector, { Categories } from 'react-native-emoji-selector';
+import EmojiSelector, { Categories } from "react-native-emoji-selector";
 const StyledView = styled(View);
 const StyledText = styled(Text);
 const StyledScrollView = styled(ScrollView);
@@ -11,13 +20,15 @@ import Feather from "react-native-vector-icons/Feather";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import Entypo from "react-native-vector-icons/Entypo";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-import { useRoute } from '@react-navigation/native';
+import { useRoute } from "@react-navigation/native";
+import * as ImagePicker from "expo-image-picker";
 
 const DMChats = () => {
-  const navigation = useNavigation()
+  const navigation = useNavigation();
   const route = useRoute();
   const { name } = route.params || {};
-  console.log(name)
+  console.log(name);
+  const [image, setImage] = useState(null);
   const [message, setMessage] = useState("");
   const [showEmojiKeyboard, setShowEmojiKeyboard] = useState(false);
   const [messages, setMessages] = useState([
@@ -26,6 +37,25 @@ const DMChats = () => {
     { id: 3, text: "I'm doing great!", sender: "John" },
   ]);
 
+  const pickImage = async () => {
+    console.log("image clicked")
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      // Handle potential errors during image picking
+      if (result.error) {
+        console.error("Image Picker Error:", result.error);
+        alert("There was an error picking the image. Please try again.");
+      } else {
+        setImage(result.assets[0].uri);
+      }
+    }
+  };
   const sendMessage = () => {
     if (message.trim() !== "") {
       const newMessage = {
@@ -43,47 +73,51 @@ const DMChats = () => {
     scrollViewRef.current.scrollToEnd({ animated: true });
   };
 
-
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={{ flex: 1 }}
     >
-    <StyledView className="flex-1 bg-white">
-      <StyledView
-        className="flex-row pt-10 pb-3 px-1  items-center justify-between h-24 "
-        style={{
-          backgroundColor: "rgba(255, 173, 101, 0.14)",
-        }}
-      >
-        <StyledView className="flex flex-row  items-center">
-          <StyledView
-            style={{
-              backgroundColor: "rgba(255, 173, 101, 0.29)",
-            }}
-            className="flex-row items-center justify-center w-10 m-2 h-10 border-2 border-[#FFAD65] rounded-xl"
-          >
-            <FontAwesome6 name="arrow-left-long" size={16} color="#888" onPress={()=>navigation.goBack()} />
+      <StyledView className="flex-1 bg-white">
+        <StyledView
+          className="flex-row pt-10 pb-3 px-1  items-center justify-between h-24 "
+          style={{
+            backgroundColor: "rgba(255, 173, 101, 0.14)",
+          }}
+        >
+          <StyledView className="flex flex-row  items-center">
+            <StyledView
+              style={{
+                backgroundColor: "rgba(255, 173, 101, 0.29)",
+              }}
+              className="flex-row items-center justify-center w-10 m-2 h-10 border-2 border-[#FFAD65] rounded-xl"
+            >
+              <FontAwesome6
+                name="arrow-left-long"
+                size={16}
+                color="#888"
+                onPress={() => navigation.goBack()}
+              />
+            </StyledView>
+            <StyledView className="flex-col items-start justify-center">
+              <StyledText className="text-lg font-bold text-[#1F2E2A]">
+                {name || "Group Name"}
+              </StyledText>
+            </StyledView>
           </StyledView>
-          <StyledView className="flex-col items-start justify-center">
-            <StyledText className="text-lg font-bold text-[#1F2E2A]">
-              {name || "Group Name"}
-            </StyledText>
+          <StyledView className="flex-row items-center">
+            <StyledView className="m-2 mb-0">
+              <Feather name="phone" size={20} color="#888" />
+            </StyledView>
+            <StyledView className="m-2 mb-0">
+              <AntDesign name="adduser" size={20} color="#888" />
+            </StyledView>
+            <StyledView className="m-2 mb-0">
+              <Entypo name="dots-three-vertical" size={20} color="#888" />
+            </StyledView>
           </StyledView>
         </StyledView>
-        <StyledView className="flex-row items-center">
-          <StyledView className="m-2 mb-0">
-            <Feather name="phone" size={20} color="#888" />
-          </StyledView>
-          <StyledView className="m-2 mb-0">
-            <AntDesign name="adduser" size={20} color="#888" />
-          </StyledView>
-          <StyledView className="m-2 mb-0">
-            <Entypo name="dots-three-vertical" size={20} color="#888" />
-          </StyledView>
-        </StyledView>
-      </StyledView>
-      <StyledScrollView ref={scrollViewRef} className="flex-1 px-4 py-2">
+        <StyledScrollView ref={scrollViewRef} className="flex-1 px-4 py-2">
           {messages.map((message) => (
             <StyledView
               key={message.id}
@@ -109,7 +143,9 @@ const DMChats = () => {
         >
           <StyledView className="flex-row items-center justify-between bg-white rounded-lg">
             <StyledView className="flex-row items-center flex-1 rounded-full pl-4 p-2">
-              <TouchableOpacity onPress={() => setShowEmojiKeyboard(!showEmojiKeyboard)}>
+              <TouchableOpacity
+                onPress={() => setShowEmojiKeyboard(!showEmojiKeyboard)}
+              >
                 <Entypo name="emoji-happy" size={20} color="#888" />
               </TouchableOpacity>
               <TextInput
@@ -131,7 +167,13 @@ const DMChats = () => {
               )}
             </StyledView>
             <StyledView className="m-2">
-              <AntDesign name="paperclip" size={20} color="#888" />
+                <AntDesign name="paperclip" size={20} color="#888" onPress={pickImage} />
+              {image && (
+                <Image
+                  source={{ uri: image }}
+                  className="w-[200px] h-[200px]"
+                />
+              )}
             </StyledView>
             <StyledView className="mr-2">
               {message.length === 0 ? (

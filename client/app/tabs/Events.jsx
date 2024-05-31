@@ -9,7 +9,7 @@ import {
   Animated,
   Easing,
 } from "react-native";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useContext } from "react";
 import { Image } from "react-native";
 import icons from "../../constants/icons";
 import images from "../../constants/images";
@@ -17,13 +17,31 @@ import { useNavigation } from "@react-navigation/native";
 import Invitation from "../screens/invitation";
 import { InvitationProvider } from "../context/InvitationContext";
 import EventMenu from "../screens/eventMenu";
+import { CreateEventContext } from "../context/CreateEventContext";
 
 import HamDrawer from "../components/HamDrawer";
 
-
 const Events = () => {
   const navigator = useNavigation();
-  const type = "host";
+  const { user, event } = useContext(CreateEventContext);
+
+  // console.log("user form event:", user);
+
+  let type = "";
+  if (user.role == "The Bride" || user.role == "The Groom") {
+    type = "host";
+  } else {
+    type = "guest"
+  }
+  const makeName = () => {
+    const name = user.name;
+    if (name.endsWith("s")) {
+      return `${name}'`;
+    } else {
+      return `${name}'s`;
+    }
+  };
+
   const todo = [
     {
       name: "Meeting with Bimal Da - Florist",
@@ -62,13 +80,13 @@ const Events = () => {
       id: 1,
       image: `${images.dummyVenue}`,
       notification: 65,
-      name: "Venue Decoration",
+      name: "Haldi Day",
     },
     {
       id: 2,
       image: `${images.food}`,
       notification: 24,
-      name: "Food and Catering",
+      name: "Wedding Day",
     },
     {
       id: 3,
@@ -99,40 +117,67 @@ const Events = () => {
   ];
   const subItems = {
     1: [
+      
       {
-        id: "1-1",
-        image: `${icons.groupChat}`,
-        notification: 60,
-        data: "Group chat",
-        type: "Group"
+        id: "1-2",
+        image: `${icons.florist}`,
+        data: "Florist Bimal Da",
+        type: "dm",
       },
-      { id: "1-2", image: `${icons.florist}`, data: "Florist Bimal Da", type: "dm" },
-      { id: "1-3", image: `${icons.venue}`, data: "Venue Decorator", type: "dm" },
-      { id: "1-4", image: `${icons.florist}`, data: "Photographer", type: "dm" },
+      {
+        id: "1-3",
+        image: `${icons.venue}`,
+        data: "Venue Decorator",
+        type: "dm",
+      },
+      {
+        id: "1-4",
+        image: `${icons.florist}`,
+        data: "Photographer",
+        type: "dm",
+      },
     ],
     2: [
+     
       {
-        id: "1-1",
-        image: `${icons.groupChat}`,
-        notification: 60,
-        data: "Group chat",
-        type: "group"
+        id: "1-2",
+        image: `${icons.florist}`,
+        data: "Florist Bimal Da",
+        type: "dm",
       },
-      { id: "1-2", image: `${icons.florist}`, data: "Florist Bimal Da", type: "dm" },
-      { id: "1-3", image: `${icons.venue}`, data: "Venue Decorator", type: "dm" },
-      { id: "1-4", image: `${icons.florist}`, data: "Photographer", type: "dm" },
+      {
+        id: "1-3",
+        image: `${icons.venue}`,
+        data: "Venue Decorator",
+        type: "dm",
+      },
+      {
+        id: "1-4",
+        image: `${icons.florist}`,
+        data: "Photographer",
+        type: "dm",
+      },
     ],
     3: [
+     
       {
-        id: "1-1",
-        image: `${icons.groupChat}`,
-        notification: 60,
-        data: "Group chat",
-        type: "group"
+        id: "1-2",
+        image: `${icons.florist}`,
+        data: "Florist Bimal Da",
+        type: "dm",
       },
-      { id: "1-2", image: `${icons.florist}`, data: "Florist Bimal Da", type: "dm" },
-      { id: "1-3", image: `${icons.venue}`, data: "Venue Decorator", type: "dm" },
-      { id: "1-4", image: `${icons.florist}`, data: "Photographer", type: "dm" },
+      {
+        id: "1-3",
+        image: `${icons.venue}`,
+        data: "Venue Decorator",
+        type: "dm",
+      },
+      {
+        id: "1-4",
+        image: `${icons.florist}`,
+        data: "Photographer",
+        type: "dm",
+      },
     ],
   };
 
@@ -141,9 +186,9 @@ const Events = () => {
       setSelected(false);
       setSelectedSubItem(null);
       return;
-    } 
-    if (item.type = "group") {
-      navigator.navigate("GroupChats", { name: item.data })
+    }
+    if ((item.type == "group")) {
+      navigator.navigate("GroupChats", { name: item.data });
     } else {
       navigator.navigate("DMChats", { name: item.data });
     }
@@ -153,11 +198,11 @@ const Events = () => {
     if (selected && selectedSubItem === itemId) {
       setSelected(false);
       setSelectedSubItem(null);
-      return
+      return;
     }
     setSelected(true);
     setSelectedSubItem(itemId);
-  }
+  };
 
   const renderCommonItems = ({ itemId, itemName }) => {
     console.log("from events", itemName);
@@ -220,49 +265,53 @@ const Events = () => {
     );
   };
 
-  const renderSubItems = (itemId) => {
+  const renderSubItems = ({ itemId, itemName }) => {
     return (
-      <SectionList
-        sections={[{ data: subItems[itemId] }]}
-        renderItem={({ item }) => (
-          <TouchableOpacity
-            onPress={() => handleNavigateToChat(item)}
-            onLongPress={() => handleSelectSubItem(item.id)}
-          >
-            <View className="py-3 px-2 border-b-[0.5px] flex flex-row justify-between items-center border-gray-300">
-              <View className="gap-[10px] flex flex-row items-center">
-                {selected && selectedSubItem === item.id ? (
-                  <Image
-                    source={icons.right}
-                    resizeMode="contain"
-                    className="w-[35px] h-[35px]"
-                  />
-                ) : (
-                  <Image
-                    source={item.image}
-                    resizeMode="contain"
-                    className="w-[35px] h-[35px]"
-                  />
-                )}
-
-                <Text className="text-md font-semibold text-gray-700">
-                  {item.data}
-                </Text>
-              </View>
-              {item.notification > 0 && (
-                <View className="px-[10px] py-1 bg-[#A34342] rounded-[15px]">
-                  <Text className="font-semibold text-white">
-                    {item.notification} +
+      <View>
+        {renderCommonItems({ itemId: itemId, itemName: itemName })}
+        <SectionList
+          sections={[{ data: subItems[itemId] }]}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              onPress={() => handleNavigateToChat(item)}
+              onLongPress={() => handleSelectSubItem(item.id)}
+            >
+              <View className="py-3 px-2 border-b-[0.5px] flex flex-row justify-between items-center border-gray-300">
+                <View className="gap-[10px] flex flex-row items-center">
+                  {selected && selectedSubItem === item.id ? (
+                    <Image
+                      source={icons.right}
+                      resizeMode="contain"
+                      className="w-[35px] h-[35px]"
+                    />
+                  ) : (
+                    <Image
+                      source={item.image}
+                      resizeMode="contain"
+                      className="w-[35px] h-[35px]"
+                    />
+                  )}
+  
+                  <Text className="text-md font-semibold text-gray-700">
+                    {item.data}
                   </Text>
                 </View>
-              )}
-            </View>
-          </TouchableOpacity>
-        )}
-        keyExtractor={(item) => item.id}
-      />
+                {item.notification > 0 && (
+                  <View className="px-[10px] py-1 bg-[#A34342] rounded-[15px]">
+                    <Text className="font-semibold text-white">
+                      {item.notification} +
+                    </Text>
+                  </View>
+                )}
+              </View>
+            </TouchableOpacity>
+          )}
+          keyExtractor={(item) => item.id}
+        />
+      </View>
     );
   };
+  
 
   const renderGuestItem = ({ item }) => (
     <View>
@@ -296,6 +345,7 @@ const Events = () => {
       </TouchableOpacity>
     </View>
   );
+
   const renderItem = ({ item }) => (
     <View className="">
       <TouchableOpacity
@@ -320,11 +370,15 @@ const Events = () => {
               </View>
             )}
 
-            <Image source={icons.menu} className="h-6 w-8" resizeMode="contain" />
+            <Image
+              source={icons.menu}
+              className="h-6 w-8"
+              resizeMode="contain"
+            />
           </View>
         </View>
 
-        {expandedItem === item.id && renderSubItems(item.id)}
+        {expandedItem === item.id && renderSubItems({ itemId: item.id, itemName: item.name })}
       </TouchableOpacity>
     </View>
   );
@@ -335,20 +389,21 @@ const Events = () => {
 
   return (
     <SafeAreaView className="relative bg-white h-full">
-      {hamOpened && <HamDrawer hamOpened={hamOpened} setHamOpened={setHamOpened} />}
-      <View 
-        className="flex justify-center px-4"
-      >
+      {hamOpened && (
+        <HamDrawer hamOpened={hamOpened} setHamOpened={setHamOpened} />
+      )}
+      <View className="flex justify-center px-4">
         <View className="gap-[24px] mt-8 ">
           <View className="flex flex-row justify-between mt-8 ">
-            <TouchableOpacity onPress={() => {
-              setHamOpened(!hamOpened);
-            }}>
+            <TouchableOpacity
+              onPress={() => {
+                setHamOpened(!hamOpened);
+              }}
+            >
               <Image
                 source={icons.ham}
                 resizeMode="contain"
                 className="w-[40px] h-[40px]"
-                
               />
             </TouchableOpacity>
             {!selected ? (
@@ -366,26 +421,26 @@ const Events = () => {
               </View>
             ) : (
               <View className="h-[42px] w-[140px] rounded-[8px] flex flex-row items-center justify-evenly py-2 bg-[#FFAD65]/[0.14]">
-              <TouchableOpacity>
-                <Image
-                  source={icons.userCross}
-                  resizeMode="contain"
-                  className="w-[24px] px-3 h-[24px]"
-                />
-              </TouchableOpacity>
-              <TouchableOpacity>
-                <Image
-                  source={icons.remove}
-                  resizeMode="contain"
-                  className="w-[24px] px-3 h-[24px]"
-                />
+                <TouchableOpacity>
+                  <Image
+                    source={icons.userCross}
+                    resizeMode="contain"
+                    className="w-[24px] px-3 h-[24px]"
+                  />
                 </TouchableOpacity>
                 <TouchableOpacity>
-                <Image
-                  source={icons.notification}
-                  resizeMode="contain"
-                  className="w-[22px] px-3 h-[22px]"
-                />
+                  <Image
+                    source={icons.remove}
+                    resizeMode="contain"
+                    className="w-[24px] px-3 h-[24px]"
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity>
+                  <Image
+                    source={icons.notification}
+                    resizeMode="contain"
+                    className="w-[22px] px-3 h-[22px]"
+                  />
                 </TouchableOpacity>
               </View>
             )}
@@ -393,16 +448,27 @@ const Events = () => {
           <View className="flex flex-row justify-between">
             <View className="flex  flex-col">
               <View className="flex flex-row justify-between">
+                <View className='flex items-center flex-row'>
                 <Text className="text-3xl font-semibold">
-                  Rajarshi's Wedding
+                  {makeName()} Wedding
                 </Text>
+                <TouchableOpacity onPress={handleMenuPressed}>
+                <View className='flex self-center'>
+                  <Image source={icons.downEvent} resizeMode="contain" className='w-[20px] h-[20px]' />
+                </View>
+                </TouchableOpacity>
+                </View>
               </View>
+              {menuOpen && (
+                <EventMenu
+                  menuOpen={ menuOpen}
+                  setMenuOpen={setMenuOpen}
+                />
+              )}
 
               <View className="w-[216px] border-[4px] rounded-[3px]  border-[#FFAD65]"></View>
             </View>
-            <TouchableOpacity
-            onPress={handleInvitationPress}
-            >
+            <TouchableOpacity onPress={handleInvitationPress}>
               <Image
                 source={icons.invite}
                 resizeMode="contain"
@@ -410,89 +476,111 @@ const Events = () => {
               />
             </TouchableOpacity>
           </View>
-        </View>
+          <View className="border-[0.5px] border-slate-400" />
+        </View> 
         {!invitationPressed ? (
-        <>
-        <View className="reminders flex py-2 mt-1">
-          <Text className="text-sm text-slate-400">Reminders</Text>
-          {
-            remindersOpen && (
-              <View className="mt-2">
-                {reminders.map((item, index) => (
-                  <View
-                    className="bg-[#FFAD65]/[0.14] h-[58px] rounded-[8px] flex flex-row border-l-8 border-[#FFAD65] justify-between items-center w-full pl-4 mb-3 py-2"
-                    key={index}
-                  >
-                    <View className="flex justify-start">
-                      <Text className="text-black font-bold">{item.name}</Text>
+          <>
+            <View className="reminders flex py-2 mt-1">
+              <Text className="text-sm text-slate-400">Reminders</Text>
+              {remindersOpen && (
+                <View className="mt-2">
+                  {reminders.map((item, index) => (
+                    <View
+                      className="bg-[#FFAD65]/[0.14] h-[58px] rounded-[8px] flex flex-row border-l-8 border-[#FFAD65] justify-between items-center w-full pl-4 mb-3 py-2"
+                      key={index}
+                    >
+                      <View className="flex justify-start">
+                        <Text className="text-black font-bold">
+                          {item.name}
+                        </Text>
 
-                      <View className="flex flex-row gap-[2px]">
-                        <Text>{item.location}</Text>
-                        <Text>-</Text>
-                        <Text className="font-semibold">{item.time}</Text>
+                        <View className="flex flex-row gap-[2px]">
+                          <Text>{item.location}</Text>
+                          <Text>-</Text>
+                          <Text className="font-semibold">{item.time}</Text>
+                        </View>
                       </View>
+
+                      <Image
+                        source={icons.menu}
+                        className="h-6"
+                        resizeMode="contain"
+                      />
                     </View>
-
-                    <Image
-                      source={icons.menu}
-                      className="h-6"
-                      resizeMode="contain"
-                    />
-                  </View>
-                ))}
-              </View>
-            )
-          }
-          
-        </View>
-        <View className="relative border-[0.5px] h-0 my-5 border-slate-400">
-          <TouchableOpacity 
-            className="absolute h-7 w-7 right-5 -bottom-[12px]"
-            onPress={() => setRemindersOpen(!remindersOpen)}
-          >
-            <Image
-              className={`w-full h-full rounded-full ${!remindersOpen && 'rotate-180'}`}
-              resizeMode="contain"
-              source={require('../../assets/icons/reminderShow.png')}
+                  ))}
+                </View>
+              )}
+            </View>
+            <View className="relative border-[0.5px] h-0 my-5 border-slate-400">
+              <TouchableOpacity
+                className="absolute h-7 w-7 right-5 -bottom-[12px]"
+                onPress={() => setRemindersOpen(!remindersOpen)}
+              >
+                <Image
+                  className={`w-full h-full rounded-full ${
+                    !remindersOpen && "rotate-180"
+                  }`}
+                  resizeMode="contain"
+                  source={require("../../assets/icons/reminderShow.png")}
+                />
+              </TouchableOpacity>
+            </View>
+            <View className="py-2 flex flex-row gap-[5px]">
+            <TouchableOpacity
+                className="px-3 py-1  bg-slate-100 rounded-[10px] text-black"
+                onPress={() => {}}
+              >
+                <Text>DMs</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                className="px-3 py-1  bg-slate-100 rounded-[10px] text-black"
+                onPress={() => {}}
+              >
+                <Text>Unread</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                className="px-3 py-1  bg-slate-100 rounded-[10px] text-black"
+                onPress={() => {}}
+              >
+                <Text>Calls</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                className="px-3 py-1  bg-slate-100 rounded-[10px] text-black"
+                onPress={() => {
+                  navigator.navigate("GroupChats");
+                }}
+              >
+                <Text>Groups</Text>
+              </TouchableOpacity>
+            </View>
+            {type == 'host' ? (
+              <FlatList
+              data={parentItems}
+              renderItem={renderItem}
+              keyExtractor={(item) => item.id}
+              className="mt-2"
             />
-          </TouchableOpacity>
-        </View>
-        <View className="py-2 flex flex-row gap-[5px]">
-          <TouchableOpacity 
-            className="px-3 py-1  bg-slate-100 rounded-[10px] text-black"
-            onPress={() => {}}
-          >
-            <Text>Unread</Text>
-          </TouchableOpacity>
-          <TouchableOpacity 
-            className="px-3 py-1  bg-slate-100 rounded-[10px] text-black"
-            onPress={() => {}}
-          >
-            <Text>Calls</Text>
-          </TouchableOpacity>
-          <TouchableOpacity 
-            className="px-3 py-1  bg-slate-100 rounded-[10px] text-black"
-            onPress={() => {navigator.navigate("GroupChats")}}
-          >
-            <Text>Groups</Text>
-          </TouchableOpacity>
-        </View>
-
-        <FlatList
-          data={parentItems}
-          renderItem={renderItem}
-          keyExtractor={(item) => item.id}
-          className="mt-2"
-        />
-        </>
-        ):(
-          <InvitationProvider value={{sendInvitation,setSendInvitation}}>
-            <Invitation/>
+            ):(
+              <FlatList
+              data={guestParentItem}
+              renderItem={renderGuestItem}
+              keyExtractor={(item) => item.id}
+              className="mt-2"
+            />
+            )}
+            
+          </>
+        ) : (
+          <InvitationProvider value={{ sendInvitation, setSendInvitation }}>
+            <Invitation />
           </InvitationProvider>
         )}
+        <View className='rounded-md mt-5 flex items-center px-4 py-2 bg-[#FFAD65]/[0.8]'>
+          <Text className='text-white text-xl'>+ Add Event Channel</Text>
+        </View>
       </View>
     </SafeAreaView>
-  )
+  );
 };
 
 export default Events;

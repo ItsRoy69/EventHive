@@ -4,9 +4,9 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import icons from "../../constants/icons";
 import { InvitationContext } from "../context/InvitationContext";
 import Events from "./Events";
-import Calendar from "./calendar";
+import CalendarItem from "./calendar";
 import Activities from "./activities";
-import EventPlan from "./eventPlan";
+import EventPlan from "./EventPlan";
 import { StatusBar } from "expo-status-bar";
 
 const Tab = createBottomTabNavigator();
@@ -91,8 +91,8 @@ const TabsLayout = () => {
       )} */}
 
       <Tab.Screen
-        name="Calendar"
-        component={Calendar}
+        name="calendar"
+        component={CalendarItem}
         options={{
           tabBarIcon: ({ name, color, focused }) => (
             <TabIcon
@@ -105,7 +105,7 @@ const TabsLayout = () => {
         }}
       />
       <Tab.Screen
-        name="Activities"
+        name="activities"
         component={Activities}
         options={{
           tabBarIcon: ({ name, color, focused }) => (

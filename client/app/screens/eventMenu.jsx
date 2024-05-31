@@ -1,11 +1,14 @@
-import React from "react";
+import React,{useState} from "react";
 import { View, Text, Modal, Button, Image, TouchableOpacity, TouchableWithoutFeedback } from "react-native";
 import { useNavigation } from "expo-router";
+import AddGuest from "./addGuest";
 
 const EventMenu = ({ menuOpen, setMenuOpen }) => {
   const navigation = useNavigation()
+  const [addGuest,setAddGuest] = useState(false)
+
   const handleAddGuest = () =>{
-    navigation.navigate('AddGuest')
+    setAddGuest(true)
   }
   return (
     <Modal
@@ -14,6 +17,7 @@ const EventMenu = ({ menuOpen, setMenuOpen }) => {
       visible={menuOpen}
       onRequestClose={() => setMenuOpen(false)}
     >
+    {addGuest ? ( <AddGuest/>):(
       <TouchableWithoutFeedback onPress={() => setMenuOpen(false)}>
         <View className="flex-1 justify-center items-center bg-black/[0.5]">
           <TouchableWithoutFeedback>
@@ -54,6 +58,8 @@ const EventMenu = ({ menuOpen, setMenuOpen }) => {
           </TouchableWithoutFeedback>
         </View>
       </TouchableWithoutFeedback>
+    )}
+     
     </Modal>
   );
 };

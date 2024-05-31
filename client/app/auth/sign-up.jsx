@@ -2,6 +2,8 @@ import React, { useState, useContext } from "react";
 import { View, Text, TextInput, TouchableOpacity, Image, Alert } from "react-native";
 import { styled } from "nativewind";
 import { useNavigation } from "@react-navigation/native";
+import * as Keychain from 'react-native-keychain';
+
 const StyledView = styled(View);
 const StyledText = styled(Text);
 const StyledTextInput = styled(TextInput);
@@ -9,10 +11,24 @@ const StyledTouchableOpacity = styled(TouchableOpacity);
 const StyledImage = styled(Image);
 
 import axios from "axios";
+import { useGlobalContext } from "../context/GlobalProvider";
 import { CreateEventContext } from "../context/CreateEventContext";
 
 const SignUp = () => {
   const [name, setName] = useState("");
+
+  async function storeToken(token) {
+    try {
+      await Keychain.setGenericPassword('jwt', token);
+      console.log('Token stored successfully');
+    } catch (error) {
+      console.log('Could not store token', error);
+    }
+  }
+  const handleStoreToken = async ({token}) => {
+    await storeToken(token);
+  };
+
   const blankCreds = {
     email: '', 
     phone: '', 
@@ -20,7 +36,10 @@ const SignUp = () => {
   }
   const [creds, setCreds] = useState(blankCreds);
   const navigation = useNavigation();
-  const { user, event } = useContext(CreateEventContext);
+  const { user, event,setUser,setEvent } = useContext(CreateEventContext);
+  // console.log("From Signup : ",user,event)
+
+  // console.log("user: ",user)
 
   const nameBuilder = (arr, type) => {
     let res = ""
@@ -53,11 +72,23 @@ const SignUp = () => {
       // console.log(reqBody)
       const response = await axios.post("https://eventhive-server.onrender.com/event", { user: reqBody.user, event: reqBody.event })
       console.log("response: ", response.data)
+      setEvent(existingEvent =>({...existingEvent,_id:response.data.data.event._id}))
+      // handleStoreToken(response.data.data.user)
+
+      const eventObject = reqBody.event
+      // const userObject = {
+      //   name: reqBody.user.name,
+      //   role: "host"
+      // }
+      // setUser(userObject)
+      // setEvent(eventObject)
+
       navigation.navigate("TabsLayout")
     } catch (error) {
       console.log(error)
       Alert.alert("Error", error.message)
     }
+    
   }
 
   return (

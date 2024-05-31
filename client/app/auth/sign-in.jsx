@@ -24,7 +24,7 @@ const SignIn = () => {
         try {
             const response = await axios.post("https://eventhive-server.onrender.com/user/login", { phone: creds.phone, email: creds.email, password: creds.password });
             const result = response.data
-            console.log(result)
+            console.log(result.user)
             navigation.navigate("TabsLayout")
         } catch (error) {
             console.log(error.message)

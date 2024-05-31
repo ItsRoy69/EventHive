@@ -19,17 +19,26 @@ import {
   Stage,
   Entrance,
 } from "../components/FloorComponents";
+import DraggableResizableComponent from "../components/DraggableResizableComponent";
 import HamDrawer from "../components/HamDrawer";
+import PaymentModal from "../screens/paymentModal";
 
 const EventPlan = () => {
   const [showPreference, setShowPreference] = useState(false);
   const [floor, setFloor] = useState("Floor 1");
   const [selectedChair, setSelectedChair] = useState(false);
+  const [selectedVendor,setSelectedVendor] = useState(null)
+  const [modalOpen,setModalOpen] = useState(false)
 
   const handleCheckBox = () => {
     setShowPreference(!showPreference);
   };
-  const type ='guest'
+
+  const handleMenuOpen=(item)=>{
+    setSelectedVendor(item);
+    setModalOpen(true);
+  }
+  const type = "guest";
 
   const invitees = [
     {
@@ -80,29 +89,42 @@ const EventPlan = () => {
     "Floor 1": (
       <View className="border-2 h-[200px] flex border-[#BEBEBE] bg-[#ECECE]">
         <View className="flex flex-row">
-          <Verandah />
-          <Room name="Room for bride" />
+          <DraggableResizableComponent>
+            <Verandah />
+          </DraggableResizableComponent>
+          <DraggableResizableComponent>
+            <Room name="Room for bride" />
+          </DraggableResizableComponent>
         </View>
 
         <View className="flex items-center h-[40px] relative left-[-10px] top-[-29px]">
-          <Stage />
+          <DraggableResizableComponent>
+            <Stage />
+          </DraggableResizableComponent>
         </View>
         <View className="flex ">
           <View className=" h-[55px]  relative top-[-78px]">
-            <Room name="Room for bride" />
+            <DraggableResizableComponent>
+              <Room name="Room for bride" />
+            </DraggableResizableComponent>
           </View>
           <View className=" h-[45px] w-[100px]  relative top-[-72px]">
-            <Room name="Drinks and snacks" />
+            <DraggableResizableComponent>
+              <Room name="Drinks and snacks" />
+            </DraggableResizableComponent>
           </View>
           <View className=" h-[32px] w-[55px] mt-3  relative top-[-72px]">
-            <Entrance />
+            <DraggableResizableComponent>
+              <Entrance />
+            </DraggableResizableComponent>
           </View>
         </View>
 
         <TouchableOpacity onPress={() => setSelectedChair(!selectedChair)}>
           <View className="items-center relative top-[-150px] mt-1 h-[74px] flex justify-center">
-          
-            <TableArea />
+            <DraggableResizableComponent>
+              <TableArea />
+            </DraggableResizableComponent>
           </View>
         </TouchableOpacity>
       </View>
@@ -110,24 +132,40 @@ const EventPlan = () => {
     "Floor 2": (
       <View className="border-2 h-[200px] border-[#BEBEBE] bg-[#ECECE]">
         <View className="flex flex-row">
-          <Room name="Room for groom" />
-          <SofaSeating />
+          <DraggableResizableComponent>
+            <Room name="Room for groom" />
+          </DraggableResizableComponent>
+          <DraggableResizableComponent>
+            <SofaSeating />
+          </DraggableResizableComponent>
         </View>
         <View className="flex flex-row ">
-          <TableArea />
-          <Entrance />
+          <DraggableResizableComponent>
+            <TableArea />
+          </DraggableResizableComponent>
+          <DraggableResizableComponent>
+            <Entrance />
+          </DraggableResizableComponent>
         </View>
       </View>
     ),
     "Floor 3": (
       <View className="border-2 h-[200px] border-[#BEBEBE] bg-[#ECECE]">
         <View className="flex flex-row">
-          <Room name="VIP Room" />
-          <TableArea />
+          <DraggableResizableComponent>
+            <Room name="VIP Room" />
+          </DraggableResizableComponent>
+          <DraggableResizableComponent>
+            <TableArea />
+          </DraggableResizableComponent>
         </View>
         <View className="flex flex-row ">
-          <Entrance />
-          <SofaSeating />
+          <DraggableResizableComponent>
+            <Entrance />
+          </DraggableResizableComponent>
+          <DraggableResizableComponent>
+            <SofaSeating />
+          </DraggableResizableComponent>
         </View>
       </View>
     ),
@@ -178,24 +216,35 @@ const EventPlan = () => {
           <Text className="text-md flex  ">{item.name}</Text>
         </View>
       </View>
-      {item.call && (
-        <View className="bg-[#A34342] flex justify-center items-center rounded-md p-2 w-[29px] h-[18px]">
-          <Image
-            source={icons.phone}
-            resizeMode="contain"
-            className="w-[15px] h-[15px]"
-          />
-        </View>
-      )}
+      <View className="flex flex-row">
+        {item.call && (
+          <View className="bg-[#A34342] flex justify-center items-center rounded-md p-2 w-[29px] h-[18px]">
+            <Image
+              source={icons.phone}
+              resizeMode="contain"
+              className="w-[15px] h-[15px]"
+            />
+          </View>
+        )}
+        <TouchableOpacity onPress={()=>handleMenuOpen(item)} >
+          <View>
+            <Image
+              source={icons.menu}
+              resizeMode="contain"
+              className="w-[20px] h-[20px]"
+            />
+          </View>
+        </TouchableOpacity>
+      </View>
     </View>
   );
-  const [numberOfChair,setNumberOfChair] = useState(0)
-  const handleAddChair = ()=>{
-    setNumberOfChair(numberOfChair + 1)
-  }
-  const handleDeleteChair = ()=>{
-    setNumberOfChair(numberOfChair - 1 )
-  }
+  const [numberOfChair, setNumberOfChair] = useState(0);
+  const handleAddChair = () => {
+    setNumberOfChair(numberOfChair + 1);
+  };
+  const handleDeleteChair = () => {
+    setNumberOfChair(numberOfChair - 1);
+  };
   const elements = [
     {
       id: 1,
@@ -232,21 +281,21 @@ const EventPlan = () => {
                   <Text className="text-lg">Round table and Chairs</Text>
                   <View className="flex flex-row gap-[2px]">
                     <TouchableOpacity onPress={handleDeleteChair}>
-                    <Image
-                      source={require("../../assets/icons/minus.png")}
-                      resizeMode="contain"
-                      className="w-[24px] h-[24px]"
-                    />
+                      <Image
+                        source={require("../../assets/icons/minus.png")}
+                        resizeMode="contain"
+                        className="w-[24px] h-[24px]"
+                      />
                     </TouchableOpacity>
                     <View className="w-[48px] flex justify-center items-center bg-white">
                       <Text>{numberOfChair}</Text>
                     </View>
                     <TouchableOpacity onPress={handleAddChair}>
-                    <Image
-                      source={require("../../assets/icons/plus.png")}
-                      resizeMode="contain"
-                      className="w-[24px] h-[24px]"
-                    />
+                      <Image
+                        source={require("../../assets/icons/plus.png")}
+                        resizeMode="contain"
+                        className="w-[24px] h-[24px]"
+                      />
                     </TouchableOpacity>
                   </View>
                 </View>
@@ -327,7 +376,7 @@ const EventPlan = () => {
         </View>
       ),
     },
-   
+
     {
       id: 3,
       name: "Event Vendors",
@@ -398,18 +447,21 @@ const EventPlan = () => {
 
   return (
     <SafeAreaView className="bg-white h-full">
-      {hamOpened && <HamDrawer hamOpened={hamOpened} setHamOpened={setHamOpened} />}
+      {hamOpened && (
+        <HamDrawer hamOpened={hamOpened} setHamOpened={setHamOpened} />
+      )}
       <View className="flex justify-center px-4">
         <View className="gap-[24px] mt-8">
           <View className="flex flex-row justify-between mt-8">
-            <TouchableOpacity onPress={() => {
-              setHamOpened(!hamOpened);
-            }}>
+            <TouchableOpacity
+              onPress={() => {
+                setHamOpened(!hamOpened);
+              }}
+            >
               <Image
                 source={icons.ham}
                 resizeMode="contain"
                 className="w-[40px] h-[40px]"
-                
               />
             </TouchableOpacity>
             <View className="flex flex-row gap-[3px]">
@@ -425,6 +477,13 @@ const EventPlan = () => {
               />
             </View>
           </View>
+          {selectedVendor && (
+        <PaymentModal
+          visible={modalOpen}
+          onClose={() => setModalOpen(false)}
+          item={selectedVendor}
+        />
+      )}
           <View className="flex flex-col">
             <View className="flex flex-row justify-between">
               <Text className="text-3xl font-semibold">Wedding Plan</Text>

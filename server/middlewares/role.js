@@ -39,7 +39,7 @@ const getUserRoleInEvent = async(req, res, next) => {
     return res.status(400).json({ message: 'You are not authorized to perform this action' })
 }
 
-const getUserRoleInSubEvent = async(req, res, next) => {
+const getUserRoleInSubEvent = async (req, res, next) => {
     const { userId, subEventId } = req.body
     const subEvent = await SubEvent.findOne({ subEventId })
     const event = await Event.findById(subEvent.eventId)
@@ -93,11 +93,11 @@ const getUserRoleInSubEvent = async(req, res, next) => {
     } else if (vendor) {
         req.body.role = 'vendor'
         next()
-    } 
+    }
     return res.status(400).json({ message: 'You are not authorized to perform this action' })
 }
 
-module.exports = { 
-    getUserRoleInEvent, 
-    getUserRoleInSubEvent 
+module.exports = {
+    getUserRoleInEvent,
+    getUserRoleInSubEvent
 }

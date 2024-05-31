@@ -1,5 +1,6 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import OnboardingScreen from "./screens/onboarding";
 import EventSelection from "./screens/eventselection";
 import BrideGroom from "./screens/bridegroom";
@@ -18,6 +19,7 @@ import Floor from "./floor";
 import TabsLayout from "./tabs/_layout";
 import Events from './tabs/Events'
 import AddGuest from "./screens/addGuest";
+import { GlobalProvider } from "./context/GlobalProvider";
 
 const Stack = createNativeStackNavigator();
 
@@ -26,6 +28,9 @@ const App = () => {
 
   return (
     <>
+      <GlobalProvider>
+
+      <GestureHandlerRootView style={{ flex: 1 }}>
       {hideSplashScreen ? (
         <Stack.Navigator screenOptions={{ headerShown: false }}>
           <Stack.Screen name="OnboardingScreen" component={OnboardingScreen} />
@@ -48,6 +53,8 @@ const App = () => {
 
         </Stack.Navigator>
       ) : null}
+      </GestureHandlerRootView>
+      </GlobalProvider>
     </>
   );
 };
