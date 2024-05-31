@@ -5,6 +5,7 @@ import {
   Platform,
   Image,
   TouchableOpacity,
+  Switch,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import React, { useState } from "react";
@@ -86,6 +87,8 @@ const CreateEvent = ({ onChangeEvent }) => {
     return `${parsedHours}:${minutes} ${suffix}`;
   };
 
+  const [createChannel, setCreateChannel] = useState(true)
+
   return (
     <View className="flex gap-[15px] px-2 ">
       <View className="mb-3">
@@ -166,10 +169,11 @@ const CreateEvent = ({ onChangeEvent }) => {
         />
       </View>
       <View className="flex flex-row items-center ">
-        <TouchableOpacity>
-          <View className="border w-3 h-3 mr-3 "></View>
-        </TouchableOpacity>
-        <Text>Create channel for this event</Text>
+        <Switch
+          value={createChannel}
+          onValueChange={setCreateChannel}
+        />
+        <Text className="ml-2">Create channel for this event</Text>
       </View>
 
       <TouchableOpacity
