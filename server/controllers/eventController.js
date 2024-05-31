@@ -27,13 +27,12 @@ const getAllEvents = async (req, res) => {
             },
             {
                 $addFields: {
-                    role: 'guest'
+                    "event.role": 'guest'
                 }
             },
             {
                 $project: {
-                    event: 1,
-                    role: 1
+                    event: 1
                 }
             }
         ])
@@ -53,13 +52,12 @@ const getAllEvents = async (req, res) => {
             },
             {
                 $addFields: {
-                    role: 'host'
+                    "event.role": 'host'
                 }
             },
             {
                 $project: {
-                    event: 1,
-                    role: 1
+                    event: 1
                 }
             }
         ])
@@ -79,18 +77,17 @@ const getAllEvents = async (req, res) => {
             },
             {
                 $addFields: {
-                    role: 'vendor'
+                    "event.role": 'vendor'
                 }
             },
             {
                 $project: {
-                    event: 1,
-                    role: 1
+                    event: 1
                 }
             }
         ])
         const events = [ ...eventsAsHost, ...eventsAsGuest, ...eventsAsVendor]
-        return res.status(200).json({ message: "Events fetched successfully", data: events })
+        return res.status(200).json({ message: "Events fetched successfully", data: events.flat() })
     } catch (error) {
         console.log(error)
         return res.status(500).json({ message: 'Internal server error' })

@@ -15,7 +15,7 @@ import { InvitationContext } from "../context/InvitationContext";
 import { useNavigation } from "@react-navigation/native";
 import EvilIcons from "react-native-vector-icons/EvilIcons";
 
-const Invitation = () => {
+const Invitation = ({setInvitationPressed}) => {
   const navigation = useNavigation();
   const categories = ["All", "Not Sent", "Accepted", "Rejected", "Pending"];
   const [showPopup, setShowPopup] = useState(false);
@@ -129,7 +129,12 @@ const Invitation = () => {
 
   return (
     <SafeAreaView>
-      
+        <TouchableOpacity 
+          className="px-3 py-1 flex justify-center items-center bg-slate-100 rounded-[10px] text-black"
+          onPress={() => setInvitationPressed(false)}
+        >
+          <Text>Cancel / Go Back</Text>
+        </TouchableOpacity>
         <View className="mt-4  ">
           <View className="flex flex-row gap-[10px]">
             {categories.map((item, index) => (
