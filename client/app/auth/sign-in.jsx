@@ -3,7 +3,8 @@ import React, { useState } from 'react'
 import { View, Text, TextInput, TouchableOpacity, Image, Alert } from "react-native";
 import { styled } from "nativewind";
 import { useNavigation } from "@react-navigation/native";
-import axios from 'axios';
+import { userApi } from '../../api/userApi';
+import { useGlobalContext } from '../context/GlobalProvider';
 const StyledView = styled(View);
 const StyledText = styled(Text);
 const StyledTextInput = styled(TextInput);
@@ -11,6 +12,8 @@ const StyledTouchableOpacity = styled(TouchableOpacity);
 const StyledImage = styled(Image);
 
 const SignIn = () => {
+
+  const { setUser } = useGlobalContext();
     
     const blankCreds = {
         email: '', 
@@ -19,12 +22,14 @@ const SignIn = () => {
     }
     const [creds, setCreds] = useState(blankCreds);
     const navigation = useNavigation();
-
     const handleSubmit = async () => {
         try {
-            const response = await axios.post("https://eventhive-server.onrender.com/user/login", { phone: creds.phone, email: creds.email, password: creds.password });
+            const response = await userApi.login(creds);
             const result = response.data
-            console.log(result.user)
+            console.log(result)
+            const user = result.data.user
+            user.token = result.data.token
+            setUser(user)
             navigation.navigate("TabsLayout")
         } catch (error) {
             console.log(error.message)

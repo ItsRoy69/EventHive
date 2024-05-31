@@ -3,11 +3,12 @@ const User = require('../models/userModel')
 const Host = require('../models/hostModel')
 const Guest = require('../models/guestModel')
 const Vendor = require('../models/vendorModel')
+const GroupChannel = require('../models/groupChannelModel')
 const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
 const getJWTToken = require('../utils/getJWTToken')
 
-const getEvents = async (req, res) => {
+const getAllEvents = async (req, res) => {
     try {
         const { userId } = req.body
         const eventsAsGuest = await Guest.aggregate([
@@ -26,13 +27,12 @@ const getEvents = async (req, res) => {
             },
             {
                 $addFields: {
-                    role: 'guest'
+                    "event.role": 'guest'
                 }
             },
             {
                 $project: {
-                    event: 1,
-                    role: 1
+                    event: 1
                 }
             }
         ])
@@ -52,13 +52,12 @@ const getEvents = async (req, res) => {
             },
             {
                 $addFields: {
-                    role: 'host'
+                    "event.role": 'host'
                 }
             },
             {
                 $project: {
-                    event: 1,
-                    role: 1
+                    event: 1
                 }
             }
         ])
@@ -78,20 +77,36 @@ const getEvents = async (req, res) => {
             },
             {
                 $addFields: {
-                    role: 'vendor'
+                    "event.role": 'vendor'
                 }
             },
             {
                 $project: {
-                    event: 1,
-                    role: 1
+                    event: 1
                 }
             }
         ])
-        const events = [...eventsAsGuest, ...eventsAsHost, ...eventsAsVendor]
-        return res.status(200).json({ message: "Events fetched successfully", data: events })
+        const events = [ ...eventsAsHost, ...eventsAsGuest, ...eventsAsVendor]
+        return res.status(200).json({ message: "Events fetched successfully", data: events.flat() })
     } catch (error) {
         console.log(error)
+        return res.status(500).json({ message: 'Internal server error' })
+    }
+}
+
+const getEventById = async (req, res) => {
+    try {
+        let { userId, role, event } = req.body
+        let groupChannels = []
+        if (role === 'host') {
+            groupChannels = await GroupChannel.find({ eventId: event._id })
+        } else {
+            groupChannels = await GroupChannel.find({ eventId: event._id, members: { $in: [userId] } })
+        }
+        event.groupChannels = groupChannels
+        return res.status(200).json({ message: 'Event fetched successfully', data: event })
+    } catch (err) {
+        console.log(err)
         return res.status(500).json({ message: 'Internal server error' })
     }
 }
@@ -212,7 +227,8 @@ const deleteEvent = async (req, res) => {
 }
 
 module.exports = {
-    getEvents,
+    getAllEvents,
+    getEventById,
     createEvent,
     updateEvent,
     deleteEvent

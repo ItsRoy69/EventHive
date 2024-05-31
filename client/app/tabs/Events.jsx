@@ -9,6 +9,7 @@ import {
   Animated,
   Easing,
   Alert,
+  ActivityIndicator
 } from "react-native";
 import React, { useEffect, useRef, useState, useContext } from "react";
 import { Image } from "react-native";
@@ -18,16 +19,16 @@ import { useNavigation } from "@react-navigation/native";
 import Invitation from "../screens/invitation";
 import { InvitationProvider } from "../context/InvitationContext";
 import EventMenu from "../screens/eventMenu";
-import { CreateEventContext } from "../context/CreateEventContext";
-import * as Keychain from 'react-native-keychain';
 
 import HamDrawer from "../components/HamDrawer";
+import { useGlobalContext } from "../context/GlobalProvider";
+import LoaderSpinner from "../components/LoaderSpinner";
 
 const Events = () => {
   const navigator = useNavigation();
-  const { user, event } = useContext(CreateEventContext);
+  // const { user, event } = useContext(CreateEventContext);
+  const { user, events, setEvents, currentEvent, setCurrentEvent } = useGlobalContext();
 
-  // console.log("user form event:", user);
   
 
   useEffect (()=>{
@@ -43,21 +44,6 @@ const Events = () => {
   },[])
   
   let type = "";
-  if (user.role == "The Bride" || user.role == "The Groom") {
-    type = "host";
-  } else {
-    type = "guest";
-  }
-
-  const makeName = () => {
-    const name = user.name;
-    if (name.endsWith("s")) {
-      return `${name}'`;
-    } else {
-      return `${name}'s`;
-    }
-  };
-
   const todo = [
     {
       name: "Meeting with Bimal Da - Florist",
@@ -404,7 +390,7 @@ const Events = () => {
     <SafeAreaView className="relative bg-white h-full">
       {hamOpened && (
         <HamDrawer hamOpened={hamOpened} setHamOpened={setHamOpened} />
-      )}
+      )} 
       <View className="flex justify-center px-4">
         <View className="gap-[24px] mt-8 ">
           <View className="flex flex-row justify-between mt-8 ">
@@ -461,19 +447,15 @@ const Events = () => {
           <View className="flex flex-row justify-between">
             <View className="flex  flex-col">
               <View className="flex flex-row justify-between">
-                <View className="flex items-center flex-row">
-                  <Text className="text-3xl font-semibold">
-                    {makeName()} Wedding
-                  </Text>
-                  <TouchableOpacity onPress={handleMenuPressed}>
-                    <View className="flex self-center">
-                      <Image
-                        source={icons.downEvent}
-                        resizeMode="contain"
-                        className="w-[20px] h-[20px]"
-                      />
-                    </View>
-                  </TouchableOpacity>
+                <View className='flex items-center flex-row'>
+                <Text className="text-3xl font-semibold truncate w-4/5">
+                  {currentEvent.name}
+                </Text>
+                <TouchableOpacity onPress={handleMenuPressed}>
+                <View className='flex self-center'>
+                  <Image source={icons.downEvent} resizeMode="contain" className='w-[20px] h-[20px]' />
+                </View>
+                </TouchableOpacity>
                 </View>
               </View>
               {menuOpen && (
@@ -588,7 +570,7 @@ const Events = () => {
           </>
         ) : (
           <InvitationProvider value={{ sendInvitation, setSendInvitation }}>
-            <Invitation />
+            <Invitation setInvitationPressed={setInvitationPressed}/>
           </InvitationProvider>
         )}
       </View>
