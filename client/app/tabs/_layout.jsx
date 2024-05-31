@@ -4,7 +4,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import icons from "../../constants/icons";
 import { InvitationContext } from "../context/InvitationContext";
 import Events from "./Events";
-import CalendarItem from "./Calendar";
+import CalendarItem from "./calendar";
 import Activities from "./activities";
 import EventPlan from "./EventPlan";
 import { StatusBar } from "expo-status-bar";

@@ -4,6 +4,7 @@ const CreateEventContext = createContext(null)
 
 const CreateEventProvider = ({ children }) => {
     const blankEventData = {
+        _id:'',
         type: '',
         names: [],
         startDateTime: '',

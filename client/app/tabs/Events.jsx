@@ -24,12 +24,14 @@ import HamDrawer from "../components/HamDrawer";
 const Events = () => {
   const navigator = useNavigation();
   const { user, event } = useContext(CreateEventContext);
-  console.log("user form event:", user);
+
+  // console.log("user form event:", user);
+
   let type = "";
   if (user.role == "The Bride" || user.role == "The Groom") {
     type = "host";
   } else {
-    type = "host";
+    type = "guest"
   }
   const makeName = () => {
     const name = user.name;
