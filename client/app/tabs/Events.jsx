@@ -8,6 +8,7 @@ import {
   SectionList,
   Animated,
   Easing,
+  Alert,
 } from "react-native";
 import React, { useEffect, useRef, useState, useContext } from "react";
 import { Image } from "react-native";
@@ -18,6 +19,7 @@ import Invitation from "../screens/invitation";
 import { InvitationProvider } from "../context/InvitationContext";
 import EventMenu from "../screens/eventMenu";
 import { CreateEventContext } from "../context/CreateEventContext";
+import * as Keychain from 'react-native-keychain';
 
 import HamDrawer from "../components/HamDrawer";
 
@@ -26,13 +28,27 @@ const Events = () => {
   const { user, event } = useContext(CreateEventContext);
 
   // console.log("user form event:", user);
+  
 
+  useEffect (()=>{
+    async function getValueFor(key) {
+      let result = await SecureStore.getItemAsync(key);
+      if (result) {
+        Alert.alert("🔐 Here's your value 🔐 \n" + result);
+      } else {
+        Alert.alert('No values stored under that key.');
+      }
+    }
+    getValueFor('jwt')
+  },[])
+  
   let type = "";
   if (user.role == "The Bride" || user.role == "The Groom") {
     type = "host";
   } else {
-    type = "guest"
+    type = "guest";
   }
+
   const makeName = () => {
     const name = user.name;
     if (name.endsWith("s")) {
@@ -117,7 +133,6 @@ const Events = () => {
   ];
   const subItems = {
     1: [
-      
       {
         id: "1-2",
         image: `${icons.florist}`,
@@ -138,7 +153,6 @@ const Events = () => {
       },
     ],
     2: [
-     
       {
         id: "1-2",
         image: `${icons.florist}`,
@@ -159,7 +173,6 @@ const Events = () => {
       },
     ],
     3: [
-     
       {
         id: "1-2",
         image: `${icons.florist}`,
@@ -187,7 +200,7 @@ const Events = () => {
       setSelectedSubItem(null);
       return;
     }
-    if ((item.type == "group")) {
+    if (item.type == "group") {
       navigator.navigate("GroupChats", { name: item.data });
     } else {
       navigator.navigate("DMChats", { name: item.data });
@@ -291,7 +304,7 @@ const Events = () => {
                       className="w-[35px] h-[35px]"
                     />
                   )}
-  
+
                   <Text className="text-md font-semibold text-gray-700">
                     {item.data}
                   </Text>
@@ -311,7 +324,6 @@ const Events = () => {
       </View>
     );
   };
-  
 
   const renderGuestItem = ({ item }) => (
     <View>
@@ -378,7 +390,8 @@ const Events = () => {
           </View>
         </View>
 
-        {expandedItem === item.id && renderSubItems({ itemId: item.id, itemName: item.name })}
+        {expandedItem === item.id &&
+          renderSubItems({ itemId: item.id, itemName: item.name })}
       </TouchableOpacity>
     </View>
   );
@@ -448,22 +461,23 @@ const Events = () => {
           <View className="flex flex-row justify-between">
             <View className="flex  flex-col">
               <View className="flex flex-row justify-between">
-                <View className='flex items-center flex-row'>
-                <Text className="text-3xl font-semibold">
-                  {makeName()} Wedding
-                </Text>
-                <TouchableOpacity onPress={handleMenuPressed}>
-                <View className='flex self-center'>
-                  <Image source={icons.downEvent} resizeMode="contain" className='w-[20px] h-[20px]' />
-                </View>
-                </TouchableOpacity>
+                <View className="flex items-center flex-row">
+                  <Text className="text-3xl font-semibold">
+                    {makeName()} Wedding
+                  </Text>
+                  <TouchableOpacity onPress={handleMenuPressed}>
+                    <View className="flex self-center">
+                      <Image
+                        source={icons.downEvent}
+                        resizeMode="contain"
+                        className="w-[20px] h-[20px]"
+                      />
+                    </View>
+                  </TouchableOpacity>
                 </View>
               </View>
               {menuOpen && (
-                <EventMenu
-                  menuOpen={ menuOpen}
-                  setMenuOpen={setMenuOpen}
-                />
+                <EventMenu menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
               )}
 
               <View className="w-[216px] border-[4px] rounded-[3px]  border-[#FFAD65]"></View>
@@ -477,7 +491,7 @@ const Events = () => {
             </TouchableOpacity>
           </View>
           <View className="border-[0.5px] border-slate-400" />
-        </View> 
+        </View>
         {!invitationPressed ? (
           <>
             <View className="reminders flex py-2 mt-1">
@@ -526,7 +540,7 @@ const Events = () => {
               </TouchableOpacity>
             </View>
             <View className="py-2 flex flex-row gap-[5px]">
-            <TouchableOpacity
+              <TouchableOpacity
                 className="px-3 py-1  bg-slate-100 rounded-[10px] text-black"
                 onPress={() => {}}
               >
@@ -553,31 +567,30 @@ const Events = () => {
                 <Text>Groups</Text>
               </TouchableOpacity>
             </View>
-            {type == 'host' ? (
+            {type == "host" ? (
               <FlatList
-              data={parentItems}
-              renderItem={renderItem}
-              keyExtractor={(item) => item.id}
-              className="mt-2"
-            />
-            ):(
+                data={parentItems}
+                renderItem={renderItem}
+                keyExtractor={(item) => item.id}
+                className="mt-2"
+              />
+            ) : (
               <FlatList
-              data={guestParentItem}
-              renderItem={renderGuestItem}
-              keyExtractor={(item) => item.id}
-              className="mt-2"
-            />
+                data={guestParentItem}
+                renderItem={renderGuestItem}
+                keyExtractor={(item) => item.id}
+                className="mt-2"
+              />
             )}
-            
+            <View className="rounded-md mt-5 flex items-center px-4 py-2 bg-[#FFAD65]/[0.8]">
+              <Text className="text-white text-xl">+ Add Event Channel</Text>
+            </View>
           </>
         ) : (
           <InvitationProvider value={{ sendInvitation, setSendInvitation }}>
             <Invitation />
           </InvitationProvider>
         )}
-        <View className='rounded-md mt-5 flex items-center px-4 py-2 bg-[#FFAD65]/[0.8]'>
-          <Text className='text-white text-xl'>+ Add Event Channel</Text>
-        </View>
       </View>
     </SafeAreaView>
   );

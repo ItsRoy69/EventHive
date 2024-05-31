@@ -2,7 +2,7 @@ import React, { useState, useContext } from "react";
 import { View, Text, TextInput, TouchableOpacity, Image, Alert } from "react-native";
 import { styled } from "nativewind";
 import { useNavigation } from "@react-navigation/native";
-import * as Keychain from 'react-native-keychain';
+import * as SecureStore from 'expo-secure-store';
 
 const StyledView = styled(View);
 const StyledText = styled(Text);
@@ -16,18 +16,15 @@ import { CreateEventContext } from "../context/CreateEventContext";
 
 const SignUp = () => {
   const [name, setName] = useState("");
-
-  async function storeToken(token) {
-    try {
-      await Keychain.setGenericPassword('jwt', token);
-      console.log('Token stored successfully');
-    } catch (error) {
-      console.log('Could not store token', error);
-    }
+  key = 'jwt'
+  // const [value,setValue] = useState('')
+  async function save(key, value) {
+    await SecureStore.setItemAsync(key, value);
   }
-  const handleStoreToken = async ({token}) => {
-    await storeToken(token);
-  };
+  // const handleStoreToken = async (token) => {
+  //   console.log("token:",token)
+  //   await storeToken(token);
+  // };
 
   const blankCreds = {
     email: '', 
@@ -73,15 +70,9 @@ const SignUp = () => {
       const response = await axios.post("https://eventhive-server.onrender.com/event", { user: reqBody.user, event: reqBody.event })
       console.log("response: ", response.data)
       setEvent(existingEvent =>({...existingEvent,_id:response.data.data.event._id}))
-      // handleStoreToken(response.data.data.user)
+      save(key,response.data.data.token)
 
       const eventObject = reqBody.event
-      // const userObject = {
-      //   name: reqBody.user.name,
-      //   role: "host"
-      // }
-      // setUser(userObject)
-      // setEvent(eventObject)
 
       navigation.navigate("TabsLayout")
     } catch (error) {
