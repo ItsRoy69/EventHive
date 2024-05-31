@@ -6,28 +6,37 @@ const Vendor = require('../models/vendorModel')
 const RSVP = require('../models/rsvpModel')
 
 const getUserRoleInEvent = async(req, res, next) => {
-    const { userId, eventId } = req.body
+    let { userId, eventId } = req.body
     if (!eventId) {
-        return res.status(400).json({ message: 'Missing required fields' })
+        eventId = req.params.eventId || req.params.id
+        if (!eventId) {
+            return res.status(400).json({ message: 'Missing required fields' })
+        }
+    }
+    const event = await Event.findById(eventId)
+    if (!event) {
+        return res.status(400).json({ message: 'Event not found' })
     }
     const host = await Host.findOne({ userId, eventId })
     const guest = await Guest.findOne({ userId, eventId })
     const vendor = await Vendor.findOne({ userId, eventId })
     if (host) {
-        req.body.role = 'host';
-        req.body.hostId = host._id;
-        next();
+        req.body.role = 'host'
+        req.body.event = event
+        req.body.hostId = host._id
+        next()
     } else if (guest) {
-        req.body.role = 'guest';
-        req.body.guestId = guest._id;
-        next();
+        req.body.role = 'guest'
+        req.body.event = event
+        req.body.guestId = guest._id
+        next()
     } else if (vendor) {
-        req.body.role = 'vendor';
-        req.body.vendorId = vendor._id;
-        next();
-    } else {
-        return res.status(400).json({ message: 'You are not authorized to perform this action' });
-    }
+        req.body.role = 'vendor'
+        req.body.event = event
+        req.body.vendorId = vendor._id
+        next()
+    } 
+    return res.status(400).json({ message: 'You are not authorized to perform this action' })
 }
 
 const getUserRoleInSubEvent = async (req, res, next) => {
