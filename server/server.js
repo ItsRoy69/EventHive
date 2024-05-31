@@ -28,6 +28,7 @@ const subEventRouter = require('./routes/subEventRouter.js')
 const userRouter = require('./routes/userRouter.js')
 const vendorRouter = require('./routes/vendorRouter.js')
 const venueRouter = require('./routes/venueRouter.js')
+const inviteRouter = require('./routes/inviteRouter.js');
 
 app.use('/event', eventRouter)
 app.use('/floor', floorRouter)
@@ -46,6 +47,7 @@ app.use('/sub-event', subEventRouter)
 app.use('/user', userRouter)
 app.use('/vendor', vendorRouter)
 app.use('/venue', venueRouter)
+app.use('/invite', inviteRouter);
 
 connectToDB()
 

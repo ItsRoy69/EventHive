@@ -18,6 +18,10 @@ const groupChannelSchema = new mongoose.Schema({
     avatar: {
         type: String,
         default: null
+    },
+    type: {
+        type: String,
+        default: 'group'
     }
 })
 

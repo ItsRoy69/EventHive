@@ -1,8 +1,9 @@
 const router = require('express').Router()
+const { uploadImageMiddleware, handleUploadResponse } = require('../config/multerConfig')
 const groupChatController = require('../controllers/groupChatController')
 
-router.get('/', groupChatController.getGroupChats)
-router.post('/', groupChatController.createGroupChat)
+router.get('/:id', groupChatController.getGroupChats)
+router.post('/', uploadImageMiddleware, handleUploadResponse, groupChatController.createGroupChat)
 router.put('/', groupChatController.updateGroupChat)
 router.delete('/', groupChatController.deleteGroupChat)
 

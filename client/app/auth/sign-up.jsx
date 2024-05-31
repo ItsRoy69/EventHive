@@ -22,7 +22,7 @@ const SignUp = () => {
   }
   const [creds, setCreds] = useState(blankCreds);
   const navigation = useNavigation();
-  const { user, event } = useContext(CreateEventContext);
+  const { user, event,setUser,setEvent } = useContext(CreateEventContext);
 
   // console.log("user: ",user)
 
@@ -57,6 +57,13 @@ const SignUp = () => {
       // console.log(reqBody)
       const response = await axios.post("https://eventhive-server.onrender.com/event", { user: reqBody.user, event: reqBody.event })
       console.log("response: ", response.data)
+      const eventObject = reqBody.event
+      const userObject = {
+        name: reqBody.user.name,
+        role: "host"
+      }
+      setUser(userObject)
+      setEvent(eventObject)
       navigation.navigate("TabsLayout")
     } catch (error) {
       console.log(error)
