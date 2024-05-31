@@ -549,7 +549,7 @@ const Events = () => {
                 <Text>Groups</Text>
               </TouchableOpacity>
             </View>
-            {type == "host" ? (
+            {currentEvent.role === 'host' ? (
               <FlatList
                 data={parentItems}
                 renderItem={renderItem}
@@ -573,6 +573,12 @@ const Events = () => {
             <Invitation setInvitationPressed={setInvitationPressed}/>
           </InvitationProvider>
         )}
+        <TouchableOpacity 
+          className='rounded-md mt-5 flex items-center px-4 py-2 bg-[#FFAD65]/[0.8]'
+          onPress={() => navigator.navigate('calendar')}
+        >
+          <Text className='text-white text-xl'>+ Add / Event Channel</Text>
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
