@@ -1,3 +1,4 @@
+const GroupChannel = require('../models/groupChannelModel')
 const SubEvent = require('../models/subEventModel')
 
 const getSubEvents = async (req, res) => {
@@ -19,7 +20,7 @@ const getSubEvents = async (req, res) => {
 
 const createSubEvent = async (req, res) => {
     try {
-        const { eventId, subEvent, role, vendors } = req.body
+        const { eventId, subEvent, userId, role, autoCreateChannels } = req.body
         if (!subEvent) {
             return res.status(400).json({ message: 'Missing required fields' })
         }
@@ -31,8 +32,31 @@ const createSubEvent = async (req, res) => {
             name: subEvent.name,
             datetime: subEvent.datetime,
             venue: subEvent.venue,
-            vendors: vendors
+            vendors: subEvent.vendors
         })
+        if (autoCreateChannels) {
+            await GroupChannel.create({
+                eventId,
+                subEventId: newSubEvent._id,
+                name: 'Anouncements',
+                type: 'restricted',
+                members: [userId]
+            })
+            await GroupChannel.create({
+                eventId,
+                subEventId: newSubEvent._id,
+                name: 'Group Chat',
+                type: 'unrestricted',
+                members: [userId]
+            })
+            await ImageChannel.create({
+                eventId,
+                subEventId: newSubEvent._id,
+                name: 'Gallery',
+                type: 'restricted',
+                members: [userId]
+            })
+        }
         return res.status(200).json({ message: "Sub-event created succesfully", data: newSubEvent })
     } catch (error) {
         console.log(error) 
