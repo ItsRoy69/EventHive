@@ -11,6 +11,11 @@ const vendorSchema = new mongoose.Schema({
         ref: 'Event',
         required: true
     },
+    subEventId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'SubEvent',
+        default: ''
+    },
     serviceType: {
         type: String,
         required: true

@@ -28,20 +28,6 @@ const Events = () => {
   const navigator = useNavigation();
   // const { user, event } = useContext(CreateEventContext);
   const { user, events, setEvents, currentEvent, setCurrentEvent } = useGlobalContext();
-
-  
-
-  useEffect (()=>{
-    async function getValueFor(key) {
-      let result = await SecureStore.getItemAsync(key);
-      if (result) {
-        Alert.alert("🔐 Here's your value 🔐 \n" + result);
-      } else {
-        Alert.alert('No values stored under that key.');
-      }
-    }
-    getValueFor('jwt')
-  },[])
   
   let type = "";
   const todo = [
@@ -57,7 +43,7 @@ const Events = () => {
     },
   ];
 
-  const [reminders, setReminders] = useState(todo);
+  const [reminders, setReminders] = useState(currentEvent.meetings);
 
   const [expandedItem, setExpandedItem] = useState(null);
   const [selected, setSelected] = useState(false);
@@ -478,34 +464,41 @@ const Events = () => {
           <>
             <View className="reminders flex py-2 mt-1">
               <Text className="text-sm text-slate-400">Reminders</Text>
-              {remindersOpen && (
-                <View className="mt-2">
-                  {reminders.map((item, index) => (
-                    <View
-                      className="bg-[#FFAD65]/[0.14] h-[58px] rounded-[8px] flex flex-row border-l-8 border-[#FFAD65] justify-between items-center w-full pl-4 mb-3 py-2"
-                      key={index}
-                    >
-                      <View className="flex justify-start">
-                        <Text className="text-black font-bold">
-                          {item.name}
-                        </Text>
+              {
+                remindersOpen &&
+                  <View className="mt-2">
+                    { 
+                      reminders.length > 0 ? reminders.map((item, index) => (
+                        <View
+                          className="bg-[#FFAD65]/[0.14] h-[58px] rounded-[8px] flex flex-row border-l-8 border-[#FFAD65] justify-between items-center w-full pl-4 mb-3 py-2"
+                          key={index}
+                        >
+                          <View className="flex justify-start">
+                            <Text className="text-black font-bold">
+                              {item.name}
+                            </Text>
 
-                        <View className="flex flex-row gap-[2px]">
-                          <Text>{item.location}</Text>
-                          <Text>-</Text>
-                          <Text className="font-semibold">{item.time}</Text>
+                            <View className="flex flex-row gap-[2px]">
+                              <Text>{item.location}</Text>
+                              <Text>-</Text>
+                              <Text className="font-semibold">{item.time}</Text>
+                            </View>
+                          </View>
+
+                          <Image
+                            source={icons.menu}
+                            className="h-6"
+                            resizeMode="contain"
+                          />
                         </View>
-                      </View>
-
-                      <Image
-                        source={icons.menu}
-                        className="h-6"
-                        resizeMode="contain"
-                      />
-                    </View>
-                  ))}
-                </View>
-              )}
+                      ))
+                      :
+                      <View className="mt-2">
+                        <Text className="text-black font-bold">No upcoming reminders</Text>
+                      </View>  
+                    }
+                  </View>
+              }
             </View>
             <View className="relative border-[0.5px] h-0 my-5 border-slate-400">
               <TouchableOpacity
@@ -551,7 +544,7 @@ const Events = () => {
             </View>
             {currentEvent.role === 'host' ? (
               <FlatList
-                data={parentItems}
+                data={currentEvent.subEvents}
                 renderItem={renderItem}
                 keyExtractor={(item) => item.id}
                 className="mt-2"
@@ -564,9 +557,6 @@ const Events = () => {
                 className="mt-2"
               />
             )}
-            <View className="rounded-md mt-5 flex items-center px-4 py-2 bg-[#FFAD65]/[0.8]">
-              <Text className="text-white text-xl">+ Add Event Channel</Text>
-            </View>
           </>
         ) : (
           <InvitationProvider value={{ sendInvitation, setSendInvitation }}>

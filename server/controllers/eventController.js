@@ -122,10 +122,6 @@ const getEventById = async (req, res) => {
         if (role === 'host') {
             vendors = await Vendor.find({ eventId })
         }
-        // event.subEvents = subEvents
-        // event.groupChannels = groupChannels
-        // event.meetings = meetings
-        // event.vendors = vendors
         event = { ... event, subEvents, groupChannels, meetings, vendors }
         return res.status(200).json({ message: 'Event fetched successfully', data: event })
     } catch (err) {
