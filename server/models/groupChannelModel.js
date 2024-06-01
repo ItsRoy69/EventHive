@@ -6,14 +6,20 @@ const groupChannelSchema = new mongoose.Schema({
         ref: 'Event',
         required: true
     },
+    subEventId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'SubEvent',
+        required: true
+    },
     name: {
         type: String,
         required: true
     },
     members: [{
         type: mongoose.Schema.Types.ObjectId,
+        // ref: 'User'
         // ref: ['Host', 'Guest', 'Vendor'],
-        required: true
+        // required: true
     }],
     avatar: {
         type: String,
@@ -21,7 +27,7 @@ const groupChannelSchema = new mongoose.Schema({
     },
     type: {
         type: String,
-        default: 'group'
+        default: 'unrestricted'
     }
 })
 
