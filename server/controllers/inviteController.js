@@ -1,6 +1,7 @@
 const Event = require('../models/eventModel');
 const Invite = require('../models/inviteModel');
 const generateInviteLink = require('../utils/inviteLinkGenerator');
+const { v4: uuidv4 } = require('uuid'); 
 
 const createInviteLink = async (req, res) => {
     try {
@@ -46,7 +47,7 @@ const handleInviteLink = async (req, res) => {
 
     if (hasApp) {
       const appURL = process.env.APP_URL;
-        const appLink = `${appURL}//invite?eventId=${eventId}&inviteId=${inviteId}`;
+        const appLink = `${appURL}/invite?eventId=${eventId}&inviteId=${inviteId}`;
         return res.redirect(appLink);
       } else {
         const baseURL = process.env.APP_BASE_URL;
