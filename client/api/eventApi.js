@@ -10,9 +10,17 @@ export const eventApi = {
         updateTokenInHeaders(token)
         return await axiosConfig.get(`/event/${id}`)
     },
+    createEvent: async (data, token) => {
+        updateTokenInHeaders(token)
+        return await axiosConfig.post("/event", { ...data })
+    },
 
 
     // ----------------------- sub-events ----------------------- //
+    getSubEvents: async (eventId, token) => {
+        updateTokenInHeaders(token)
+        return await axiosConfig.get(`/sub-event/${eventId}`)
+    },
     createSubEvent: async (eventId, subEvent, token) => {
         updateTokenInHeaders(token)
         return await axiosConfig.post("/sub-event", { subEvent, eventId })

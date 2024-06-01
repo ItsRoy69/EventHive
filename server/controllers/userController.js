@@ -56,9 +56,10 @@ const createUser = async (req, res) => {
             password: hashedPassword 
         })
         if (user) {
-            const userData = { userId: user._id, name: user.name, phone: user.phone }
+            let userData = { userId: user._id, name: user.name, phone: user.phone }
             const token = getJWTToken('1d', userData)
-            return res.status(201).json({ message: 'User created successfully', data: { user, token } })
+            userData.token = token
+            return res.status(201).json({ message: 'User created successfully', data: userData })
         } else {
             throw new Error('User could not be created')
         }
