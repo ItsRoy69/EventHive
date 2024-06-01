@@ -6,8 +6,10 @@ import {
   Image,
   TouchableOpacity,
   Alert,
+  Modal
 } from "react-native";
 import CreateEvent from "../screens/createEvent";
+import CreateMeeting from "../screens/createMeeting";
 import React, { useEffect, useState } from "react";
 import icons from "../../constants/icons";
 import images from "../../constants/images";
@@ -21,72 +23,87 @@ const CalendarItem = () => {
   const weddingDate = "2024-05-31";
   const [selectedDate, setSelectedDate] = useState(null);
   const [addEvent, setAddEvent] = useState(false);
+  const [addMeeting,setAddMeeting] = useState(false)
+  const [showModal, setShowModal] = useState(false);
   
   const { currentEvent, user } = useGlobalContext();
   const eventId = currentEvent._id;
   const token = user.token; 
+
+  const [items, setItems] = useState({});
+
   
-  
-  
-  const [items, setItems] = useState({
-    "2024-05-29": [
-      { name: "Meeting with client", time: "10:00 AM", location: "Rajarhat" },
-    ],
-    "2024-05-30": [
-      { name: "Meeting with florist bimal da", time: "9:00 AM" },
-      { name: "Venue Decorator Meeting", time: "2:00 PM" },
-      { name: "Presentation", time: "5:00 PM" },
-    ],
-    "2024-06-01": [
-      { name: "Team brainstorming session", time: "9:00 AM" },
-      { name: "Project presentation", time: "2:00 PM" },
-    ],
-    "2024-06-02": [
-      { name: "Team brainstorming session", time: "9:00 AM" },
-      { name: "Project presentation", time: "2:00 PM" },
-    ],
-  });
   const [filteredItems, setFilteredItems] = useState([]);
 
   useEffect(()=>{
-    const getSubEvents = async() =>{
+    const getSubEvent = async() =>{
+      
       try{
       const response = await eventApi.getSubEvents(eventId,token)
-      console.log("Get Sub events",response.data)
+      const subEvents = response.data.data 
+      const formattedItems = {};
+
+    subEvents.forEach(event => {
+      const { dateString, timeString } = formatDateTime(event.datetime.start);
+
+      if (!formattedItems[dateString]) {
+        formattedItems[dateString] = [];
+      }
+
+      formattedItems[dateString].push({
+        name: event.name,
+        time: timeString,
+        location: event.location || ''
+      });
+    });
+
+    setItems(formattedItems);
+
       }
       catch(error){
+       
         console.log(error)
-        Alert.alert("Error",error.message)
+        Alert.alert("Error",error)
       }
     }
-    getSubEvents()
-  },[])
+    getSubEvent()
+  },[items])
   
-
   useEffect(() => {
-    console.log(selectedDate)
     const tempItems = items[selectedDate] ? items[selectedDate] : [];
     setFilteredItems(tempItems);
   }, [selectedDate]);
 
-  const handleAddEventPressed = () => {
-    setAddEvent(!addEvent);
+  const handleAddShowModal = () => {
+    setShowModal(true);
   };
+  const handleModalClose = () => {
+    setShowModal(false);
+  };
+  const handleAddEventPressed = () =>{
+    setAddEvent(!addEvent)
+    setShowModal(false);
+
+  }
+
+  const handleAddMeetingPressed = () =>{
+    setAddMeeting(!addMeeting)
+    setShowModal(false);
+  }
+
+
 
   const formatDateTime = (isoString) =>{
     const date = new Date(isoString);
 
-  // Extract date components
   const year = date.getUTCFullYear();
   const month = String(date.getUTCMonth() + 1).padStart(2, '0'); // Months are zero-based
   const day = String(date.getUTCDate()).padStart(2, '0');
 
-  // Extract time components
   let hours = date.getUTCHours();
   const minutes = String(date.getUTCMinutes()).padStart(2, '0');
   const seconds = String(date.getUTCSeconds()).padStart(2, '0');
-  
-  // Determine AM/PM and convert hours to 12-hour format
+
   const isPM = hours >= 12;
   const modifier = isPM ? 'PM' : 'AM';
   if (hours === 0) {
@@ -96,44 +113,11 @@ const CalendarItem = () => {
   }
   hours = String(hours).padStart(2, '0');
 
-  // Construct date and time strings
   const dateString = `${year}-${month}-${day}`;
   const timeString = `${hours}:${minutes} ${modifier}`;
 
   return { dateString, timeString };
   }
-
-  const handleChangeEvent = (newEvent) =>{
-    console.log("from calendar: ",newEvent)
-    const {eventDate,time} = formatDateTime(newEvent.datetime)
-    const eventDetails = {
-      name: newEvent.name,
-      time: time,
-      location: newEvent.location
-    }
-    setItems((prevItems) => {
-      if (prevItems[eventDate]) {
-        return {
-          ...prevItems,
-          [eventDate]: [...prevItems[eventDate], eventDetails],
-        };
-      }
-      return {
-        ...prevItems,
-        [eventDate]: [eventDetails],
-      };
-    });
-
-    setFilteredItems(prevFilteredItems => {
-      if (selectedDate === eventDate) {
-        return [...prevFilteredItems, eventDetails];
-      }
-      return prevFilteredItems;
-    });
-  
-    handleAddEventPressed()
-  }
- 
 
   const [hamOpened, setHamOpened] = useState(false)
 
@@ -167,7 +151,7 @@ const CalendarItem = () => {
             </View>
           </View>
           <View className="mt-[28px] ">
-            {!addEvent ? (
+            {!addEvent && !addMeeting? (
               <>
                 <Calendar
                   markedDates={{
@@ -224,7 +208,7 @@ const CalendarItem = () => {
                   {filteredItems && filteredItems.length > 0 && (
                     <View className="flex mb-1 flex-row items-center justify-between">
                       <Text className="text-sm text-slate-400">Reminders</Text>
-                      <TouchableOpacity onPress={handleAddEventPressed}>
+                      <TouchableOpacity onPress={handleAddShowModal}>
                         <View className="w-[110px] h-[26px]  flex-row rounded-[4px]  justify-center p px-2 bg-[#FFAD65]">
                           <Text className="text-white flex self-center text-xl px-1">
                             +
@@ -272,14 +256,14 @@ const CalendarItem = () => {
                             {" "}
                             No reminders to display
                           </Text>
-                          <TouchableOpacity onPress={handleAddEventPressed}>
+                          <TouchableOpacity onPress={handleAddShowModal}>
                             <View className="w-[125px] mt-5  self-center flex-row rounded-[4px]  justify-center py-1 px-2 bg-[#FFAD65]">
                               <Text className="text-white flex self-center text-2xl px-1">
                                 +
                               </Text>
                               <Text className="text-white flex self-center text-lg font-bold">
                                 {" "}
-                                Add Event
+                                Schedule
                               </Text>
                             </View>
                           </TouchableOpacity>
@@ -289,11 +273,35 @@ const CalendarItem = () => {
                   </View>
                 </View>
               </>
-            ):(
-              <CreateEvent
-                onChangeEvent = {handleChangeEvent}
-              />
-            )}
+            ): addEvent ? (
+              <CreateEvent addEvent={addEvent} setAddEvent={setAddEvent} />
+            ) : addMeeting ? (
+              <CreateMeeting addMeeting={addMeeting} setAddMeeting={setAddMeeting} />
+            ):null}
+            <Modal
+              visible={showModal}
+              animationType="slide"
+              transparent={true}
+              onRequestClose={handleModalClose}
+            >
+              <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "rgba(0, 0, 0, 0.5)" }}>
+                <View style={{ width: 300, backgroundColor: "white", padding: 20, borderRadius: 10 }}>
+                  <TouchableOpacity onPress={handleAddEventPressed}>
+                    <View className="p-1 flex gap-[3px] self-center flex-row w-[189px] items-center justify-center h-[40px] mt-8 bg-[#FFAD65] rounded-[8px] text-white">
+                      <Text className='text-white'>Add Sub-event</Text>
+                    </View>
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={handleAddMeetingPressed}>
+                  <View className="p-1 flex gap-[3px] self-center flex-row w-[189px] items-center justify-center h-[40px] mt-4 bg-[#A34342] rounded-[8px] text-white">
+                      <Text className='text-white' >Add Meeting</Text>
+                    </View>
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={handleModalClose}>
+                    <Text className='self-center mt-3'>Cancel</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </Modal>
            
 
           </View>
