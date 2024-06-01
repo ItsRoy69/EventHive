@@ -5,15 +5,15 @@ import expo from "./expo.png";
 import expo02 from "./expo02.png";
 import javascript from "./javascript.png";
 import react from "./react.png";
-import mongodb from "./mongodb.png"
-import tailwind from "./tailwind.png"
+import mongodb from "./mongodb.png";
+import tailwind from "./tailwind.png";
 import scene from "./scene.png";
 import mockup from "./mockup.png";
 import figma from "./figma.jpg";
 import express from "./express.jpg";
 import node from "./node.png";
 
-export default {
+const assets = {
   homeHero,
   homeCards,
   feature,
@@ -24,8 +24,10 @@ export default {
   figma,
   react,
   express,
-  tailwind, 
+  tailwind,
   mongodb,
   scene,
   mockup,
 };
+
+export default assets;
