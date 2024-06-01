@@ -46,7 +46,7 @@ const handleInviteLink = async (req, res) => {
 
     if (hasApp) {
       const appURL = process.env.APP_URL;
-        const appLink = `${appURL}//invite?eventId=${eventId}&inviteId=${inviteId}`;
+        const appLink = `${appURL}/invite?eventId=${eventId}&inviteId=${inviteId}`;
         return res.redirect(appLink);
       } else {
         const baseURL = process.env.APP_BASE_URL;

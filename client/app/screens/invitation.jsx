@@ -93,35 +93,14 @@ const Invitation = ({setInvitationPressed}) => {
     {
       id: 6,
       dp: `${images.dummyPic}`,
-      name: "Jyotirmoy Roy",
+      name: "Riddhika Shankar",
       status: "Not Sent",
       date: "sent 10d ago",
     },
     {
       id: 7,
       dp: `${images.dummyPic}`,
-      name: "Jyotirmoy Roy",
-      status: "Not Sent",
-      date: "sent 10d ago",
-    },
-    {
-      id: 8,
-      dp: `${images.dummyPic}`,
-      name: "Jyotirmoy Roy",
-      status: "Not Sent",
-      date: "sent 10d ago",
-    },
-    {
-      id: 9,
-      dp: `${images.dummyPic}`,
-      name: "Jyotirmoy Roy",
-      status: "Not Sent",
-      date: "sent 10d ago",
-    },
-    {
-      id: 10,
-      dp: `${images.dummyPic}`,
-      name: "Jyotirmoy Roy",
+      name: "Rajiv Roy",
       status: "Not Sent",
       date: "sent 10d ago",
     },
@@ -150,7 +129,7 @@ const Invitation = ({setInvitationPressed}) => {
             ))}
           </View>
           <ScrollView className="people-list bg-[#F3F3F3]/[0.5] px-0  flex flex-col mt-6 shadow-md "
-           contentContainerStyle={{ justifyContent: "center" }} 
+             contentContainerStyle={{ justifyContent: "center" }}
           >
             {people
               .filter(
