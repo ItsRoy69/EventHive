@@ -5,6 +5,7 @@ import {
   Text,
   Image,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import CreateEvent from "../screens/createEvent";
 import React, { useEffect, useState } from "react";
@@ -12,15 +13,19 @@ import icons from "../../constants/icons";
 import images from "../../constants/images";
 import { Calendar, Agenda } from "react-native-calendars";
 import { useRouter } from "expo-router";
+import { useGlobalContext } from "../context/GlobalProvider";
 import HamDrawer from "../components/HamDrawer";
+import { eventApi } from "../../api/eventApi";
 
 const CalendarItem = () => {
   const weddingDate = "2024-05-31";
   const [selectedDate, setSelectedDate] = useState(null);
   const [addEvent, setAddEvent] = useState(false);
   
- 
-
+  const { currentEvent, user } = useGlobalContext();
+  const eventId = currentEvent._id;
+  const token = user.token; 
+  
   
   
   const [items, setItems] = useState({
@@ -43,6 +48,21 @@ const CalendarItem = () => {
   });
   const [filteredItems, setFilteredItems] = useState([]);
 
+  useEffect(()=>{
+    const getSubEvents = async() =>{
+      try{
+      const response = await eventApi.getSubEvents(eventId,token)
+      console.log("Get Sub events",response.data)
+      }
+      catch(error){
+        console.log(error)
+        Alert.alert("Error",error.message)
+      }
+    }
+    getSubEvents()
+  },[])
+  
+
   useEffect(() => {
     console.log(selectedDate)
     const tempItems = items[selectedDate] ? items[selectedDate] : [];
@@ -53,12 +73,42 @@ const CalendarItem = () => {
     setAddEvent(!addEvent);
   };
 
+  const formatDateTime = (isoString) =>{
+    const date = new Date(isoString);
+
+  // Extract date components
+  const year = date.getUTCFullYear();
+  const month = String(date.getUTCMonth() + 1).padStart(2, '0'); // Months are zero-based
+  const day = String(date.getUTCDate()).padStart(2, '0');
+
+  // Extract time components
+  let hours = date.getUTCHours();
+  const minutes = String(date.getUTCMinutes()).padStart(2, '0');
+  const seconds = String(date.getUTCSeconds()).padStart(2, '0');
+  
+  // Determine AM/PM and convert hours to 12-hour format
+  const isPM = hours >= 12;
+  const modifier = isPM ? 'PM' : 'AM';
+  if (hours === 0) {
+    hours = 12;
+  } else if (hours > 12) {
+    hours -= 12;
+  }
+  hours = String(hours).padStart(2, '0');
+
+  // Construct date and time strings
+  const dateString = `${year}-${month}-${day}`;
+  const timeString = `${hours}:${minutes} ${modifier}`;
+
+  return { dateString, timeString };
+  }
+
   const handleChangeEvent = (newEvent) =>{
     console.log("from calendar: ",newEvent)
-    const eventDate = newEvent.date
+    const {eventDate,time} = formatDateTime(newEvent.datetime)
     const eventDetails = {
       name: newEvent.name,
-      time: newEvent.time,
+      time: time,
       location: newEvent.location
     }
     setItems((prevItems) => {

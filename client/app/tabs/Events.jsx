@@ -27,7 +27,7 @@ const Events = () => {
   const navigator = useNavigation();
   // const { user, event } = useContext(CreateEventContext);
   const { user, events, setEvents, currentEvent, setCurrentEvent } = useGlobalContext();
-  console.log("From event",currentEvent._id)
+  // console.log("From event",currentEvent._id)
   let type = "";
   const todo = [
     {

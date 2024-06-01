@@ -41,6 +41,7 @@ const TabsLayout = () => {
       try {
         const response = await eventApi.getAllEvents(user.token);
         const res = response.data.data
+        console.log("Current Event from response: ",res[0].event[0])
         setCurrentEvent(res[0].event[0]);
         setEvents(res[0].event);
       } catch (err) {

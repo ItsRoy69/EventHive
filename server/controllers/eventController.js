@@ -1,9 +1,11 @@
 const Event = require('../models/eventModel')
+const SubEvent = require('../models/subEventModel')
 const User = require('../models/userModel')
 const Host = require('../models/hostModel')
 const Guest = require('../models/guestModel')
 const Vendor = require('../models/vendorModel')
 const GroupChannel = require('../models/groupChannelModel')
+const Meeting = require('../models/meetingModel')
 const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
 const getJWTToken = require('../utils/getJWTToken')
@@ -103,7 +105,26 @@ const getEventById = async (req, res) => {
         } else {
             groupChannels = await GroupChannel.find({ eventId: event._id, members: { $in: [userId] } })
         }
+        let meetings = []
+        if (role === 'host') {
+            meetings = await Meeting.find({ eventId: event._id })
+        } else if (role === 'vendor') {
+            meetings = await Meeting.find({ eventId: event._id, vendorId: userId })
+        }
+        let subEvents = []
+        if (role === 'host') {
+            subEvents = await SubEvent.find({ parentEvent: event._id })
+        } else if (role === 'vendor') {
+            subEvents = await SubEvent.find({ parentEvent: event._id, vendorId: userId })
+        }
+        let vendors = []
+        if (role === 'host') {
+            vendors = await Vendor.find({ eventId: event._id })
+        }
+        event.subEvents = subEvents
         event.groupChannels = groupChannels
+        event.meetings = meetings
+        event.vendors = vendors
         return res.status(200).json({ message: 'Event fetched successfully', data: event })
     } catch (err) {
         console.log(err)

@@ -8,9 +8,10 @@ import {
   Switch,
   FlatList,
 } from "react-native";
+import { eventApi } from "../../api/eventApi";
 import { Picker } from "@react-native-picker/picker";
 import DropDownPicker from "react-native-dropdown-picker";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useGlobalContext } from "../context/GlobalProvider";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import icons from "../../constants/icons";
@@ -25,8 +26,14 @@ const CreateEvent = ({ onChangeEvent }) => {
   const [timeOfEvent, setTimeOfEvent] = useState("");
   const [location, setLocation] = useState(null);
   const [selectedValues, setSelectedValues] = useState([]);
+  const [vendors, setVendors] = useState([]);
 
-  const { currentEvent, events } = useGlobalContext();
+  const { currentEvent, user } = useGlobalContext();
+  const eventId = currentEvent._id;
+  const token = user.token;
+  const role = currentEvent.role
+  // console.log("eventId: ",eventId)
+  // console.log("token: ",token)
 
   const onChangeDate = ({ type }, selectedDate) => {
     if (type == "set") {
@@ -53,17 +60,83 @@ const CreateEvent = ({ onChangeEvent }) => {
       showTimepicker();
     }
   };
+  useEffect(() => {
+    const handleGetVendors = async () => {
+      try {
+        const response = await eventApi.getVendors(eventId, token);
 
-  const handleAddEventClicked = () => {
-    const newEvent = {
-      name: eventName,
-      date: dateOfEvent,
-      location: location,
-      time: timeOfEvent,
-      venedor:selectedValues
+        const vendorsList = response.data.data.map((vendor) => ({
+          name: vendor.user[0].name,
+          service: vendor.serviceType,
+          id:vendor._id
+        }));
+        setVendors(vendorsList);
+      } catch (error) {
+        console.error("Error fetching vendors:", error);
+      }
     };
-    onChangeEvent(newEvent);
-  };
+
+    handleGetVendors();
+  }, []);
+
+  const createDateTime =(dateStr,timeStr)=>{
+    const [year, month, day] = dateStr.split('-');
+
+  // Parse the time string and convert to 24-hour format
+  let [time, modifier] = timeStr.split(' ');
+  let [hours, minutes] = time.split(':');
+  hours = parseInt(hours, 10);
+  minutes = parseInt(minutes, 10);
+
+  if (modifier === 'PM' && hours < 12) {
+    hours += 12;
+  }
+  if (modifier === 'AM' && hours === 12) {
+    hours = 0;
+  }
+
+  // Create a Date object with the parsed values
+  const date = new Date(Date.UTC(year, month - 1, day, hours, minutes));
+
+  return date
+}
+  
+
+const handleAddEventClicked = async () => {
+  try {
+    const newSubEvent = {
+      name: eventName,
+      datetime :{
+        start: createDateTime(dateOfEvent, timeOfEvent),
+        end: createDateTime(dateOfEvent, timeOfEvent)
+        },
+      location: location,
+      vendors: selectedValues,
+    };
+
+    const response = await eventApi.createSubEvent(eventId, newSubEvent, token);
+    console.log("Set subevent", response);
+
+    onChangeEvent(newSubEvent);
+  } catch (error) {
+    // Handle errors
+    if (error.response) {
+      // The request was made and the server responded with a status code
+      // that falls out of the range of 2xx
+      console.error("Error response:", error.response);
+      console.error("Data:", error.response.data);
+      console.error("Status:", error.response.status);
+      console.error("Headers:", error.response.headers);
+    } else if (error.request) {
+      // The request was made but no response was received
+      console.error("Error request:", error.request);
+    } else {
+      // Something happened in setting up the request that triggered an Error
+      console.error("Error message:", error.message);
+    }
+    console.error("Error config:", error.config);
+  }
+};
 
   const showDatepicker = () => {
     setShowDate(!showDate);
@@ -72,29 +145,31 @@ const CreateEvent = ({ onChangeEvent }) => {
   const showTimepicker = () => {
     setShowTime(!showTime);
   };
+
   
-  const options = [
-    { label: 'Vendor 1', value: 'vendor1' },
-    { label: 'Vendor 2', value: 'vendor2' },
-    { label: 'Vendor 3', value: 'vendor3' },
-    { label: 'Vendor 4', value: 'vendor4' },
-    { label: 'Vendor 5', value: 'vendor5' },
-  ];
-  
+
   const [open, setOpen] = useState(false);
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState("");
 
   const toggleDropdown = () => {
     setOpen(!open);
   };
 
   const toggleSelection = (value) => {
+    let updatedSelectedValues;
     if (selectedValues.includes(value)) {
-      setSelectedValues(selectedValues.filter(item => item !== value));
+      updatedSelectedValues = selectedValues.filter((item) => item !== value);
     } else {
-      setSelectedValues([...selectedValues, value]);
+      updatedSelectedValues = [...selectedValues, value];
     }
+    setSelectedValues(updatedSelectedValues);
+    setInputValue(updatedSelectedValues.join(", "));
   };
+  const VendorItem = ({ name, service }) => (
+    <View className="flex-row items-center  py-2 border-b border-gray-200">
+      <Text className="text-base">{name} - {service}</Text>
+    </View>
+  );
 
   const formatDate = (rawDate) => {
     let date = new Date(rawDate);
@@ -201,44 +276,52 @@ const CreateEvent = ({ onChangeEvent }) => {
           <Picker.Item label="floo3" value="floor3" />
         </Picker>
       </View>
-      <View style={`mb-3`}>
-      <Text>Select Vendors</Text>
-      <TouchableOpacity onPress={toggleDropdown}>
-        <TextInput
-          className='border-b border-[#1F2E2A]/[0.41] h-[37px]  bg-[#1F2E2A]/[0.01] text-md text-black'
-          value={inputValue}
-          placeholder="Click to select vendors"
-          editable={false}
-        />
-      </TouchableOpacity>
-
-      {open && (
-        <View style={`border border-gray-300 rounded`}>
-          <FlatList
-            data={options}
-            renderItem={({ item }) => (
-              <TouchableOpacity onPress={() => toggleSelection(item.value)} className='flex px-5 flex-row justify-between items-center'>
-                <Text className='text-md py-2  '>{item.label}</Text>
-                {selectedValues.includes(item.value) && <Text className='text-[#FFAD65] text-xl'>✓</Text>}
-              </TouchableOpacity>
-            )}
-            keyExtractor={(item) => item.value}
+      <View className={`mb-3`}>
+        <Text>Select Vendors</Text>
+        <TouchableOpacity onPress={toggleDropdown}>
+          <TextInput
+            className="border-b border-[#1F2E2A]/[0.41] h-[37px]  bg-[#1F2E2A]/[0.01] text-md text-black"
+            value={inputValue}
+            placeholder="Click to select vendors"
+            editable={false}
           />
-        </View>
-      )}
-      <View className='flex flex-row mt-5 gap-[3px] items-center rounded-md p-3'>
-        <Text>Selected Vendors: </Text>
-        {selectedValues.map((value)=>(
-          <View className='bg-[#FFAD65]/[0.7] rounded-md p-2'>
-          <Text>{value}</Text>
+        </TouchableOpacity>
 
+        {open && (
+          <View className="border border-gray-300 rounded">
+            {vendors.length === 0 ? (
+              <Text className="p-3 text-center text-slate-400">
+                No vendors to show
+              </Text>
+            ) : (
+              <FlatList
+                data={vendors}
+                renderItem={({ item }) => (
+                  <TouchableOpacity
+                    onPress={() => toggleSelection(item.name)}
+                    className="flex px-5 flex-row justify-between items-center"
+                  >
+                    <VendorItem name={item.name} key={item.id} service={item.service} />
+
+                    {selectedValues.includes(item.name) && (
+                      <Text className="text-[#FFAD65] text-xl">✓</Text>
+                    )}
+                  </TouchableOpacity>
+                )}
+                keyExtractor={(item) => item.id}
+              />
+            )}
           </View>
-
-        ))}
-        
-        
+        )}
+        <View className="flex flex-row mt-5 gap-[3px] items-center rounded-md py-2">
+          <Text>Selected Vendors: </Text>
+          {selectedValues.map((value) => (
+            <View className="bg-[#FFAD65]/[0.7] rounded-md p-2">
+              <Text>{value}</Text>
+            </View>
+          ))}
+        </View>
       </View>
-    </View>
 
       <View className="flex flex-row items-center ">
         <Switch value={createChannel} onValueChange={setCreateChannel} />
