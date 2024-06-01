@@ -5,7 +5,7 @@ const {getUserRoleInEvent} = require('../middlewares/role')
 
 router.get('/', verifyToken, eventController.getAllEvents)
 router.get('/:eventId', verifyToken, getUserRoleInEvent, eventController.getEventById)
-router.post('/', eventController.createEvent)
+router.post('/', verifyToken, eventController.createEvent)
 router.put('/', verifyToken, getUserRoleInEvent, eventController.updateEvent)
 router.delete('/', verifyToken, getUserRoleInEvent, eventController.deleteEvent)
 

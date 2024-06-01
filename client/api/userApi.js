@@ -7,5 +7,5 @@ export const userApi = {
     },
     signup: async (creds) => {
         return await axiosConfig.post("/user", { ...creds });
-      },
+    },
 }
