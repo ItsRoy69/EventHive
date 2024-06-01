@@ -179,6 +179,13 @@ const Events = () => {
     }
   };
 
+  const formatDate = (date) => {
+    const dateObj= new Date(date);
+    const dateStr = dateObj.toLocaleDateString();
+    const timeStr = dateObj.toLocaleTimeString();
+    return `${timeStr}, ${dateStr}`
+  }
+
   const handleSelectSubItem = (itemId) => {
     if (selected && selectedSubItem === itemId) {
       setSelected(false);
@@ -475,13 +482,13 @@ const Events = () => {
                         >
                           <View className="flex justify-start">
                             <Text className="text-black font-bold">
-                              {item.name}
+                              {item.subject}
                             </Text>
 
                             <View className="flex flex-row gap-[2px]">
                               <Text>{item.location}</Text>
                               <Text>-</Text>
-                              <Text className="font-semibold">{item.time}</Text>
+                              <Text className="font-semibold">{formatDate(item.datetime)}</Text>
                             </View>
                           </View>
 

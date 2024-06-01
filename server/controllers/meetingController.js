@@ -34,14 +34,16 @@ const getMeetings = async (req, res) => {
 
 const createMeeting = async (req, res) => {
     try {
-        const { role, vendorId, subject, datetime } = req.body
+        const { role, vendorId, subject, datetime, eventId, location } = req.body
         if (role !== 'host') {
             return res.status(400).json({ message: 'You are not authorized to perform this action' })
         }
         const newMeeting = new Meeting({
+            eventId,
             vendorId,
             subject,
-            datetime
+            datetime,
+            location
         })
         await newMeeting.save()
         return res.status(200).json({ message: 'Meeting created successfully', data: newMeeting })
