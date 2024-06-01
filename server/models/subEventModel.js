@@ -11,6 +11,10 @@ const subEventSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    vendors: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Vendor'
+    }],
     venue: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Venue'

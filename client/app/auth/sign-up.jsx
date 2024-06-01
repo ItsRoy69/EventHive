@@ -14,7 +14,6 @@ import { CreateEventContext } from "../context/CreateEventContext";
 
 const SignUp = () => {
   const [name, setName] = useState("");
-  
 
   const blankCreds = {
     email: '', 
@@ -60,7 +59,9 @@ const SignUp = () => {
       const response = await axios.post("https://eventhive-server.onrender.com/event", { user: reqBody.user, event: reqBody.event })
       console.log("response: ", response.data)
       setEvent(existingEvent =>({...existingEvent,_id:response.data.data.event._id}))
-     
+
+      const eventObject = reqBody.event
+
       navigation.navigate("TabsLayout")
     } catch (error) {
       console.log(error)

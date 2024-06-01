@@ -41,9 +41,9 @@ const TabsLayout = () => {
       try {
         const response = await eventApi.getAllEvents(user.token);
         const res = response.data.data
-        console.log("Current Event from response: ",res[0].event[0])
-        setCurrentEvent(res[0].event[0]);
         setEvents(res[0].event);
+        const response2 = await eventApi.getEventById(res[0].event[0]._id, user.token);
+        setCurrentEvent(response2.data.data);
       } catch (err) {
         console.log(err)
         Alert.alert("Error", err.message)
@@ -82,7 +82,6 @@ const TabsLayout = () => {
                   name="Events"
                   color={color}
                   focused={focused}
-                  // disabled={!currentEvent?.name}
                 />
               ),
             }}
