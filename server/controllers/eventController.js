@@ -98,7 +98,8 @@ const getAllEvents = async (req, res) => {
 
 const getEventById = async (req, res) => {
     try {
-        let { userId, role, event } = req.body
+        let { userId, role, event, vendorId } = req.body
+        let { eventId } = req.params
         let groupChannels = []
         if (role === 'host') {
             groupChannels = await GroupChannel.find({ eventId: event._id })
@@ -107,24 +108,25 @@ const getEventById = async (req, res) => {
         }
         let meetings = []
         if (role === 'host') {
-            meetings = await Meeting.find({ eventId: event._id })
+            meetings = await Meeting.find({ eventId })
         } else if (role === 'vendor') {
-            meetings = await Meeting.find({ eventId: event._id, vendorId: userId })
+            meetings = await Meeting.find({ eventId, vendorId }).exec().lean()
         }
         let subEvents = []
         if (role === 'host') {
-            subEvents = await SubEvent.find({ parentEvent: event._id })
+            subEvents = await SubEvent.find({ eventId })
         } else if (role === 'vendor') {
-            subEvents = await SubEvent.find({ parentEvent: event._id, vendorId: userId })
+            subEvents = await SubEvent.find({ eventId, vendorId })
         }
         let vendors = []
         if (role === 'host') {
-            vendors = await Vendor.find({ eventId: event._id })
+            vendors = await Vendor.find({ eventId })
         }
-        event.subEvents = subEvents
-        event.groupChannels = groupChannels
-        event.meetings = meetings
-        event.vendors = vendors
+        // event.subEvents = subEvents
+        // event.groupChannels = groupChannels
+        // event.meetings = meetings
+        // event.vendors = vendors
+        event = { ... event, subEvents, groupChannels, meetings, vendors }
         return res.status(200).json({ message: 'Event fetched successfully', data: event })
     } catch (err) {
         console.log(err)
