@@ -14,9 +14,11 @@ import DropDownPicker from "react-native-dropdown-picker";
 import React, { useEffect, useState } from "react";
 import { useGlobalContext } from "../context/GlobalProvider";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import icons from "../../constants/icons";
+import { useNavigation } from "expo-router";
+import icons from "../../constants/icons"
 
-const CreateEvent = ({ onChangeEvent }) => {
+const CreateEvent = ({addEvent,setAddEvent}) => {
+  const navigation = useNavigation()
   const [date, setDate] = useState(new Date());
   const [time, setTime] = useState(new Date());
   const [showDate, setShowDate] = useState(false);
@@ -28,13 +30,10 @@ const CreateEvent = ({ onChangeEvent }) => {
   const [selectedValues, setSelectedValues] = useState([]);
   const [vendors, setVendors] = useState([]);
 
-  const { currentEvent, user } = useGlobalContext();
+  const { currentEvent, user,setCurrentEvent } = useGlobalContext();
   const eventId = currentEvent._id;
   const token = user.token;
-  const role = currentEvent.role
-  // console.log("eventId: ",eventId)
-  // console.log("token: ",token)
-
+  
   const onChangeDate = ({ type }, selectedDate) => {
     if (type == "set") {
       const currentDate = selectedDate;
@@ -112,12 +111,14 @@ const handleAddEventClicked = async () => {
         },
       location: location,
       vendors: selectedValues,
+      autoCreateChannels:createChannel
     };
 
     const response = await eventApi.createSubEvent(eventId, newSubEvent, token);
-    console.log("Set subevent", response);
+    console.log("Set subevent", response.status);
+    setAddEvent(!addEvent)
 
-    onChangeEvent(newSubEvent);
+    
   } catch (error) {
     // Handle errors
     if (error.response) {
@@ -197,7 +198,15 @@ const handleAddEventClicked = async () => {
   return (
     <View className="flex gap-[15px] px-2 ">
       <View className="mb-3">
-        <Text className="text-2xl font-bold ">Create Sub-Event</Text>
+        <View className='flex flex-row justify-between'>
+          <Text className="text-2xl font-bold ">Create Sub-Event</Text>
+          <TouchableOpacity onPress={()=>setAddEvent(!addEvent)}>
+            <View className='py-2 px-4 bg-slate-200 rounded-md'>
+              <Text className='text-slate-400'>Back</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+       
         <View className="w-[117px] border-[2px] rounded-[3px] mb-3  border-[#FFAD65]"></View>
 
         <Text>Sub-event Name</Text>
