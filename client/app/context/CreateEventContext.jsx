@@ -11,17 +11,21 @@ const CreateEventProvider = ({ children }) => {
         endDateTime: ''
     }
     const [event, setEvent] = useState(blankEventData)
-    const [user, setUser] = useState({
-        name: '',
-        role: ''
-    })
+
+    const blankUser = { name: '', role: '' }
+    const [user, setUser] = useState(blankUser)
 
     useEffect(() => {
         console.log(user, event)
     }, [user, event])
 
+    const clearContextData = () => {
+        setEvent(blankEventData)
+        setUser(blankUser)
+    }
+
     return (
-        <CreateEventContext.Provider value={{ event, setEvent, user, setUser }}>
+        <CreateEventContext.Provider value={{ event, setEvent, user, setUser, clearContextData }}>
             {children}
         </CreateEventContext.Provider>
     )

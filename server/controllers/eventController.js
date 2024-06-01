@@ -132,41 +132,7 @@ const getEventById = async (req, res) => {
 
 const createEvent = async (req, res) => {
     try {
-        let { user, event } = req.body
-        console.log(req.body)
-        let userId
-        if (!user) {
-            const token = req.headers.authorization.split(' ')[1]
-            if (token) {
-                const decoded = jwt.verify(token, process.env.JWT_SECRET_TOKEN)
-                userId = decoded.userId
-            }
-        }
-        if ((!user && !userId) || !event) {
-            return res.status(400).json({ message: 'Missing required fields' })   
-        }
-        if (!userId) {
-            const existingUser = await User.findOne({
-                $or: [
-                    { email: user.email },
-                    { phone: user.phone }
-                ]
-            })
-            if (existingUser) {
-                return res.status(400).json({ message: 'User already exists' })
-            }
-            const hashedPassword = await bcrypt.hash(user.password, 10)
-            const newUser = await User.create({
-                name: user.name,
-                phone: user.phone,
-                email: user.email,
-                password: hashedPassword
-            })
-            userId = newUser._id
-            user = newUser
-        }
-        const userData = { userId: user._id, name: user.name, phone: user.phone }
-        const token = getJWTToken('1d', userData)
+        const { userId, event } = req.body
         let newEvent = await Event.create({
             name: event.name,
             datetime: event.datetime
@@ -175,12 +141,7 @@ const createEvent = async (req, res) => {
             userId,
             eventId: newEvent._id
         })
-        const data = {
-            token:token,
-            user: user,
-            event: newEvent
-        }
-        return res.status(200).json({ message: "Event created successfully", data })
+        return res.status(200).json({ message: "Event created successfully", data: newEvent })
     } catch (error) {
         console.log(error)
         return res.status(500).json({ message: 'Internal server error' })

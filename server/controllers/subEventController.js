@@ -7,9 +7,6 @@ const getSubEvents = async (req, res) => {
         if (!eventId) {
             return res.status(400).json({ message: 'Missing required fields' })
         }
-        // if (role === 'guest') {
-        //     return res.status(400).json({ message: "Sub-events fetched successfully", data: req.body.subEventData })
-        // }
         const subEventData = await SubEvent.find({ eventId: eventId })
         if (role === 'host' || role === 'vendor') {
             return res.status(200).json({ message:  "Sub-events fetched successfully", data: subEventData })

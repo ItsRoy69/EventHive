@@ -199,7 +199,7 @@ const handleAddEventClicked = async () => {
     <View className="flex gap-[15px] px-2 ">
       <View className="mb-3">
         <View className='flex flex-row justify-between'>
-          <Text className="text-2xl font-bold ">Create Event</Text>
+          <Text className="text-2xl font-bold ">Create Sub-Event</Text>
           <TouchableOpacity onPress={()=>setAddEvent(!addEvent)}>
             <View className='py-2 px-4 bg-slate-200 rounded-md'>
               <Text className='text-slate-400'>Back</Text>
@@ -209,7 +209,7 @@ const handleAddEventClicked = async () => {
        
         <View className="w-[117px] border-[2px] rounded-[3px] mb-3  border-[#FFAD65]"></View>
 
-        <Text>Event Name</Text>
+        <Text>Sub-event Name</Text>
         <TextInput
           className="border-b border-[#1F2E2A]/[0.41] h-[37px]  bg-[#1F2E2A]/[0.01] text-md "
           placeholder="Rajarshis Haldi Ceremony"
@@ -331,17 +331,19 @@ const handleAddEventClicked = async () => {
           ))}
         </View>
       </View>
-
-      <View className="flex flex-row items-center ">
-        <Switch value={createChannel} onValueChange={setCreateChannel} />
-        <Text className="ml-2">Create channel for this event</Text>
+      <View className="w-full flex flex-row items-center px-2">
+        <Switch
+          value={createChannel}
+          onValueChange={setCreateChannel}
+        />
+        <Text className="ml-2 pr-6 truncate">Create Group Chat, Anouncement & Gallery channel for this event</Text>
       </View>
 
       <TouchableOpacity
         className="bg-[#FFAD65] border border-[#FFAD65] rounded-md flex items-center  p-2"
         onPress={handleAddEventClicked}
       >
-        <Text className="text-xl font-bold text-white">Add Event</Text>
+        <Text className="text-xl font-bold text-white">Add Sub-event</Text>
       </TouchableOpacity>
     </View>
   );

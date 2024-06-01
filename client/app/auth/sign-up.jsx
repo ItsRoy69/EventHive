@@ -11,6 +11,8 @@ const StyledImage = styled(Image);
 import axios from "axios";
 import { useGlobalContext } from "../context/GlobalProvider";
 import { CreateEventContext } from "../context/CreateEventContext";
+import { userApi } from "../../api/userApi";
+import { eventApi } from "../../api/eventApi";
 
 const SignUp = () => {
   const [name, setName] = useState("");
@@ -22,10 +24,7 @@ const SignUp = () => {
   }
   const [creds, setCreds] = useState(blankCreds);
   const navigation = useNavigation();
-  const { user, event,setUser,setEvent } = useContext(CreateEventContext);
-  // console.log("From Signup : ",user,event)
-
-  // console.log("user: ",user)
+  const { user, event, setUser, setEvent, clearContextData } = useContext(CreateEventContext);
 
   const nameBuilder = (arr, type) => {
     let res = ""
@@ -38,30 +37,33 @@ const SignUp = () => {
     return res 
   }
 
+  const { user: user2, setUser: setUser2 } = useGlobalContext()
+
   const handleSubmit = async() => {
     try {
-      const reqBody = {
-        event: {
-          name: nameBuilder(event.names, event.type),
-          datetime: {
-            start: event.startDateTime,
-            end: event.endDateTime
-          }
-        },
-        user: {
-          name: user.name,
-          phone: creds.phone,
-          email: creds.email,
-          password: creds.password
+      const userCreds = {
+        name: user.name,
+        phone: creds.phone,
+        email: creds.email,
+        password: creds.password
+      }
+      
+      const response = await userApi.signup(userCreds)
+      console.log("response: ", response.data)
+
+      const eventData = {
+        name: nameBuilder(event.names, event.type),
+        datetime: {
+          start: event.startDateTime,
+          end: event.endDateTime
         }
       }
-      // console.log(reqBody)
-      const response = await axios.post("https://eventhive-server.onrender.com/event", { user: reqBody.user, event: reqBody.event })
-      console.log("response: ", response.data)
-      setEvent(existingEvent =>({...existingEvent,_id:response.data.data.event._id}))
 
-      const eventObject = reqBody.event
+      setUser2(response.data.data)
+      const response2 = await eventApi.createEvent(eventData, response.data.data.token)
+      console.log("event created successfully: ", response2.data.data)
 
+      clearContextData()
       navigation.navigate("TabsLayout")
     } catch (error) {
       console.log(error)
