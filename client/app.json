@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "EventHive",
-    "slug": "eventhive",
+    "slug": "eventhive-cvii0uzmmtp5cslrup4m",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -47,6 +47,9 @@
             "DEFAULT"
           ]
         }
+      ],
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
       ]
     },
     "web": {
@@ -71,7 +74,7 @@
         "origin": false
       },
       "eas": {
-        "projectId": "8cb23f78-f951-44da-a935-6a2b71a8fec1"
+        "projectId": "9fb08920-0a66-42e9-bb61-09238a78db95"
       }
     },
     "owner": "itsroy69"
