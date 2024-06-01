@@ -31,5 +31,15 @@ export const eventApi = {
     // ----------------------- venues ----------------------- //
     getVenues: async (eventId) => {
         return await axiosConfig.get(`/venue`)
+    },
+
+    // ----------------------- meetings ----------------------- //
+    getMeetings: async (eventId, token) => {
+        updateTokenInHeaders(token)
+        return await axiosConfig.get(`/meeting/${eventId}`)
+    },
+    createMeeting: async (eventId, meeting, token) => {
+        updateTokenInHeaders(token)
+        return await axiosConfig.post("/meeting", {meeting, eventId})
     }
 }
