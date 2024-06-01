@@ -12,7 +12,7 @@ export const eventApi = {
     },
     createEvent: async (data, token) => {
         updateTokenInHeaders(token)
-        return await axiosConfig.post("/event", { ...data })
+        return await axiosConfig.post("/event", { event: data })
     },
 
 
