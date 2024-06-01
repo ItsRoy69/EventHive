@@ -2,16 +2,17 @@ const SubEvent = require('../models/subEventModel')
 
 const getSubEvents = async (req, res) => {
     try {
-        const { role, eventId } = req.body
+        const { role } = req.body
+        const { eventId } = req.params
         if (!eventId) {
             return res.status(400).json({ message: 'Missing required fields' })
         }
-        if (role === 'guest') {
-            return res.status(400).json({ message: "Sub-events fetched successfully", data: req.body.subEventData })
-        }
+        // if (role === 'guest') {
+        //     return res.status(400).json({ message: "Sub-events fetched successfully", data: req.body.subEventData })
+        // }
         const subEventData = await SubEvent.find({ eventId: eventId })
         if (role === 'host' || role === 'vendor') {
-            return res.status(400).json({ message:  "Sub-events fetched successfully", data: subEventData })
+            return res.status(200).json({ message:  "Sub-events fetched successfully", data: subEventData })
         }
     } catch (error) {
         console.log(error) 
@@ -21,15 +22,19 @@ const getSubEvents = async (req, res) => {
 
 const createSubEvent = async (req, res) => {
     try {
-        const { userId, eventId, subEvent } = req.body
-        if (!userId || !eventId) {
+        const { eventId, subEvent, role } = req.body
+        if (!subEvent) {
             return res.status(400).json({ message: 'Missing required fields' })
+        }
+        if (role !== 'host') {
+            return res.status(400).json({ message: 'You are not authorized to perform this action' })
         }
         const newSubEvent = await SubEvent.create({
             eventId: eventId,
             name: subEvent.name,
             datetime: subEvent.datetime
         })
+        console.log(newSubEvent)
         return res.status(200).json({ message: "Sub-event created succesfully", data: newSubEvent })
     } catch (error) {
         console.log(error) 
