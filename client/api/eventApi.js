@@ -22,5 +22,10 @@ export const eventApi = {
     getVendors: async (eventId, token) => {
         updateTokenInHeaders(token)
         return await axiosConfig.get(`/vendor/${eventId}`)
+    },
+
+    // ----------------------- venues ----------------------- //
+    getVenues: async (eventId) => {
+        return await axiosConfig.get(`/venue`)
     }
 }
