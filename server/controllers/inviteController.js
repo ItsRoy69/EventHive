@@ -1,6 +1,7 @@
 const Event = require('../models/eventModel');
 const Invite = require('../models/inviteModel');
 const generateInviteLink = require('../utils/inviteLinkGenerator');
+const { v4: uuidv4 } = require('uuid'); 
 
 const createInviteLink = async (req, res) => {
     try {
