@@ -18,6 +18,10 @@ const meetingSchema = new mongoose.Schema({
     datetime: {
         type: Date,
         required: true
+    },
+    location: {
+        type: String,
+        default: 'Online'
     }
 })
 
