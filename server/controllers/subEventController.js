@@ -22,7 +22,7 @@ const getSubEvents = async (req, res) => {
 
 const createSubEvent = async (req, res) => {
     try {
-        const { eventId, subEvent, role } = req.body
+        const { eventId, subEvent, role, vendors } = req.body
         if (!subEvent) {
             return res.status(400).json({ message: 'Missing required fields' })
         }
@@ -32,7 +32,9 @@ const createSubEvent = async (req, res) => {
         const newSubEvent = await SubEvent.create({
             eventId: eventId,
             name: subEvent.name,
-            datetime: subEvent.datetime
+            datetime: subEvent.datetime,
+            venue: subEvent.venue,
+            vendors: vendors
         })
         return res.status(200).json({ message: "Sub-event created succesfully", data: newSubEvent })
     } catch (error) {
