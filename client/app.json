@@ -23,7 +23,8 @@
             ]
           }
         ]
-      }
+      },
+      "bundleIdentifier": "com.itsroy69.eventhivecvii0uzmmtp5cslrup4m"
     },
     "android": {
       "adaptiveIcon": {
@@ -50,7 +51,8 @@
       ],
       "permissions": [
         "android.permission.RECORD_AUDIO"
-      ]
+      ],
+      "package": "com.itsroy69.eventhivecvii0uzmmtp5cslrup4m"
     },
     "web": {
       "bundler": "metro",
