@@ -83,7 +83,7 @@ const CalendarItem = () => {
   
     handleAddEventPressed()
   }
-  console.log("Items",items)
+ 
 
   const [hamOpened, setHamOpened] = useState(false)
 
@@ -181,7 +181,7 @@ const CalendarItem = () => {
                           </Text>
                           <Text className="text-white flex self-center text-md font-bold">
                             {" "}
-                            Add Event
+                            Schedule
                           </Text>
                         </View>
                       </TouchableOpacity>

@@ -6,9 +6,12 @@ import {
   Image,
   TouchableOpacity,
   Switch,
+  FlatList,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
+import DropDownPicker from "react-native-dropdown-picker";
 import React, { useState } from "react";
+import { useGlobalContext } from "../context/GlobalProvider";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import icons from "../../constants/icons";
 
@@ -21,6 +24,9 @@ const CreateEvent = ({ onChangeEvent }) => {
   const [dateOfEvent, setDateOfEvent] = useState("");
   const [timeOfEvent, setTimeOfEvent] = useState("");
   const [location, setLocation] = useState(null);
+  const [selectedValues, setSelectedValues] = useState([]);
+
+  const { currentEvent, events } = useGlobalContext();
 
   const onChangeDate = ({ type }, selectedDate) => {
     if (type == "set") {
@@ -54,6 +60,7 @@ const CreateEvent = ({ onChangeEvent }) => {
       date: dateOfEvent,
       location: location,
       time: timeOfEvent,
+      venedor:selectedValues
     };
     onChangeEvent(newEvent);
   };
@@ -64,6 +71,29 @@ const CreateEvent = ({ onChangeEvent }) => {
 
   const showTimepicker = () => {
     setShowTime(!showTime);
+  };
+  
+  const options = [
+    { label: 'Vendor 1', value: 'vendor1' },
+    { label: 'Vendor 2', value: 'vendor2' },
+    { label: 'Vendor 3', value: 'vendor3' },
+    { label: 'Vendor 4', value: 'vendor4' },
+    { label: 'Vendor 5', value: 'vendor5' },
+  ];
+  
+  const [open, setOpen] = useState(false);
+  const [inputValue, setInputValue] = useState('');
+
+  const toggleDropdown = () => {
+    setOpen(!open);
+  };
+
+  const toggleSelection = (value) => {
+    if (selectedValues.includes(value)) {
+      setSelectedValues(selectedValues.filter(item => item !== value));
+    } else {
+      setSelectedValues([...selectedValues, value]);
+    }
   };
 
   const formatDate = (rawDate) => {
@@ -87,7 +117,7 @@ const CreateEvent = ({ onChangeEvent }) => {
     return `${parsedHours}:${minutes} ${suffix}`;
   };
 
-  const [createChannel, setCreateChannel] = useState(true)
+  const [createChannel, setCreateChannel] = useState(true);
 
   return (
     <View className="flex gap-[15px] px-2 ">
@@ -161,18 +191,57 @@ const CreateEvent = ({ onChangeEvent }) => {
       </View>
       <View className="mb-3">
         <Text>Where is it happening</Text>
-        <TextInput
-          className="border-b border-[#1F2E2A]/[0.41] h-[37px]  bg-[#1F2E2A]/[0.01] text-md text-black "
-          value={location}
-          onChangeText={(text) => setLocation(text)}
-          placeholder="Holiday Inn"
-        />
+        <Picker
+          selectedValue={location}
+          onValueChange={(itemValue, itemIndex) => setLocation(itemValue)}
+          className="border border-[#1F2E2A] h-[37px]  bg-[#1F2E2A]/[0.01] text-md text-black "
+        >
+          <Picker.Item label="floo1 " value="floor1" />
+          <Picker.Item label="floo2 " value="floor2" />
+          <Picker.Item label="floo3" value="floor3" />
+        </Picker>
       </View>
-      <View className="flex flex-row items-center ">
-        <Switch
-          value={createChannel}
-          onValueChange={setCreateChannel}
+      <View style={`mb-3`}>
+      <Text>Select Vendors</Text>
+      <TouchableOpacity onPress={toggleDropdown}>
+        <TextInput
+          className='border-b border-[#1F2E2A]/[0.41] h-[37px]  bg-[#1F2E2A]/[0.01] text-md text-black'
+          value={inputValue}
+          placeholder="Click to select vendors"
+          editable={false}
         />
+      </TouchableOpacity>
+
+      {open && (
+        <View style={`border border-gray-300 rounded`}>
+          <FlatList
+            data={options}
+            renderItem={({ item }) => (
+              <TouchableOpacity onPress={() => toggleSelection(item.value)} className='flex px-5 flex-row justify-between items-center'>
+                <Text className='text-md py-2  '>{item.label}</Text>
+                {selectedValues.includes(item.value) && <Text className='text-[#FFAD65] text-xl'>✓</Text>}
+              </TouchableOpacity>
+            )}
+            keyExtractor={(item) => item.value}
+          />
+        </View>
+      )}
+      <View className='flex flex-row mt-5 gap-[3px] items-center rounded-md p-3'>
+        <Text>Selected Vendors: </Text>
+        {selectedValues.map((value)=>(
+          <View className='bg-[#FFAD65]/[0.7] rounded-md p-2'>
+          <Text>{value}</Text>
+
+          </View>
+
+        ))}
+        
+        
+      </View>
+    </View>
+
+      <View className="flex flex-row items-center ">
+        <Switch value={createChannel} onValueChange={setCreateChannel} />
         <Text className="ml-2">Create channel for this event</Text>
       </View>
 

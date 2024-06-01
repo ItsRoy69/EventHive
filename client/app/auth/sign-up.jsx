@@ -2,8 +2,6 @@ import React, { useState, useContext } from "react";
 import { View, Text, TextInput, TouchableOpacity, Image, Alert } from "react-native";
 import { styled } from "nativewind";
 import { useNavigation } from "@react-navigation/native";
-import * as SecureStore from 'expo-secure-store';
-
 const StyledView = styled(View);
 const StyledText = styled(Text);
 const StyledTextInput = styled(TextInput);
@@ -16,15 +14,7 @@ import { CreateEventContext } from "../context/CreateEventContext";
 
 const SignUp = () => {
   const [name, setName] = useState("");
-  key = 'jwt'
-  // const [value,setValue] = useState('')
-  async function save(key, value) {
-    await SecureStore.setItemAsync(key, value);
-  }
-  // const handleStoreToken = async (token) => {
-  //   console.log("token:",token)
-  //   await storeToken(token);
-  // };
+  
 
   const blankCreds = {
     email: '', 
@@ -70,10 +60,7 @@ const SignUp = () => {
       const response = await axios.post("https://eventhive-server.onrender.com/event", { user: reqBody.user, event: reqBody.event })
       console.log("response: ", response.data)
       setEvent(existingEvent =>({...existingEvent,_id:response.data.data.event._id}))
-      save(key,response.data.data.token)
-
-      const eventObject = reqBody.event
-
+     
       navigation.navigate("TabsLayout")
     } catch (error) {
       console.log(error)

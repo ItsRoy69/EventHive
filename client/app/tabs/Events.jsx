@@ -19,7 +19,6 @@ import { useNavigation } from "@react-navigation/native";
 import Invitation from "../screens/invitation";
 import { InvitationProvider } from "../context/InvitationContext";
 import EventMenu from "../screens/eventMenu";
-
 import HamDrawer from "../components/HamDrawer";
 import { useGlobalContext } from "../context/GlobalProvider";
 import LoaderSpinner from "../components/LoaderSpinner";
@@ -28,21 +27,7 @@ const Events = () => {
   const navigator = useNavigation();
   // const { user, event } = useContext(CreateEventContext);
   const { user, events, setEvents, currentEvent, setCurrentEvent } = useGlobalContext();
-
-  
-
-  useEffect (()=>{
-    async function getValueFor(key) {
-      let result = await SecureStore.getItemAsync(key);
-      if (result) {
-        Alert.alert("🔐 Here's your value 🔐 \n" + result);
-      } else {
-        Alert.alert('No values stored under that key.');
-      }
-    }
-    getValueFor('jwt')
-  },[])
-  
+  console.log("From event",currentEvent._id)
   let type = "";
   const todo = [
     {
@@ -564,21 +549,19 @@ const Events = () => {
                 className="mt-2"
               />
             )}
-            <View className="rounded-md mt-5 flex items-center px-4 py-2 bg-[#FFAD65]/[0.8]">
-              <Text className="text-white text-xl">+ Add Event Channel</Text>
-            </View>
+            <TouchableOpacity 
+          className='rounded-md mt-5 flex items-center px-4 py-2 bg-[#FFAD65]/[0.8]'
+          onPress={() => navigator.navigate('calendar')}
+        >
+          <Text className='text-white text-xl'>+ Add / Event Channel</Text>
+        </TouchableOpacity>
           </>
         ) : (
           <InvitationProvider value={{ sendInvitation, setSendInvitation }}>
             <Invitation setInvitationPressed={setInvitationPressed}/>
           </InvitationProvider>
         )}
-        <TouchableOpacity 
-          className='rounded-md mt-5 flex items-center px-4 py-2 bg-[#FFAD65]/[0.8]'
-          onPress={() => navigator.navigate('calendar')}
-        >
-          <Text className='text-white text-xl'>+ Add / Event Channel</Text>
-        </TouchableOpacity>
+       
       </View>
     </SafeAreaView>
   );
