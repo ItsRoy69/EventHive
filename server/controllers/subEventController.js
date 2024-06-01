@@ -34,7 +34,6 @@ const createSubEvent = async (req, res) => {
             name: subEvent.name,
             datetime: subEvent.datetime
         })
-        console.log(newSubEvent)
         return res.status(200).json({ message: "Sub-event created succesfully", data: newSubEvent })
     } catch (error) {
         console.log(error) 
