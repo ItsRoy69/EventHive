@@ -13,7 +13,7 @@ const getUserRoleInEvent = async(req, res, next) => {
             return res.status(400).json({ message: 'Missing required fields' })
         }
     }
-    const event = await Event.findById(eventId)
+    const event = await Event.findById(eventId).lean().exec()
     if (!event) {
         return res.status(400).json({ message: 'Event not found' })
     }
