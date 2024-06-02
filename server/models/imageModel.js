@@ -12,7 +12,7 @@ const imageSchema = new mongoose.Schema({
     },
     estimatedReceiver: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Guest',
+        ref: 'User',
         default: null
     }
 })
