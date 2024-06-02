@@ -6,7 +6,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import icons from "../../constants/icons";
 import { Picker } from "@react-native-picker/picker";
 
-const CreateMeeting = ({ addMeeting, setAddMeeting }) => {
+const CreateMeeting = ({ addMeeting, setAddMeeting,setMeetingTriggered, meetingTriggered }) => {
     const [subject, setSubject] = useState('');
     const [vendorId, setVendorId] = useState('');
     const [location, setLocation] = useState('');
@@ -17,6 +17,7 @@ const CreateMeeting = ({ addMeeting, setAddMeeting }) => {
     const [dateOfEvent, setDateOfEvent] = useState('');
     const [timeOfEvent, setTimeOfEvent] = useState('');
     const [vendors, setVendors] = useState([]);
+
   
     const { currentEvent, user } = useGlobalContext();
     const eventId = currentEvent._id;
@@ -117,9 +118,10 @@ const CreateMeeting = ({ addMeeting, setAddMeeting }) => {
                 datetime:createDateTime(dateOfEvent, timeOfEvent),
                 location:location
             }
-            console.log(meeting)
+            
             const response = await eventApi.createMeeting(eventId,meeting,token)
-            console.log("Set Meeting:",response.status)
+            // console.log("Set Meeting:",response.status)
+            setMeetingTriggered(true)
             setAddMeeting(!addMeeting)
         }catch (error) {
             if (error.response) {

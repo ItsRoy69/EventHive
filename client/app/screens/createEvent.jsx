@@ -17,7 +17,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { useNavigation } from "expo-router";
 import icons from "../../constants/icons"
 
-const CreateEvent = ({addEvent,setAddEvent}) => {
+const CreateEvent = ({addEvent,setAddEvent,subEventTrigeered, setSubEventTriggered}) => {
   const navigation = useNavigation()
   const [date, setDate] = useState(new Date());
   const [time, setTime] = useState(new Date());
@@ -115,7 +115,8 @@ const handleAddEventClicked = async () => {
     };
 
     const response = await eventApi.createSubEvent(eventId, newSubEvent, token);
-    console.log("Set subevent", response.status);
+    // console.log("Set subevent", response.status);
+    setSubEventTriggered(true)
     setAddEvent(!addEvent)
 
     

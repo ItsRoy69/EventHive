@@ -25,8 +25,10 @@ const CalendarItem = () => {
   const [addEvent, setAddEvent] = useState(false);
   const [addMeeting,setAddMeeting] = useState(false)
   const [showModal, setShowModal] = useState(false);
-  
+  const [meetingTriggered, setMeetingTriggered] = useState(false)
+  const [subEventTriggered, setSubEventTriggered] = useState(false)
   const { currentEvent, user } = useGlobalContext();
+
   const eventId = currentEvent._id;
   const token = user.token; 
 
@@ -67,7 +69,7 @@ const CalendarItem = () => {
       }
     }
     getSubEvent()
-  },[items])
+  },[subEventTriggered])
   
   useEffect(() => {
     const tempItems = items[selectedDate] ? items[selectedDate] : [];
@@ -274,9 +276,9 @@ const CalendarItem = () => {
                 </View>
               </>
             ): addEvent ? (
-              <CreateEvent addEvent={addEvent} setAddEvent={setAddEvent} />
+              <CreateEvent subEventTriggered={subEventTriggered} setSubEventTriggered={setSubEventTriggered} addEvent={addEvent} setAddEvent={setAddEvent} />
             ) : addMeeting ? (
-              <CreateMeeting addMeeting={addMeeting} setAddMeeting={setAddMeeting} />
+              <CreateMeeting meetingTriggered={meetingTriggered} setMeetingTriggered={setMeetingTriggered} addMeeting={addMeeting} setAddMeeting={setAddMeeting} />
             ):null}
             <Modal
               visible={showModal}

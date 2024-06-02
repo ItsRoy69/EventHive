@@ -3,6 +3,7 @@ const Meeting = require('../models/meetingModel')
 const getMeetings = async (req, res) => {
     try {
         const { role, eventId } = req.body
+        console.log(eventId)
         if (role == 'host') {
             const meetings = await Meeting.aggregate([
                 {

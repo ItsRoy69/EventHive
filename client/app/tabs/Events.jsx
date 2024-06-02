@@ -11,7 +11,7 @@ import {
   Alert,
   ActivityIndicator
 } from "react-native";
-import React, { useEffect, useRef, useState, useContext } from "react";
+import React, { useEffect,useState } from "react";
 import { Image } from "react-native";
 import icons from "../../constants/icons";
 import images from "../../constants/images";
@@ -20,27 +20,28 @@ import Invitation from "../screens/invitation";
 import { InvitationProvider } from "../context/InvitationContext";
 import EventMenu from "../screens/eventMenu";
 import HamDrawer from "../components/HamDrawer";
+import { eventApi } from "../../api/eventApi";
 import { useGlobalContext } from "../context/GlobalProvider";
 import LoaderSpinner from "../components/LoaderSpinner";
 
 const Events = () => {
   const navigator = useNavigation();
   // const { user, event } = useContext(CreateEventContext);
-  const { user, events, setEvents, currentEvent, setCurrentEvent } = useGlobalContext();
-  
-  let type = "";
-  const todo = [
-    {
-      name: "Meeting with Bimal Da - Florist",
-      location: "Rajarhat",
-      time: "10:30",
-    },
-    {
-      name: "Venue visit and discussion",
-      location: "Holiday Inn",
-      time: "Chinar Park - 17:30",
-    },
-  ];
+  const { user,currentEvent} = useGlobalContext();
+  const eventId = currentEvent._id
+  const token = user.token
+
+  useEffect(()=>{
+    const handleGetMeetings = async() =>{
+      try{
+      const response = await eventApi.getMeetings(eventId,token)
+      console.log("Meetings Fetched:",response)
+      }catch(error){
+        console.log(error.response)
+      }
+    }
+    handleGetMeetings()
+  },[])
 
   const [reminders, setReminders] = useState(currentEvent.meetings);
 
@@ -196,7 +197,7 @@ const Events = () => {
   };
 
   const renderCommonItems = ({ itemId, itemName }) => {
-    console.log("from events", itemName);
+    // console.log("from events", itemName);
     return (
       <View className="flex">
         <TouchableOpacity
