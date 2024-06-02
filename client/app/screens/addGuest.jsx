@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -12,12 +12,15 @@ import {
 import * as Linking from "expo-linking";
 import { useNavigation } from "expo-router";
 import * as Clipboard from "expo-clipboard";
-import { Ionicons } from "@expo/vector-icons"; // Ensure you have expo/vector-icons installed
+import { Ionicons } from "@expo/vector-icons";
+import axios from "axios";
+import { useGlobalContext } from "../context/GlobalProvider";
 
 const AddGuest = () => {
-  const navigation = useNavigation()
+  const navigation = useNavigation();
   const [menuOpen, setMenuOpen] = useState(false);
-  const inviteLink = "https://example.com/invite";
+  const [inviteLink, setInviteLink] = useState("");
+  const { user, currentEvent } = useGlobalContext();
   const openGmail = () => {
     console.log("Mail clicked");
     const email = "example@gmail.com";
@@ -37,6 +40,7 @@ const AddGuest = () => {
       })
       .catch((err) => console.error("An error occurred", err));
   };
+
   const openWhatsApp = () => {
     const message = "Hello, this is a pre-filled message!";
     const whatsappUrl = `whatsapp://send?text=${encodeURIComponent(message)}`;
@@ -55,6 +59,44 @@ const AddGuest = () => {
   const copyToClipboard = async () => {
     await Clipboard.setStringAsync(inviteLink);
     Alert.alert("Success", "Copied to clipboard");
+  };
+
+  useEffect(() => {
+    if (user && currentEvent) {
+      generateInviteLink();
+    }
+  }, [user, currentEvent]);
+
+  const generateInviteLink = async () => {
+    try {
+      const eventId = currentEvent._id;
+      const hostId = user._id;
+      const token = user.token;
+
+      const response = await axios.post(
+        "https://eventhive-server.onrender.com/invite",
+        {
+          eventId,
+          role: "host",
+          hostId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const { data } = response.data;
+      setInviteLink(data.inviteLink);
+    } catch (error) {
+      console.error("Error generating invite link:", error);
+      Alert.alert("Error", "Failed to generate invite link");
+    }
+
+    
+
+
   };
 
   return (
