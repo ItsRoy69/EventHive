@@ -12,7 +12,12 @@ const updateTokenInHeaders = (token) => {
     axiosConfig.defaults.headers.common["Authorization"] = `Bearer ${token}`                
 }
 
+const changeContentTypeToMultipart = () => {
+    axiosConfig.defaults.headers.common["Content-Type"] = "multipart/form-data"
+}
+
 module.exports = {
     axiosConfig,
-    updateTokenInHeaders
+    updateTokenInHeaders,
+    changeContentTypeToMultipart
 } 
