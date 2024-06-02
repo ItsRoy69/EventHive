@@ -21,6 +21,7 @@ import { InvitationProvider } from "../context/InvitationContext";
 import EventMenu from "../screens/eventMenu";
 import HamDrawer from "../components/HamDrawer";
 import { eventApi } from "../../api/eventApi";
+import {channelApi} from '../../api/channelApi'
 import { useGlobalContext } from "../context/GlobalProvider";
 
 
@@ -66,7 +67,7 @@ const Events = () => {
   const handleMenuPressed = () => {
     setMenuOpen(!menuOpen);
   };
-  
+
   const guestParentItem = [
     {
       id: 1,
@@ -149,9 +150,27 @@ const Events = () => {
       },
     ],
   };
+  const [channels,setChannels] = useState([])
+  const [data,setData] = useState([])
+  useEffect(()=>{
+    const handleGetChannels = async() =>{
+      try{
+        const response = await channelApi.getAllChannels(eventId,token)
+       console.log(response)
+       setData(response.data)
+       const channelsData = response.data[0].channels
+       setChannels(channelsData)  
+      }
+      catch(error){
+        console.log(error)
+      }
+       
+    }
+    handleGetChannels()
+  },[])
 
   const handleNavigateToChat = (item) => {
-    if (selected && selectedSubItem === item.id) {
+    if (selected && selectedSubItem === item._id) {
       setSelected(false);
       setSelectedSubItem(null);
       return;
@@ -180,13 +199,10 @@ const Events = () => {
     setSelectedSubItem(itemId);
   };
 
-  const renderCommonItems = ({ itemId, itemName }) => {
-    // console.log("from events", itemName);
+  const renderChannels = ({ item }) => {
     return (
       <View className="flex">
-        <TouchableOpacity
-          onPress={() => navigator.navigate("GroupChats", { name: itemName })}
-        >
+        <TouchableOpacity onPress={() => handleNavigateToChat({ item })} key={item._id}>
           <View className="py-3 px-2 border-b-[0.5px] flex flex-row justify-between items-center border-gray-300">
             <View className="gap-[10px] flex flex-row items-center">
               <Image
@@ -195,52 +211,14 @@ const Events = () => {
                 className="w-[35px] h-[35px]"
               />
               <Text className="text-md font-semibold text-gray-700">
-                Group Chat
+                {item.name || (item.user && item.user[0] && item.user[0].name)}
               </Text>
-            </View>
-            <View className="px-[10px] py-1 bg-[#A34342] rounded-[15px]">
-              <Text className="font-semibold text-white">60 +</Text>
-            </View>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <View className="py-3 px-2 border-b-[0.5px] flex flex-row justify-between items-center border-gray-300">
-            <View className="gap-[10px] flex flex-row items-center">
-              <Image
-                source={icons.announcement}
-                resizeMode="contain"
-                className="w-[35px] h-[35px]"
-              />
-              <Text className="text-md font-semibold text-gray-700">
-                Announcements
-              </Text>
-            </View>
-            <View className="px-[10px] py-1 bg-[#A34342] rounded-[15px]">
-              <Text className="font-semibold text-white">60 +</Text>
-            </View>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigator.navigate("Gallery")}>
-          <View className="py-3 px-2 border-b-[0.5px] flex flex-row justify-between items-center border-gray-300">
-            <View className="gap-[10px] flex flex-row items-center">
-              <Image
-                source={icons.gallery}
-                resizeMode="contain"
-                className="w-[35px] h-[35px]"
-              />
-              <Text className="text-md font-semibold text-gray-700">
-                Gallery
-              </Text>
-            </View>
-            <View className="px-[10px] py-1 bg-[#A34342] rounded-[15px]">
-              <Text className="font-semibold text-white">60 +</Text>
             </View>
           </View>
         </TouchableOpacity>
       </View>
     );
   };
-
   const renderSubItems = ({ itemId, itemName }) => {
     return (
       <View>
@@ -324,18 +302,18 @@ const Events = () => {
   const renderItem = ({ item }) => (
     <View className="">
       <TouchableOpacity
-        onPress={() => toggleExpand(item.id)}
+        onPress={() => toggleExpand(item._id)}
         style={["py-4 border-b-[0.5px] border-gray-300 "]}
       >
         <View
           className={`flex py-3 px-2  ${
-            expandedItem === item.id
+            expandedItem === item._id
               ? "bg-[#FFAD65]/[0.14]"
               : "bg-[#D9D9D9]/[0.1]"
           }   flex-row justify-between items-center`}
         >
           <View className="flex flex-row gap-[8px] items-center">
-            <Image source={item.image} resizeMode="contain" />
+            <Image source={icons.dummyVenue} resizeMode="contain" />
             <Text className="text-lg font-semibold">{item.name}</Text>
           </View>
           <View className="flex flex-row justify-between items-center gap-2">
@@ -353,8 +331,8 @@ const Events = () => {
           </View>
         </View>
 
-        {expandedItem === item.id &&
-          renderSubItems({ itemId: item.id, itemName: item.name })}
+        {expandedItem === item._id &&
+          renderChannels({ itemId: item._id, itemName: item.name })}
       </TouchableOpacity>
     </View>
   );
@@ -541,18 +519,48 @@ const Events = () => {
 
             {currentEvent.role === 'host' ? (
               <FlatList
-                data={currentEvent.subEvents}
-                renderItem={renderItem}
-                keyExtractor={(item) => item.id}
-                className="mt-2"
+        data={data}
+        keyExtractor={(item) => item._id}
+        renderItem={({ item }) => (
+          <View>
+            <TouchableOpacity onPress={() => toggleExpand(item._id)}>
+              <Text style={{ fontSize: 18, fontWeight: 'bold' }}>{item.name}</Text>
+            </TouchableOpacity>
+            {expandedItem === item._id && (
+              <SectionList
+                sections={[{ title: "Channels", data: item.channels }]}
+                keyExtractor={(item) => item._id}
+                renderItem={renderChannels}
+                renderSectionHeader={({ section: { title } }) => (
+                  <Text style={{ fontWeight: 'bold', marginTop: 10 }}>{title}</Text>
+                )}
               />
+            )}
+          </View>
+        )}
+      />
             ) : (
               <FlatList
-                data={guestParentItem}
-                renderItem={renderGuestItem}
-                keyExtractor={(item) => item.id}
-                className="mt-2"
+        data={data}
+        keyExtractor={(item) => item._id}
+        renderItem={({ item }) => (
+          <View>
+            <TouchableOpacity onPress={() => toggleExpand(item._id)}>
+              <Text style={{ fontSize: 18, fontWeight: 'bold' }}>{item.name}</Text>
+            </TouchableOpacity>
+            {expandedItem === item._id && (
+              <SectionList
+                sections={[{ title: "Channels", data: item.channels }]}
+                keyExtractor={(item) => item._id}
+                renderItem={renderChannels}
+                renderSectionHeader={({ section: { title } }) => (
+                  <Text style={{ fontWeight: 'bold', marginTop: 10 }}>{title}</Text>
+                )}
               />
+            )}
+          </View>
+        )}
+      />
             )}
             </View>
             <TouchableOpacity 
