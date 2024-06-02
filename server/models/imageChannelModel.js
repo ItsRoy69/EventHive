@@ -1,11 +1,6 @@
 const mongoose = require('mongoose')
 
 const imageChannelSchema = new mongoose.Schema({
-    eventId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Event',
-        required: true
-    },
     subEventId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'SubEvent',
@@ -27,7 +22,7 @@ const imageChannelSchema = new mongoose.Schema({
     },
     type: {
         type: String,
-        default: 'unrestricted'
+        default: 'restricted'
     }
 })
 

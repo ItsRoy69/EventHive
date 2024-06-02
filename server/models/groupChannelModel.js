@@ -1,11 +1,6 @@
 const mongoose = require('mongoose')
 
 const groupChannelSchema = new mongoose.Schema({
-    eventId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Event',
-        required: true
-    },
     subEventId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'SubEvent',
