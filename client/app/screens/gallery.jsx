@@ -1,6 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from 'react';
 import { View, Text, Image, TouchableOpacity, ScrollView } from "react-native";
-import { launchImageLibrary } from "react-native-image-picker";
+import * as ImagePicker from 'expo-image-picker';
+import { useGlobalContext } from '../context/GlobalProvider';
+import { channelApi } from '../../api/channelApi';
+import * as FileSystem from 'expo-file-system';
+import * as Base64 from 'base64-js';
+import { changeContentTypeToMultipart } from '../../utils/axiosConfig';
 const Gallery = () => {
   const images = [
     require("../../assets/images/weddingimage.png"),
@@ -38,25 +43,51 @@ const Gallery = () => {
   ];
 
   const [selectedImages, setSelectedImages] = useState([]);
+  const { user, currentEvent } = useGlobalContext();
 
-  const handleUploadImage = () => {
-    launchImageLibrary(
-      {
-        mediaType: "photo",
-        selectionLimit: 0,
-        includeBase64: false,
-      },
-      (response) => {
-        if (response.didCancel) {
-          console.log("User cancelled image picker");
-        } else if (response.error) {
-          console.log("ImagePicker Error: ", response.error);
-        } else {
-          const newImages = response.assets.map((asset) => asset.uri);
-          setSelectedImages([...selectedImages, ...newImages]);
+
+  const handleUploadImage = async () => {
+    try {
+      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (status !== 'granted') {
+        console.log('Permission to access media library denied');
+        return;
+      }
+
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsMultipleSelection: true,
+        aspect: [4, 3],
+        quality: 1,
+      });
+
+      if (!result.canceled) {
+        const newImages = result.assets;
+        setSelectedImages([...selectedImages, ...newImages]);
+
+        changeContentTypeToMultipart(); // Set Content-Type header to multipart/form-data
+
+        for (const asset of newImages) {
+          const formData = new FormData();
+          formData.append('image', {
+            uri: asset.uri,
+            name: asset.fileName,
+            type: asset.type || 'image/jpeg', // Set a default type if it's not available
+          });
+
+          console.log('Uploading image:', asset.uri);
+
+          try {
+            const response = await channelApi.uploadImage(currentEvent.imageChannelId, formData, user.token);
+            console.log('Image upload response:', response.data);
+          } catch (error) {
+            console.error('Error uploading image:', error);
+          }
         }
       }
-    );
+    } catch (error) {
+      console.log('Error occurred while launching image picker:', error);
+    }
   };
 
   return (
@@ -68,7 +99,12 @@ const Gallery = () => {
           {[...images, ...selectedImages].map((image, index) => (
             <View key={index} className="w-1/4 p-1">
               <Image
-                source={typeof image === "number" ? image : { uri: image }}
+                source={typeof image === "number"
+                    ? image
+                    : image.uri
+                    ? { uri: image.uri }
+                    : require("../../assets/images/weddingimage.png") // or any other placeholder image
+                }
                 className="w-full h-20 rounded-lg"
                 resizeMode="cover"
               />
