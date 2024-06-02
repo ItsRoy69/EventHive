@@ -27,7 +27,6 @@ const DMChats = () => {
   const navigation = useNavigation();
   const route = useRoute();
   const { name } = route.params || {};
-  console.log(name);
   const [image, setImage] = useState(null);
   const [message, setMessage] = useState("");
   const [showEmojiKeyboard, setShowEmojiKeyboard] = useState(false);

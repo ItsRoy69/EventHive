@@ -11,7 +11,7 @@ import {
   Alert,
   ActivityIndicator
 } from "react-native";
-import React, { useEffect, useRef, useState, useContext } from "react";
+import React, { useEffect,useState } from "react";
 import { Image } from "react-native";
 import icons from "../../constants/icons";
 import images from "../../constants/images";
@@ -20,30 +20,35 @@ import Invitation from "../screens/invitation";
 import { InvitationProvider } from "../context/InvitationContext";
 import EventMenu from "../screens/eventMenu";
 import HamDrawer from "../components/HamDrawer";
+import { eventApi } from "../../api/eventApi";
 import { useGlobalContext } from "../context/GlobalProvider";
-import LoaderSpinner from "../components/LoaderSpinner";
+
 
 const Events = () => {
   const navigator = useNavigation();
   // const { user, event } = useContext(CreateEventContext);
-  const { user, events, setEvents, currentEvent, setCurrentEvent } = useGlobalContext();
-  
-  let type = "";
-  const todo = [
-    {
-      name: "Meeting with Bimal Da - Florist",
-      location: "Rajarhat",
-      time: "10:30",
-    },
-    {
-      name: "Venue visit and discussion",
-      location: "Holiday Inn",
-      time: "Chinar Park - 17:30",
-    },
-  ];
+  const { user,currentEvent} = useGlobalContext();
+  const eventId = currentEvent._id
+  const token = user.token
 
   const [reminders, setReminders] = useState(currentEvent.meetings);
 
+ 
+
+  useEffect(()=>{
+    const handleGetMeetings = async() =>{
+      try{
+      const response = await eventApi.getMeetings(eventId,token)
+      // console.log("Meetings Fetched:",response.data)
+      setReminders(response.data.data)
+      }catch(error){
+        console.log(error.response)
+      }
+    }
+    handleGetMeetings()
+  },[reminders])
+
+  
   const [expandedItem, setExpandedItem] = useState(null);
   const [selected, setSelected] = useState(false);
   const [selectedSubItem, setSelectedSubItem] = useState(null);
@@ -61,27 +66,7 @@ const Events = () => {
   const handleMenuPressed = () => {
     setMenuOpen(!menuOpen);
   };
-
-  const parentItems = [
-    {
-      id: 1,
-      image: `${images.dummyVenue}`,
-      notification: 65,
-      name: "Haldi Day",
-    },
-    {
-      id: 2,
-      image: `${images.food}`,
-      notification: 24,
-      name: "Wedding Day",
-    },
-    {
-      id: 3,
-      image: `${images.dummyVenue}`,
-      notification: 10,
-      name: "Priest and Rituals",
-    },
-  ];
+  
   const guestParentItem = [
     {
       id: 1,
@@ -196,7 +181,7 @@ const Events = () => {
   };
 
   const renderCommonItems = ({ itemId, itemName }) => {
-    console.log("from events", itemName);
+    // console.log("from events", itemName);
     return (
       <View className="flex">
         <TouchableOpacity
@@ -466,9 +451,10 @@ const Events = () => {
           </View>
           <View className="border-[0.5px] border-slate-400" />
         </View>
-        {!invitationPressed ? (
+        {!invitationPressed  ? (
           <>
-            <View className="reminders flex py-2 mt-1">
+            <View className={`reminders ${remindersOpen ? 'h-[180px]':null}  flex py-2 mt-1`}>
+              <ScrollView>
               <Text className="text-sm text-slate-400">Reminders</Text>
               {
                 remindersOpen &&
@@ -503,8 +489,10 @@ const Events = () => {
                         <Text className="text-black font-bold">No upcoming reminders</Text>
                       </View>  
                     }
+                    
                   </View>
               }
+              </ScrollView>
             </View>
             <View className="relative border-[0.5px] h-0 my-5 border-slate-400">
               <TouchableOpacity
@@ -523,7 +511,7 @@ const Events = () => {
             <View className="py-2 flex flex-row gap-[5px]">
               <TouchableOpacity
                 className="px-3 py-1  bg-slate-100 rounded-[10px] text-black"
-                onPress={() => {}}
+                onPress={() => navigator.navigate('DMChatList')}
               >
                 <Text>DMs</Text>
               </TouchableOpacity>
@@ -548,6 +536,9 @@ const Events = () => {
                 <Text>Groups</Text>
               </TouchableOpacity>
             </View>
+            <View className='h-[210px]'
+          >
+
             {currentEvent.role === 'host' ? (
               <FlatList
                 data={currentEvent.subEvents}
@@ -563,6 +554,7 @@ const Events = () => {
                 className="mt-2"
               />
             )}
+            </View>
             <TouchableOpacity 
           className='rounded-md mt-5 flex items-center px-4 py-2 bg-[#FFAD65]/[0.8]'
           onPress={() => navigator.navigate('calendar')}
@@ -570,11 +562,12 @@ const Events = () => {
           <Text className='text-white text-xl'>+ Add / Event Channel</Text>
         </TouchableOpacity>
           </>
-        ) : (
+        ) :(
           <InvitationProvider value={{ sendInvitation, setSendInvitation }}>
             <Invitation setInvitationPressed={setInvitationPressed}/>
           </InvitationProvider>
         )}
+        
        
       </View>
     </SafeAreaView>
