@@ -1,9 +1,11 @@
 const Meeting = require('../models/meetingModel')
+const mongoose = require('mongoose')
 
 const getMeetings = async (req, res) => {
     try {
-        const { role, eventId } = req.body
-        if (role == 'host') {
+        const { role } = req.body
+        const { eventId } = req.params
+        if (role === 'host') {
             const meetings = await Meeting.aggregate([
                 {
                     $match: {
@@ -12,6 +14,7 @@ const getMeetings = async (req, res) => {
                     }
                 }
             ])
+            // const meetings = await Meeting.find({ eventId: eventId })
             return res.status(200).json({ message: "Meetings fetched successfully", data: meetings })
         } else if (role === 'vendor') {
             const meetings = await Meeting.aggregate([
