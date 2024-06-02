@@ -235,7 +235,7 @@ const Events = () => {
             </View>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigator.navigate("Gallery")}>
           <View className="py-3 px-2 border-b-[0.5px] flex flex-row justify-between items-center border-gray-300">
             <View className="gap-[10px] flex flex-row items-center">
               <Image
