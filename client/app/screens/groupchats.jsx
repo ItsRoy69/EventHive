@@ -66,12 +66,10 @@ const GroupChats = () => {
             <FontAwesome6 name="arrow-left-long" size={16} color="#888" onPress={()=>navigation.goBack()} />
           </StyledView>
           <StyledView className="flex-col items-start justify-center">
-            <StyledText className="text-md font-bold text-[#1F2E2A]">
+            <StyledText className="text-lg font-bold text-[#1F2E2A]">
               {name || "Group Name"}
             </StyledText>
-            <StyledText className="text-xl font-bold text-[#1F2E2A]">
-              Group Chat
-            </StyledText>
+            
           </StyledView>
         </StyledView>
         <StyledView className="flex-row items-center">

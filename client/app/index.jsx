@@ -69,6 +69,7 @@ const App = () => {
           <Stack.Screen name="GroomName" component={GroomName} />
           <Stack.Screen name="GroupChats" component={GroupChats} />
           <Stack.Screen name="DMChats" component={DMChats}/>
+          <Stack.Screen name="Gallery" component={Gallery}/>
           <Stack.Screen name='DMChatList' component = {DMChatList}/>
           <Stack.Screen name='AddGuest' component={AddGuest}/>
 
