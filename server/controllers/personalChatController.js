@@ -1,13 +1,73 @@
 const PersonalChat = require('../models/personalChatModel')
+const mongoose = require('mongoose')
 
 const getAllPersonalChats = async (req, res) => {
     try {
-        const { eventId, userId } = req.body
+        const { userId } = req.body
+        const { eventId } = req.params
         if (!eventId) {
             return res.status(400).json({ message: 'Missing required fields' })
         }
         const conditions = [ { senderId: userId }, { receiverId: userId } ]
-        const personalChats = await PersonalChat.find({ eventId, $or: conditions })
+        // just get the recepients
+        let personalChats = await PersonalChat.aggregate([
+            {
+                $match: {
+                    eventId: new mongoose.Types.ObjectId(eventId),
+                    senderId: userId,
+                },
+            },
+            // {
+            //     $group: {
+            //         _id: '$receiverId',
+            //     }
+            // }, 
+            {
+                $lookup: {
+                    from: 'users',
+                    localField: '_id',
+                    foreignField: '_id',
+                    as: 'receiver',
+                }
+            },
+            {
+                $project: {
+                    "receiver._id": 1,
+                    "receiver.name": 1,
+                    "receiver.phone": 1,
+                    "receiver.email": 1,
+                }
+            }
+        ])
+        personalChats = personalChats.concat(await PersonalChat.aggregate([
+            {
+                $match: {
+                    eventId: new mongoose.Types.ObjectId(eventId),
+                    receiverId: userId,
+                }
+            },
+            {
+                $group: {
+                    _id: '$senderId',
+                }
+            }, 
+            {
+                $lookup: {
+                    from: 'users',
+                    localField: '_id',
+                    foreignField: '_id',
+                    as: 'sender',
+                }
+            },
+            {
+                $project: {
+                    "sender._id": 1,
+                    "sender.name": 1,
+                    "sender.phone": 1,
+                    "sender.email": 1,
+                }   
+            }
+        ]))
         return res.status(200).json({ message: 'Chats fetched successfully', data: personalChats })
     } catch (err) {
         console.log(err)
@@ -17,14 +77,14 @@ const getAllPersonalChats = async (req, res) => {
 
 const getPersonalChatWithUser = async (req, res) => {
     try {
-        const { eventId, userId, userId2 } = req.body
-
+        const { userId, userId2 } = req.body
+        const { eventId } = req.params
         if (!eventId) {
             return res.status(400).json({ message: 'Missing required fields' })
         }
         const conditions = [ { senderId: userId, receiverId: userId2 }, { senderId: userId2, receiverId: userId } ]
-        const personalChats = await PersonalChat.find({ $or: conditions }).sort({ timestamp: -1 })   
-        return res.staus(200).json({ message: 'Chats fetched successfully', data: personalChats })
+        const personalChats = await PersonalChat.find({ eventId, $or: conditions }).sort({ timestamp: -1 })   
+        return res.status(200).json({ message: 'Chats fetched successfully', data: personalChats })
     } catch (err) {
         console.log(err)
         return res.status(500).json({ message: 'Internal server error' })
@@ -33,10 +93,18 @@ const getPersonalChatWithUser = async (req, res) => {
 
 const createPersonalChat = async (req, res) => {
     try {
-        const { eventId, userId: senderId, receiverId, type, message } = req.body
+        const { userId: senderId, message } = req.body
+        const { eventId } = req.params
         const cdnLink = req.cdnLink
-        const chatObj = { eventId, senderId, receiverId, type, message, image: type === "image" && cdnLink }
-        const newChat = new PersonalChat.create(chatObj)
+        const chatObj = { 
+            eventId, 
+            senderId, 
+            receiverId: message.receiverId, 
+            type: message.type, 
+            message: message.message, 
+            image: message.type === "image" ? cdnLink : null 
+        }
+        const newChat = await PersonalChat.create(chatObj)
         return res.status(200).json({ message: 'Chat created successfully', data: newChat })
     } catch (err) {
         console.log(err)

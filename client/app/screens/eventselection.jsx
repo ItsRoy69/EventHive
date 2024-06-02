@@ -17,15 +17,8 @@ const EventSelection = () => {
     setEvent(existingEvent => ({ ...existingEvent, type: event }));
     if (event === 'Wedding') {
       navigation.navigate('BrideGroom');
-    }
-    if (event === 'Marriage anniversary') {
-      navigation.navigate('GuestInvite');
-    }
-    if (event === 'Farewell') {
-      navigation.navigate('VendorInvite');
-    }
-    if (event === 'Retirement function') {
-      navigation.navigate('GroupChats');
+    } else {
+      navigation.navigate('WorkingOn');
     }
   };
 
