@@ -48,18 +48,21 @@ const createSubEvent = async (req, res) => {
                 subEventId: newSubEvent._id,
                 name: 'Anouncements',
                 type: 'restricted',
+                avatar: 'https://res.cloudinary.com/dnm4zdkxz/image/upload/v1717314794/eventhive_media/smouupugos80b9ycy2y7.png',
                 members: [userId]
             })
             await GroupChannel.create({
                 subEventId: newSubEvent._id,
                 name: 'Group Chat',
                 type: 'unrestricted',
+                avatar: 'https://res.cloudinary.com/dnm4zdkxz/image/upload/v1717314897/eventhive_media/yuobxun2ui3ydehb8mpp.png',
                 members: [userId]
             })
             await ImageChannel.create({
                 subEventId: newSubEvent._id,
                 name: 'Gallery',
                 type: 'restricted',
+                avatar: 'https://res.cloudinary.com/dnm4zdkxz/image/upload/v1717314962/eventhive_media/lszgbohw9prws1kgxzuu.png',
                 members: [userId]
             })
         }
