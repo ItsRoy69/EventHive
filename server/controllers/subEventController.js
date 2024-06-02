@@ -1,5 +1,7 @@
 const GroupChannel = require('../models/groupChannelModel')
+const ImageChannel = require('../models/imageChannelModel')
 const SubEvent = require('../models/subEventModel')
+const Vendor = require('../models/vendorModel')
 
 const getSubEvents = async (req, res) => {
     try {
@@ -34,23 +36,27 @@ const createSubEvent = async (req, res) => {
             venue: subEvent.venue,
             vendors: subEvent.vendors
         })
+        let vendors = await Vendor.find({ userId: { $in: subEvent.vendors } })
+        const promises = vendors.map(async (vendor) => {
+            return await Vendor.findById(vendor._id).updateOne({ $push: { subEvents: newSubEvent._id } })
+        }) 
+
+        await Promise.all(promises)
+        
         if (autoCreateChannels) {
             await GroupChannel.create({
-                eventId,
                 subEventId: newSubEvent._id,
                 name: 'Anouncements',
                 type: 'restricted',
                 members: [userId]
             })
             await GroupChannel.create({
-                eventId,
                 subEventId: newSubEvent._id,
                 name: 'Group Chat',
                 type: 'unrestricted',
                 members: [userId]
             })
             await ImageChannel.create({
-                eventId,
                 subEventId: newSubEvent._id,
                 name: 'Gallery',
                 type: 'restricted',
