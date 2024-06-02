@@ -43,7 +43,7 @@ const createImage = async (req, res) => {
             image
         })
         await newImage.save()
-        return res.status(200).json({ message: 'Created image successfully', data: newImage })
+        return res.status(200).json({ message: 'Uploadedimage successfully', data: newImage })
     } catch (err) {
         console.log(err)
         return res.status(500).json({ message: 'Internal server error' })
