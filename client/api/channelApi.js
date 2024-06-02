@@ -1,4 +1,4 @@
-import axiosConfig from "../utils/axiosConfig";
+import {axiosConfig, updateTokenInHeaders} from "../utils/axiosConfig";
 
 export const channelApi = {
     // ----------------------- channels ----------------------- //
