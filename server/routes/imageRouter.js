@@ -4,7 +4,7 @@ const imageController = require('../controllers/imageController')
 const { verifyToken } = require('../middlewares/auth')
 
 router.get('/:imageChannelId', verifyToken, imageController.getImages)
-router.post('/', verifyToken, uploadImageMiddleware, handleUploadResponse, imageController.createImage)
+router.post('/:imageChannelId', uploadImageMiddleware, handleUploadResponse, verifyToken, imageController.createImage)
 router.put('/', imageController.updateImage)
 router.delete('/', imageController.deleteImage) 
 

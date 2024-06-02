@@ -13,9 +13,9 @@ export const channelApi = {
     },
 
     // ----------------------- gallery ----------------------- //
-    uploadImage: async (data, token) => {
+    uploadImage: async (imageChannelId, data, token) => {
         updateTokenInHeaders(token)
-        return await axiosConfig.post("/image", data)
+        return await axiosConfig.post(`/image/${imageChannelId}`, data)
     },
     getImages: async (imageChannelId, token) => {
         updateTokenInHeaders(token)
