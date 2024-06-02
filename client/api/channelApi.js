@@ -1,4 +1,4 @@
-import {axiosConfig, updateTokenInHeaders} from "../utils/axiosConfig";
+import {axiosConfig, updateTokenInHeaders, changeContentTypeToMultipart} from "../utils/axiosConfig";
 
 export const channelApi = {
     // ----------------------- channels ----------------------- //
@@ -15,6 +15,7 @@ export const channelApi = {
     // ----------------------- gallery ----------------------- //
     uploadImage: async (imageChannelId, data, token) => {
         updateTokenInHeaders(token)
+        changeContentTypeToMultipart()
         return await axiosConfig.post(`/image/${imageChannelId}`, data)
     },
     getImages: async (imageChannelId, token) => {
