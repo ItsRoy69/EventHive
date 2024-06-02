@@ -87,13 +87,16 @@ const getUserRoleInSubEvent = async (req, res, next) => {
 
     if (host) {
         req.body.role = 'host'
+        req.bost.hostId = host._id
         next()
     } else if (guest && rsvpd?.length > 0) {
         req.body.role = 'guest'
+        req.body.guestId = guest._id
         req.body.subEventData = rsvpd[0].subEventDetails
         next()
     } else if (vendor) {
         req.body.role = 'vendor'
+        req.body.vendorId = vendor._id
         next()
     } else {
         return res.status(400).json({ message: 'You are not authorized to perform this action' })
