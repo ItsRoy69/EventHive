@@ -11,7 +11,7 @@ const connectToDB = require('./config/dbConfig')
 
 const eventRouter = require('./routes/eventRouter')
 const floorRouter = require('./routes/floorRouter.js')
-const groupChannelRouter = require('./routes/groupChannelRouter.js')
+const channelRouter = require('./routes/channelRouter.js')
 const groupChatRouter = require('./routes/groupChatRouter.js')
 const guestRouter = require('./routes/guestRouter.js')
 const hostRouter = require('./routes/hostRouter.js')
@@ -30,7 +30,7 @@ const inviteRouter = require('./routes/inviteRouter.js');
 
 app.use('/event', eventRouter)
 app.use('/floor', floorRouter)
-app.use('/group-channel', groupChannelRouter)
+app.use('/channel', channelRouter)
 app.use('/group-chat', groupChatRouter)
 app.use('/guest', guestRouter)
 app.use('/host', hostRouter)
