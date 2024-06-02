@@ -1,3 +1,4 @@
+const { default: mongoose } = require('mongoose')
 const GroupChannel = require('../models/groupChannelModel')
 const ImageChannel = require('../models/imageChannelModel')
 const SubEvent = require('../models/subEventModel')
@@ -49,21 +50,24 @@ const createSubEvent = async (req, res) => {
                 name: 'Anouncements',
                 type: 'restricted',
                 avatar: 'https://res.cloudinary.com/dnm4zdkxz/image/upload/v1717314794/eventhive_media/smouupugos80b9ycy2y7.png',
-                members: [userId]
+                members: [new mongoose.Types.ObjectId(userId)],
+                admins: [new mongoose.Types.ObjectId(userId)]
             })
             await GroupChannel.create({
                 subEventId: newSubEvent._id,
                 name: 'Group Chat',
                 type: 'unrestricted',
                 avatar: 'https://res.cloudinary.com/dnm4zdkxz/image/upload/v1717314897/eventhive_media/yuobxun2ui3ydehb8mpp.png',
-                members: [userId]
+                members: [new mongoose.Types.ObjectId(userId)],
+                admins: [new mongoose.Types.ObjectId(userId)]
             })
             await ImageChannel.create({
                 subEventId: newSubEvent._id,
                 name: 'Gallery',
                 type: 'restricted',
                 avatar: 'https://res.cloudinary.com/dnm4zdkxz/image/upload/v1717314962/eventhive_media/lszgbohw9prws1kgxzuu.png',
-                members: [userId]
+                members: [new mongoose.Types.ObjectId(userId)],
+                admins: [new mongoose.Types.ObjectId(userId)]
             })
         }
         return res.status(200).json({ message: "Sub-event created succesfully", data: newSubEvent })
