@@ -66,12 +66,10 @@ const GroupChats = () => {
             <FontAwesome6 name="arrow-left-long" size={16} color="#888" onPress={()=>navigation.goBack()} />
           </StyledView>
           <StyledView className="flex-col items-start justify-center">
-            <StyledText className="text-md font-bold text-[#1F2E2A]">
+            <StyledText className="text-lg font-bold text-[#1F2E2A]">
               {name || "Group Name"}
             </StyledText>
-            <StyledText className="text-xl font-bold text-[#1F2E2A]">
-              Group Chat
-            </StyledText>
+            
           </StyledView>
         </StyledView>
         <StyledView className="flex-row items-center">
@@ -92,13 +90,13 @@ const GroupChats = () => {
               key={message.id}
               className={`my-2 rounded-lg p-2 ${
                 message.sender === "John"
-                  ? "bg-blue-500 self-end"
+                  ? "bg-[#FFAD65]/[0.41] self-end"
                   : "bg-gray-200 self-start"
               }`}
             >
               <StyledText
                 className={`text-sm ${
-                  message.sender === "John" ? "text-white" : "text-gray-800"
+                  message.sender === "John" ? "text-black" : "text-gray-800"
                 }`}
               >
                 {message.text}

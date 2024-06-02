@@ -122,13 +122,13 @@ const DMChats = () => {
               key={message.id}
               className={`my-2 rounded-lg p-2 ${
                 message.sender === "John"
-                  ? "bg-blue-500 self-end"
+                  ? "bg-[#FFAD65]/[0.41] self-end"
                   : "bg-gray-200 self-start"
               }`}
             >
               <StyledText
                 className={`text-sm ${
-                  message.sender === "John" ? "text-white" : "text-gray-800"
+                  message.sender === "John" ? "text-black" : "text-gray-800"
                 }`}
               >
                 {message.text}
