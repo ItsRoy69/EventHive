@@ -5,8 +5,21 @@ import { useNavigation } from "expo-router";
 import images from "../../constants/images";
 import icons from "../../constants/icons";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { chatApi } from "../../api/chatApi";
+import { useGlobalContext } from "../context/GlobalProvider";
 
 const DMChatList = () => {
+
+  // const [dms, setDms] = useState([]);
+  const { user, event } = useGlobalContext();
+  // useEffect(() => {
+  //   const fetchDms = async () => {
+  //     const response = await chatApi.getAllPersonalChats(event._id, user.token);
+  //     setDms(response.data.data);
+  //   };
+  //   fetchDms();
+  // }, [])
+
   const navigator = useNavigation();
 
   const dms = [
@@ -26,6 +39,7 @@ const DMChatList = () => {
       name: "Jyotirmoy Roy",
     },
   ];
+
 
   const handleChatPressed = ({ item }) => {
     navigator.navigate("DMChats", { name: item.name });
@@ -75,7 +89,7 @@ const DMChatList = () => {
                   <View className="h-[56px] flex flex-row justify-between items-center px-2 bg-white mb-2 rounded-md shadow-sm">
                     <View className="flex flex-row items-center gap-[10px]">
                       <Image
-                        source={item.image}
+                        source={item.avatar || images.dummyPic}
                         resizeMode="contain"
                         className="w-[40px] h-[40px] rounded-full"
                       />

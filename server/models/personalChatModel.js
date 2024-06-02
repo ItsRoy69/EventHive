@@ -3,14 +3,17 @@ const mongoose = require('mongoose')
 const personalChatSchema = new mongoose.Schema({
     eventId: {
         type: mongoose.Schema.Types.ObjectId,
+        ref: "Event",
         required: true
     },
     senderId: {
         type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
         required: true
     },
     receiverId: {
         type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
         required: true
     },
     type: {
