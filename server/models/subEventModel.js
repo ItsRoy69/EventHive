@@ -22,6 +22,10 @@ const subEventSchema = new mongoose.Schema({
     datetime: {
         type: dateTimeSchema,
         required: true
+    },
+    avatar: {
+        type: String,
+        default: null
     }
 })
 

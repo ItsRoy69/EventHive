@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import OnboardingScreen from "./screens/onboarding";
 import EventSelection from "./screens/eventselection";
 import BrideGroom from "./screens/bridegroom";
@@ -19,12 +19,32 @@ import Floor from "./floor";
 import DMChatList from "./screens/dmChatList";
 import TabsLayout from "./tabs/_layout";
 import AddGuest from "./screens/addGuest";
+import Gallery from "./screens/gallery";
 import { GlobalProvider } from "./context/GlobalProvider";
+import * as Linking from "expo-linking";
 
 const Stack = createNativeStackNavigator();
 
 const App = () => {
   const [hideSplashScreen, setHideSplashScreen] = React.useState(true);
+
+  useEffect(() => {
+    const handleDeepLink = (event) => {
+      const { url } = event;
+      const { path, queryParams } = Linking.parse(url);
+
+      if (path.startsWith("invite")) {
+        const { eventId, inviteId } = queryParams;
+        navigation.navigate("GuestInvite", { eventId, inviteId });
+      }
+    };
+
+    Linking.addEventListener("url", handleDeepLink);
+
+    return () => {
+      Linking.removeEventListener("url", handleDeepLink);
+    };
+  }, []);
 
   return (
     <>

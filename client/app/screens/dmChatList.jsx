@@ -11,17 +11,17 @@ const DMChatList = () => {
 
   const dms = [
     {
-        id: 1,
+      id: 1,
       image: `${images.dummyPic}`,
       name: "Florist-Bimal da",
     },
     {
-        id: 2,
+      id: 2,
       image: `${images.dummyPic}`,
       name: "Koustav Roy",
     },
     {
-        id:3,
+      id: 3,
       image: `${images.dummyPic}`,
       name: "Jyotirmoy Roy",
     },
@@ -57,7 +57,7 @@ const DMChatList = () => {
           <View className="flex">
             <View className="mb-4 mt-5 flex flex-row justify-between">
               <View className="flex">
-                <Text className='text-2xl font-bold'>Chats</Text>
+                <Text className="text-2xl font-bold">Chats</Text>
                 <View className="w-[59px] border-[2px] rounded-[3px] mb-3  border-[#FFAD65]"></View>
               </View>
               <TouchableOpacity onPress={() => navigator.goBack()}>
@@ -68,7 +68,10 @@ const DMChatList = () => {
             </View>
             <View className="h-[532px] py-2 px-1 flex bg-slate-100/[0.5]">
               {dms.map((item) => (
-                <TouchableOpacity onPress={() => handleChatPressed({ item })} key={item.id}>
+                <TouchableOpacity
+                  onPress={() => handleChatPressed({ item })}
+                  key={item.id}
+                >
                   <View className="h-[56px] flex flex-row justify-between items-center px-2 bg-white mb-2 rounded-md shadow-sm">
                     <View className="flex flex-row items-center gap-[10px]">
                       <Image
