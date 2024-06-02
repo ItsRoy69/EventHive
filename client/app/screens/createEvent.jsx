@@ -26,10 +26,10 @@ const CreateEvent = ({addEvent,setAddEvent,subEventTrigeered, setSubEventTrigger
   const [eventName, setEventName] = useState(null);
   const [dateOfEvent, setDateOfEvent] = useState("");
   const [timeOfEvent, setTimeOfEvent] = useState("");
-  const [location, setLocation] = useState(null);
+  const [location, setLocation] = useState([]);
   const [selectedValues, setSelectedValues] = useState([]);
   const [vendors, setVendors] = useState([]);
-
+  const [selectedLocation, setSelectedLocation] = useState()
   const { currentEvent, user,setCurrentEvent } = useGlobalContext();
   const eventId = currentEvent._id;
   const token = user.token;
@@ -63,6 +63,7 @@ const CreateEvent = ({addEvent,setAddEvent,subEventTrigeered, setSubEventTrigger
     const handleGetVendors = async () => {
       try {
         const response = await eventApi.getVendors(eventId, token);
+        console.log(response.data)
 
         const vendorsList = response.data.data.map((vendor) => ({
           name: vendor.user[0].name,
@@ -70,11 +71,28 @@ const CreateEvent = ({addEvent,setAddEvent,subEventTrigeered, setSubEventTrigger
           id:vendor._id
         }));
         setVendors(vendorsList);
+        
       } catch (error) {
         console.error("Error fetching vendors:", error);
       }
     };
 
+    const handleGetVenue = async()=>{
+      try{
+        const response = await eventApi.getVenues(eventId)
+        const venueList = response.data.data.map((location)=>({
+          name: location.name,
+          location:location.location,
+          id:location._id
+        }))
+        
+        setLocation(venueList)
+      }
+      catch(err){
+        console.log(err.response)
+      }
+    };
+    handleGetVenue();
     handleGetVendors();
   }, []);
 
@@ -113,6 +131,7 @@ const handleAddEventClicked = async () => {
       vendors: selectedValues,
       autoCreateChannels:createChannel
     };
+    console.log(newSubEvent)
 
     const response = await eventApi.createSubEvent(eventId, newSubEvent, token);
     // console.log("Set subevent", response.status);
@@ -276,15 +295,17 @@ const handleAddEventClicked = async () => {
       </View>
       <View className="mb-3">
         <Text>Where is it happening</Text>
+        <View className='border-b flex border-[#1F2E2A]/[0.41] h-[37px] bg-[#1F2E2A]/[0.01]'>
         <Picker
-          selectedValue={location}
-          onValueChange={(itemValue, itemIndex) => setLocation(itemValue)}
-          className="border border-[#1F2E2A] h-[37px]  bg-[#1F2E2A]/[0.01] text-md text-black "
+          selectedValue={selectedLocation}
+          onValueChange={(itemValue, itemIndex) => setSelectedLocation(itemValue)}
+          className="text-md text-black"
         >
-          <Picker.Item label="floo1 " value="floor1" />
-          <Picker.Item label="floo2 " value="floor2" />
-          <Picker.Item label="floo3" value="floor3" />
+          {location.map((venue)=>(
+            <Picker.Item key={venue.id} label={`${venue.name} - ${venue.location}`} value={venue.name} />
+          ))}
         </Picker>
+        </View>
       </View>
       <View className={`mb-3`}>
         <Text>Select Vendors</Text>
@@ -306,18 +327,20 @@ const handleAddEventClicked = async () => {
             ) : (
               <FlatList
                 data={vendors}
-                renderItem={({ item }) => (
-                  <TouchableOpacity
-                    onPress={() => toggleSelection(item.name)}
+                renderItem={({ item }) => {
+                  
+                 ( <TouchableOpacity
+                    onPress={() => toggleSelection(item.id)}
                     className="flex px-5 flex-row justify-between items-center"
                   >
                     <VendorItem name={item.name} key={item.id} service={item.service} />
 
-                    {selectedValues.includes(item.name) && (
+                    {selectedValues.includes(item.id) && (
                       <Text className="text-[#FFAD65] text-xl">✓</Text>
                     )}
                   </TouchableOpacity>
-                )}
+                  )
+                }}
                 keyExtractor={(item) => item.id}
               />
             )}

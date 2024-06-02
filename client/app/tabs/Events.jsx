@@ -6,13 +6,9 @@ import {
   TouchableOpacity,
   FlatList,
   SectionList,
-  Animated,
-  Easing,
-  Alert,
-  ActivityIndicator,
+  Image
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { Image } from "react-native";
 import icons from "../../constants/icons";
 import images from "../../constants/images";
 import { useNavigation } from "@react-navigation/native";
@@ -26,7 +22,6 @@ import { useGlobalContext } from "../context/GlobalProvider";
 
 const Events = () => {
   const navigator = useNavigation();
-  // const { user, event } = useContext(CreateEventContext);
   const { user, currentEvent } = useGlobalContext();
   const eventId = currentEvent._id;
   const token = user.token;
@@ -37,14 +32,13 @@ const Events = () => {
     const handleGetMeetings = async () => {
       try {
         const response = await eventApi.getMeetings(eventId, token);
-        // console.log("Meetings Fetched:",response.data)
         setReminders(response.data.data);
       } catch (error) {
         console.log(error.response);
       }
     };
     handleGetMeetings();
-  }, [reminders]);
+  }, [eventId, token]);
 
   const [expandedItem, setExpandedItem] = useState(null);
   const [selected, setSelected] = useState(false);
@@ -52,16 +46,18 @@ const Events = () => {
   const [sendInvitation, setSendInvitation] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [invitationPressed, setInvitationPressed] = useState(false);
+  
   const toggleExpand = (itemId) => {
     setExpandedItem(expandedItem === itemId ? null : itemId);
   };
 
-  const [avatar,setAvatars] = useState([
-    `${images.haldi}`,`${images.food}`,`${images.priest}`
-  ])
+  const [avatar, setAvatars] = useState([
+    `${images.haldi}`, `${images.food}`, `${images.priest}`
+  ]);
+
   const setChannelAvatar = (index) => {
-    return avatar[index % 3]
-  }
+    return avatar[index % 3];
+  };
 
   const handleInvitationPress = () => {
     setInvitationPressed(!invitationPressed);
@@ -73,11 +69,11 @@ const Events = () => {
 
   const [channels, setChannels] = useState([]);
   const [data, setData] = useState([]);
+
   useEffect(() => {
     const handleGetChannels = async () => {
       try {
         const response = await channelApi.getAllChannels(eventId, token);
-        //  console.log("Data:",response.data.data[0])
         setData(response.data.data);
         setChannels(response.data.data[0].channels);
       } catch (error) {
@@ -85,22 +81,24 @@ const Events = () => {
       }
     };
     handleGetChannels();
-  }, []);
-  // console.log("Channels",channels)
-  const handleNavigateToChat = ({parentName,item}) => {
-    console.log(item)
+  }, [eventId, token]);
+
+  console.log("Channels",data[0])
+
+  const handleNavigateToChat = (item, parentName) => {
     if (selected && selectedSubItem === item._id) {
       setSelected(false);
       setSelectedSubItem(null);
       return;
     }
-    if (item.category == "group"  ) {
+    if (item.category === "group") {
       navigator.navigate("GroupChats", { name: item.name });
     } else {
-      if(item.category == "gallery"){
-        navigator.navigate("Gallery",{name : item.name})
+      if (item.category === "gallery") {
+        navigator.navigate("Gallery");
+      } else {
+        navigator.navigate("DMChats", { name: item.user[0].name });
       }
-      navigator.navigate("DMChats", { name: item.user[0].name });
     }
   };
 
@@ -111,25 +109,22 @@ const Events = () => {
     return `${timeStr}, ${dateStr}`;
   };
 
-  const renderChannels = ({ item,parentName }) => {
-    // console.log(item.avatar)
-    // const link = item.avatar;
+  const renderChannels = ({ item }) => {
     return (
       <View className="flex">
         <TouchableOpacity
-          onPress={() => handleNavigateToChat({parentName,item})}
+          onPress={() => handleNavigateToChat(item)}
           key={item._id}
         >
           <View className="py-3 px-2 border-b-[0.5px] flex flex-row justify-between items-center border-gray-300">
             <View className="gap-[15px] flex flex-row items-center">
               <View className="w-[24px] h-[24px] p-1 rounded-full bg-[#FFAD65]/[0.41]">
                 <Image
-                   source={item.category === 'vendor' ? images.dummyPic : { uri: `${item.avatar}` }}
+                  source={item.category === 'vendor' ? images.dummyPic : { uri: `${item.avatar}` }}
                   resizeMode="contain"
-                  className="w-full h-full "
+                  className="w-full h-full"
                 />
               </View>
-
               <Text className="text-md font-semibold text-gray-700">
                 {item.name || (item.user && item.user[0] && item.user[0].name)}
               </Text>
@@ -141,7 +136,6 @@ const Events = () => {
   };
 
   const [hamOpened, setHamOpened] = useState(false);
-
   const [remindersOpen, setRemindersOpen] = useState(true);
 
   return (
@@ -239,9 +233,7 @@ const Events = () => {
         {!invitationPressed ? (
           <>
             <View
-              className={`reminders ${
-                remindersOpen ? "h-[180px]" : null
-              }  flex py-2 mt-1`}
+              className={`reminders ${remindersOpen ? "h-[180px]" : null} flex py-2 mt-1`}
             >
               <ScrollView>
                 <Text className="text-sm text-slate-400">Reminders</Text>
@@ -257,7 +249,6 @@ const Events = () => {
                             <Text className="text-black font-bold">
                               {item.subject}
                             </Text>
-
                             <View className="flex flex-row gap-[2px]">
                               <Text>{item.location}</Text>
                               <Text>-</Text>
@@ -266,7 +257,6 @@ const Events = () => {
                               </Text>
                             </View>
                           </View>
-
                           <Image
                             source={icons.menu}
                             className="h-6"
@@ -291,9 +281,7 @@ const Events = () => {
                 onPress={() => setRemindersOpen(!remindersOpen)}
               >
                 <Image
-                  className={`w-full h-full rounded-full ${
-                    !remindersOpen && "rotate-180"
-                  }`}
+                  className={`w-full h-full rounded-full ${!remindersOpen && "rotate-180"}`}
                   resizeMode="contain"
                   source={require("../../assets/icons/reminderShow.png")}
                 />
@@ -301,25 +289,25 @@ const Events = () => {
             </View>
             <View className="py-2 flex flex-row gap-[5px]">
               <TouchableOpacity
-                className="px-3 py-1  bg-slate-100 rounded-[10px] text-black"
+                className="px-3 py-1 bg-slate-100 rounded-[10px] text-black"
                 onPress={() => navigator.navigate("DMChatList")}
               >
                 <Text>DMs</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                className="px-3 py-1  bg-slate-100 rounded-[10px] text-black"
+                className="px-3 py-1 bg-slate-100 rounded-[10px] text-black"
                 onPress={() => {}}
               >
                 <Text>Unread</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                className="px-3 py-1  bg-slate-100 rounded-[10px] text-black"
+                className="px-3 py-1 bg-slate-100 rounded-[10px] text-black"
                 onPress={() => {}}
               >
                 <Text>Calls</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                className="px-3 py-1  bg-slate-100 rounded-[10px] text-black"
+                className="px-3 py-1 bg-slate-100 rounded-[10px] text-black"
                 onPress={() => {
                   navigator.navigate("GroupChats");
                 }}
@@ -341,7 +329,6 @@ const Events = () => {
                           <Text className="text-lg font-bold">{item.name}</Text>
                         </TouchableOpacity>
                       </View>
-
                       {expandedItem === item._id && (
                         <SectionList
                           sections={[
@@ -361,24 +348,23 @@ const Events = () => {
                 <FlatList
                   data={data}
                   keyExtractor={(item) => item._id}
-                  renderItem={({ item,index }) => (
+                  renderItem={({ item, index }) => (
                     <View>
-                      <View className="bg-[#FFAD65]/[0.14] h-[56px] flex justify-between flex-row items-center px-2 rounded-md">
+                      <View className="bg-[#FFAD65]/[0.14] mb-3 h-[56px] flex justify-between flex-row items-center px-2 rounded-md">
                         <TouchableOpacity
                           onPress={() => toggleExpand(item._id)}
                         >
-                          <View className='flex flex-row gap-[7px]'>
-                          <View className='w-[28px] h-[28px] rounded-md '>
-                          <Image source={setChannelAvatar(index)}
-                                  resizeMode="contain"
-                                  className='w-full h-full'
-                          />
-                        </View>
-                        <Text className="text-lg font-bold">{item.name}</Text>
+                          <View className="flex flex-row gap-[7px]">
+                            <View className="w-[28px] h-[28px] rounded-md">
+                              <Image
+                                source={setChannelAvatar(index)}
+                                resizeMode="contain"
+                                className="w-full h-full"
+                              />
+                            </View>
+                            <Text className="text-lg font-bold">{item.name}</Text>
                           </View>
-                         
                         </TouchableOpacity>
-                        
                       </View>
                       {expandedItem === item._id && (
                         <SectionList
@@ -387,7 +373,6 @@ const Events = () => {
                           ]}
                           keyExtractor={(item) => item._id}
                           renderItem={renderChannels}
-                          
                         />
                       )}
                     </View>

@@ -1,4 +1,4 @@
-import { getAllPersonalChats } from "../../server/controllers/personalChatController";
+
 import { updateTokenInHeaders, axiosConfig, changeContentTypeToMultipart } from "../utils/axiosConfig";
 
 export const chatApi = {
