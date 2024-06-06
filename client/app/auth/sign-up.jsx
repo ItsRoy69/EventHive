@@ -17,6 +17,7 @@ import { eventApi } from "../../api/eventApi";
 
 const SignUp = () => {
   const [name, setName] = useState("");
+  const [loading,setLoading] = useState(false)
 
   const blankCreds = {
     email: '', 
@@ -41,6 +42,7 @@ const SignUp = () => {
   const { user: user2, setUser: setUser2 } = useGlobalContext()
 
   const handleSubmit = async() => {
+    setLoading(true)
     try {
       const userCreds = {
         name: user.name,
@@ -65,6 +67,7 @@ const SignUp = () => {
       console.log("event created successfully: ", response2.data.data)
 
       clearContextData()
+      setLoading(false)
       navigation.navigate("TabsLayout")
     } catch (error) {
       console.log(error)
@@ -75,7 +78,7 @@ const SignUp = () => {
 
   return (
     <View className="flex-1 items-center bg-white">
-    {/* {loading && (<LoaderSpinner text={"Loading.."}/>)} */}
+    {loading && (<LoaderSpinner text={"Loading.."}/>)}
       <StyledView className="flex-row w-full mt-8">
         <StyledImage
           source={require("../../assets/images/signup/onboardingtop.png")}
