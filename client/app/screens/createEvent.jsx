@@ -127,8 +127,10 @@ const CreateEvent = ({
         vendors: selectedValues,
         autoCreateChannels: createChannel,
       };
-      console.log(newSubEvent)
+      console.log("newSubEvent",
+        newSubEvent)
       const response = await eventApi.createSubEvent(eventId, newSubEvent, token);
+      // console.log("SubEvent res",response.data.data)
       setSubEventTriggered(true);
       setAddEvent(!addEvent);
     } catch (error) {
