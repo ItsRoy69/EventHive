@@ -23,7 +23,7 @@ const getSubEvents = async (req, res) => {
 
 const createSubEvent = async (req, res) => {
     try {
-        const { eventId, subEvent, userId, role, autoCreateChannels } = req.body
+        const { eventId, subEvent, userId, role } = req.body
         if (!subEvent) {
             return res.status(400).json({ message: 'Missing required fields' })
         }
@@ -44,7 +44,7 @@ const createSubEvent = async (req, res) => {
 
         await Promise.all(promises)
         
-        if (autoCreateChannels) {
+        if (subEvent.autoCreateChannels) {
             await GroupChannel.create({
                 subEventId: newSubEvent._id,
                 name: 'Anouncements',
