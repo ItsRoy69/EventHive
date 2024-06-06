@@ -1,6 +1,7 @@
 import React, { useState, useContext } from "react";
 import { View, Text, TextInput, TouchableOpacity, Image, Alert } from "react-native";
 import { styled } from "nativewind";
+import LoaderSpinner from "../components/LoaderSpinner";
 import { useNavigation } from "@react-navigation/native";
 const StyledView = styled(View);
 const StyledText = styled(Text);
@@ -74,6 +75,7 @@ const SignUp = () => {
 
   return (
     <View className="flex-1 items-center bg-white">
+    {loading && (<LoaderSpinner text={"Loading.."}/>)}
       <StyledView className="flex-row w-full mt-8">
         <StyledImage
           source={require("../../assets/images/signup/onboardingtop.png")}
