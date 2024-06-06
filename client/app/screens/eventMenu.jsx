@@ -6,6 +6,7 @@ import AddGuest from "./addGuest";
 const EventMenu = ({ menuOpen, setMenuOpen }) => {
   const navigation = useNavigation()
   const [addGuest,setAddGuest] = useState(false)
+  
 
   const handleAddGuest = () =>{
     setAddGuest(true)
@@ -34,7 +35,7 @@ const EventMenu = ({ menuOpen, setMenuOpen }) => {
                   <Text className="text-white text-lg">Add Guest</Text>
                 </View>
               </TouchableOpacity>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={handleAddGuest}>
                 <View className="p-1 flex flex-row gap-[3px] w-[189px] items-center justify-center h-[40px] my-4 bg-[#A34342] rounded-[8px] text-white">
                   <Image
                     source={require('../../assets/icons/addVendor.png')}

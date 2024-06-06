@@ -134,7 +134,7 @@ const CreateEvent = ({
       setSubEventTriggered(true);
       setAddEvent(!addEvent);
     } catch (error) {
-      console.error("Error creating sub-event:", error);
+      console.error("Error creating sub-event:", error.response.message);
     }
   };
 
