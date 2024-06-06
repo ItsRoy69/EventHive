@@ -14,6 +14,7 @@ const StyledImage = styled(Image);
 const SignIn = () => {
 
   const { setUser } = useGlobalContext();
+  const [loading,setLoading] = useState(false)
     
     const blankCreds = {
         email: '', 
@@ -23,6 +24,7 @@ const SignIn = () => {
     const [creds, setCreds] = useState(blankCreds);
     const navigation = useNavigation();
     const handleSubmit = async () => {
+      setLoading(true)
         try {
             const response = await userApi.login(creds);
             const result = response.data
@@ -30,6 +32,7 @@ const SignIn = () => {
             const user = result.data.user
             user.token = result.data.token
             setUser(user)
+            setLoading(false)
             navigation.navigate("TabsLayout")
         } catch (error) {
             console.log(error.message)
@@ -38,7 +41,9 @@ const SignIn = () => {
     }
 
     return (
+      
         <View className="flex-1 items-center bg-white">
+          {loading && (<View className='w-full h-full absolute flex items-center justify-center top-0 left-0 bg-slate-700/[0.5] z-10'><Text>Loading...</Text></View>)}
       <StyledView className="flex-row w-full mt-8">
         <StyledImage
           source={require("../../assets/images/signup/onboardingtop.png")}

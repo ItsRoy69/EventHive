@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -8,16 +9,19 @@ import {
   Switch,
   FlatList,
 } from "react-native";
-import { eventApi } from "../../api/eventApi";
 import { Picker } from "@react-native-picker/picker";
-import DropDownPicker from "react-native-dropdown-picker";
-import React, { useEffect, useState } from "react";
-import { useGlobalContext } from "../context/GlobalProvider";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useNavigation } from "expo-router";
+import { eventApi } from "../../api/eventApi";
+import { useGlobalContext } from "../context/GlobalProvider";
 import icons from "../../constants/icons";
 
-const CreateEvent = ({ addEvent, setAddEvent, subEventTriggered, setSubEventTriggered }) => {
+const CreateEvent = ({
+  addEvent,
+  setAddEvent,
+  subEventTriggered,
+  setSubEventTriggered,
+}) => {
   const navigation = useNavigation();
   const [date, setDate] = useState(new Date());
   const [time, setTime] = useState(new Date());
@@ -123,6 +127,7 @@ const CreateEvent = ({ addEvent, setAddEvent, subEventTriggered, setSubEventTrig
         vendors: selectedValues,
         autoCreateChannels: createChannel,
       };
+      console.log(newSubEvent)
       const response = await eventApi.createSubEvent(eventId, newSubEvent, token);
       setSubEventTriggered(true);
       setAddEvent(!addEvent);
@@ -146,20 +151,27 @@ const CreateEvent = ({ addEvent, setAddEvent, subEventTriggered, setSubEventTrig
     setOpen(!open);
   };
 
-  const toggleSelection = (value) => {
+  const toggleSelection = (id, name) => {
     let updatedSelectedValues;
-    if (selectedValues.includes(value)) {
-      updatedSelectedValues = selectedValues.filter((item) => item !== value);
+    if (selectedValues.includes(id)) {
+      updatedSelectedValues = selectedValues.filter((item) => item !== id);
     } else {
-      updatedSelectedValues = [...selectedValues, value];
+      updatedSelectedValues = [...selectedValues, id];
     }
     setSelectedValues(updatedSelectedValues);
-    setInputValue(updatedSelectedValues.join(", "));
+    setInputValue(
+      vendors
+        .filter((vendor) => updatedSelectedValues.includes(vendor.id))
+        .map((vendor) => vendor.name)
+        .join(", ")
+    );
   };
 
   const VendorItem = ({ name, service }) => (
     <View className="flex-row items-center py-2 border-b border-gray-200">
-      <Text className="text-base">{name} - {service}</Text>
+      <Text className="text-base">
+        {name} - {service}
+      </Text>
     </View>
   );
 
@@ -221,7 +233,7 @@ const CreateEvent = ({ addEvent, setAddEvent, subEventTriggered, setSubEventTrig
           <TouchableOpacity onPress={showDatepicker}>
             <TextInput
               className="border-b border-[#1F2E2A]/[0.41] h-[37px] bg-[#1F2E2A]/[0.01] text-md text-black"
-              placeholder="Rajarshis Haldi Ceremony"
+              placeholder="Select date"
               value={dateOfEvent}
               onChangeText={setDateOfEvent}
               editable={false}
@@ -249,7 +261,7 @@ const CreateEvent = ({ addEvent, setAddEvent, subEventTriggered, setSubEventTrig
           <TouchableOpacity onPress={showTimepicker}>
             <TextInput
               className="border-b border-[#1F2E2A]/[0.41] h-[37px] bg-[#1F2E2A]/[0.01] text-md text-black"
-              placeholder="Rajarshis Haldi Ceremony"
+              placeholder="Select time"
               value={timeOfEvent}
               onChangeText={setTimeOfEvent}
               editable={false}
@@ -287,27 +299,30 @@ const CreateEvent = ({ addEvent, setAddEvent, subEventTriggered, setSubEventTrig
           />
         </TouchableOpacity>
         {open && (
-          <FlatList
-            data={vendors}
-            renderItem={({ item }) => (
-              <TouchableOpacity
-                onPress={() => toggleSelection(item.id)}
-                className="flex px-5 flex-row justify-between items-center"
-              >
-                <VendorItem name={item.name} key={item.id} service={item.service} />
-                {selectedValues.includes(item.id) && (
-                  <Text className="text-[#FFAD65] text-xl">✓</Text>
-                )}
-              </TouchableOpacity>
-            )}
-            keyExtractor={(item) => item.id}
-          />
+          <View style={{ maxHeight: 200 }}>
+            <FlatList
+              data={vendors}
+              renderItem={({ item }) => (
+                <TouchableOpacity
+                  onPress={() => toggleSelection(item.id, item.name)}
+                  className="flex px-5 flex-row justify-between items-center"
+                >
+                  <VendorItem name={item.name} key={item.id} service={item.service} />
+                  {selectedValues.includes(item.id) && (
+                    <Text className="text-[#FFAD65] text-xl">✓</Text>
+                  )}
+                </TouchableOpacity>
+              )}
+              keyExtractor={(item) => item.id}
+            />
+          </View>
         )}
-
       </View>
-      <View className="w-full flex flex-row items-center px-2">
+      <View className="w-full flex flex-row items-center justify-center px-2">
         <Switch value={createChannel} onValueChange={setCreateChannel} />
-        <Text className="ml-2 pr-6 truncate">Create Group Chat, Announcement & Gallery channel for this event</Text>
+        <Text className="ml-2 pr-6 truncate">
+          Create Group Chat, Announcement & Gallery channel for this event
+        </Text>
       </View>
       <TouchableOpacity
         className="bg-[#FFAD65] border border-[#FFAD65] rounded-md flex items-center p-2"
@@ -320,3 +335,4 @@ const CreateEvent = ({ addEvent, setAddEvent, subEventTriggered, setSubEventTrig
 };
 
 export default CreateEvent;
+
