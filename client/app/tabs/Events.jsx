@@ -248,7 +248,7 @@ const Events = () => {
         {!invitationPressed ? (
           <>
             <View
-              className={`reminders ${remindersOpen ? "" : null} flex py-2 mt-1`}
+              className={`reminders ${remindersOpen ? "max-h-[180px]" : null} flex py-2 mt-1`}
             >
               <ScrollView
               refreshControl={
