@@ -1,45 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, Image, TouchableOpacity, ScrollView } from "react-native";
 import * as ImagePicker from "expo-image-picker";
+import { useNavigation } from "@react-navigation/native";
 import { useGlobalContext } from "../context/GlobalProvider";
 import { channelApi } from "../../api/channelApi";
 import * as FileSystem from "expo-file-system";
 import * as Base64 from "base64-js";
 import { changeContentTypeToMultipart } from "../../utils/axiosConfig";
 const Gallery = () => {
+  const navigator = useNavigation()
   const images = [
     require("../../assets/images/weddingimage.png"),
     require("../../assets/images/weddingimage.png"),
     require("../../assets/images/weddingimage.png"),
     require("../../assets/images/weddingimage.png"),
-    require("../../assets/images/weddingimage.png"),
-    require("../../assets/images/weddingimage.png"),
-    require("../../assets/images/weddingimage.png"),
-    require("../../assets/images/weddingimage.png"),
-    require("../../assets/images/weddingimage.png"),
-    require("../../assets/images/weddingimage.png"),
-    require("../../assets/images/weddingimage.png"),
-    require("../../assets/images/weddingimage.png"),
-    require("../../assets/images/weddingimage.png"),
-    require("../../assets/images/weddingimage.png"),
-    require("../../assets/images/weddingimage.png"),
-    require("../../assets/images/weddingimage.png"),
-    require("../../assets/images/weddingimage.png"),
-    require("../../assets/images/weddingimage.png"),
-    require("../../assets/images/weddingimage.png"),
-    require("../../assets/images/weddingimage.png"),
-    require("../../assets/images/weddingimage.png"),
-    require("../../assets/images/weddingimage.png"),
-    require("../../assets/images/weddingimage.png"),
-    require("../../assets/images/weddingimage.png"),
-    require("../../assets/images/weddingimage.png"),
-    require("../../assets/images/weddingimage.png"),
-    require("../../assets/images/weddingimage.png"),
-    require("../../assets/images/weddingimage.png"),
-    require("../../assets/images/weddingimage.png"),
-    require("../../assets/images/weddingimage.png"),
-    require("../../assets/images/weddingimage.png"),
-    require("../../assets/images/weddingimage.png"),
+    
+    
   ];
 
   const [selectedImages, setSelectedImages] = useState([]);
@@ -115,9 +91,9 @@ const Gallery = () => {
       </View>
 
       <ScrollView contentContainerClassName="p-4 ">
-        <View className="flex-row flex-wrap bg-[#F9DCC4] justify-between rounded-lg mx-2">
+        <View className="flex-row flex-wrap justify-start rounded-lg mx-2">
           {[...images, ...selectedImages].map((image, index) => (
-            <View key={index} className="w-1/4 p-1">
+            <View key={index} className="w-1/4 p-1  ">
               <Image
                 source={
                   typeof image === "number"

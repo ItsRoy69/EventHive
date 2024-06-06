@@ -248,7 +248,7 @@ const Events = () => {
         {!invitationPressed ? (
           <>
             <View
-              className={`reminders ${remindersOpen ? "h-[180px]" : null} flex py-2 mt-1`}
+              className={`reminders ${remindersOpen ? "" : null} flex py-2 mt-1`}
             >
               <ScrollView
               refreshControl={
@@ -376,7 +376,7 @@ const Events = () => {
               )}
             </View>
             <TouchableOpacity
-              className="rounded-md fixed bottom-6 mt-3  flex items-center px-4 py-2 bg-[#FFAD65]/[0.8]"
+              className="rounded-md fixed bottom-3 mt-3  flex items-center px-4 py-2 bg-[#FFAD65]/[0.8]"
               onPress={() => navigator.navigate("calendar")}
             >
               <Text className="text-white text-xl">+ Add / Event Channel</Text>

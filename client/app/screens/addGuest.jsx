@@ -120,7 +120,7 @@ const AddGuest = () => {
               <View className="w-[120px] flex self-center border-[2px] rounded-[3px] border-[#FFAD65]"></View>
               <View className="mt-12  flex items-center">
                 <Text>Copy that invite link:</Text>
-                <View className="flex-row items-center border mx-3 px-2  mt-2  overflow-y-auto  bg-slate-100 py-2  rounded-md">
+                <View className="flex-row items-center  mx-3 px-2  mt-2  overflow-y-auto  bg-slate-100 py-2  rounded-md">
                   <Text className="font-bold w-[2/5] text-slate-500">{inviteLink}</Text>
                   <TouchableOpacity
                     style={{ marginLeft: 10 }}
