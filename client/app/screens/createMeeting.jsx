@@ -8,7 +8,7 @@ import { Picker } from "@react-native-picker/picker";
 
 const CreateMeeting = ({ addMeeting, setAddMeeting,setMeetingTriggered, meetingTriggered }) => {
     const [subject, setSubject] = useState('');
-    const [vendorId, setVendorId] = useState('');
+    const [vendorId, setVendorId] = useState();
     const [location, setLocation] = useState('');
     const [date, setDate] = useState(new Date());
     const [time, setTime] = useState(new Date());
@@ -118,6 +118,7 @@ const CreateMeeting = ({ addMeeting, setAddMeeting,setMeetingTriggered, meetingT
                 datetime:createDateTime(dateOfEvent, timeOfEvent),
                 location:location
             }
+            console.log("Meeting",meeting)
             
             const response = await eventApi.createMeeting(eventId,meeting,token)
             // console.log("Set Meeting:",response.status)

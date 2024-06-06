@@ -6,12 +6,13 @@ import {
   TouchableOpacity,
   FlatList,
   SectionList,
-  Image
+  Image,
+  RefreshControl
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,useCallback } from "react";
 import icons from "../../constants/icons";
 import images from "../../constants/images";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation,useFocusEffect } from "@react-navigation/native";
 import Invitation from "../screens/invitation";
 import { InvitationProvider } from "../context/InvitationContext";
 import EventMenu from "../screens/eventMenu";
@@ -27,18 +28,9 @@ const Events = () => {
   const token = user.token;
 
   const [reminders, setReminders] = useState(currentEvent.meetings);
+  const [refreshing, setRefreshing] = useState(false);
 
-  useEffect(() => {
-    const handleGetMeetings = async () => {
-      try {
-        const response = await eventApi.getMeetings(eventId, token);
-        setReminders(response.data.data);
-      } catch (error) {
-        console.log(error.response);
-      }
-    };
-    handleGetMeetings();
-  }, [eventId, token]);
+
 
   const [expandedItem, setExpandedItem] = useState(null);
   const [selected, setSelected] = useState(false);
@@ -70,17 +62,40 @@ const Events = () => {
   const [channels, setChannels] = useState([]);
   const [data, setData] = useState([]);
 
-  useEffect(() => {
-    const handleGetChannels = async () => {
+ 
+  useFocusEffect(
+    useCallback(() => {
+      const fetchData = async () => {
+        try {
+          const response = await eventApi.getMeetings(eventId, token);
+          setReminders(response.data.data);
+          const channelResponse = await channelApi.getAllChannels(eventId, token);
+          setData(channelResponse.data.data);
+          setChannels(channelResponse.data.data[0].channels);
+        } catch (error) {
+          console.log(error.response);
+        }
+      };
+      fetchData();
+    }, [])
+  );
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    const fetchData = async () => {
       try {
-        const response = await channelApi.getAllChannels(eventId, token);
-        setData(response.data.data);
-        setChannels(response.data.data[0].channels);
+        const response = await eventApi.getMeetings(eventId, token);
+        setReminders(response.data.data);
+        const channelResponse = await channelApi.getAllChannels(eventId, token);
+        setData(channelResponse.data.data);
+        setChannels(channelResponse.data.data[0].channels);
       } catch (error) {
-        console.log(error);
+        console.log(error.response);
+      } finally {
+        setRefreshing(false);
       }
     };
-    handleGetChannels();
+    fetchData();
   }, []);
 
   console.log("Channels",data)
@@ -136,7 +151,7 @@ const Events = () => {
   };
 
   const [hamOpened, setHamOpened] = useState(false);
-  const [remindersOpen, setRemindersOpen] = useState(true);
+  const [remindersOpen, setRemindersOpen] = useState(false);
 
   return (
     <SafeAreaView className="relative bg-white h-full">
@@ -235,7 +250,11 @@ const Events = () => {
             <View
               className={`reminders ${remindersOpen ? "h-[180px]" : null} flex py-2 mt-1`}
             >
-              <ScrollView>
+              <ScrollView
+              refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+              }
+              >
                 <Text className="text-sm text-slate-400">Reminders</Text>
                 {remindersOpen && (
                   <View className="mt-2">
@@ -316,35 +335,7 @@ const Events = () => {
               </TouchableOpacity>
             </View>
             <View className="h-[205px] mt-4 px-2">
-              {currentEvent.role === "host" ? (
-                <FlatList
-                  data={data}
-                  keyExtractor={(item) => item._id}
-                  renderItem={({ item }) => (
-                    <View>
-                      <View className="bg-[#FFAD65]/[0.14] rounded-md">
-                        <TouchableOpacity
-                          onPress={() => toggleExpand(item._id)}
-                        >
-                          <Text className="text-lg font-bold">{item.name}</Text>
-                        </TouchableOpacity>
-                      </View>
-                      {expandedItem === item._id && (
-                        <SectionList
-                          sections={[
-                            { title: "Channels", data: item.channels },
-                          ]}
-                          keyExtractor={(item) => item._id}
-                          renderItem={renderChannels}
-                          renderSectionHeader={({ section: { title } }) => (
-                            <Text className="font-bold mt-2">{title}</Text>
-                          )}
-                        />
-                      )}
-                    </View>
-                  )}
-                />
-              ) : (
+              {data.length != 0 ? (
                 <FlatList
                   data={data}
                   keyExtractor={(item) => item._id}
@@ -378,10 +369,14 @@ const Events = () => {
                     </View>
                   )}
                 />
+              ) : (
+                <View className="flex justify-center items-center h-full">
+                  <Text className="text-lg font-bold">No Sub-Events Created so far</Text>
+                </View>
               )}
             </View>
             <TouchableOpacity
-              className="rounded-md mt-5 flex items-center px-4 py-2 bg-[#FFAD65]/[0.8]"
+              className="rounded-md fixed bottom-6 mt-3  flex items-center px-4 py-2 bg-[#FFAD65]/[0.8]"
               onPress={() => navigator.navigate("calendar")}
             >
               <Text className="text-white text-xl">+ Add / Event Channel</Text>
