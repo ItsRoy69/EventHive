@@ -52,7 +52,7 @@ const Events = () => {
   };
 
   const [avatar, setAvatars] = useState([
-    `${images.haldi}`, `${images.food}`, `${images.priest}`
+    `${images.haldi}`, `${images.food}`, `${images.dummyVenue}`
   ]);
 
   const setChannelAvatar = (index) => {
@@ -81,9 +81,9 @@ const Events = () => {
       }
     };
     handleGetChannels();
-  }, [eventId, token]);
+  }, []);
 
-  console.log("Channels",data[0])
+  console.log("Channels",data)
 
   const handleNavigateToChat = (item, parentName) => {
     if (selected && selectedSubItem === item._id) {

@@ -19,7 +19,6 @@ const Stage = () => (
   <View className="flex-1  bg-[#D9D9D9] h-[40px] w-[150px] border border-black items-center justify-center">
     <Text>Stage
     </Text>
-  
   </View>
 );
 

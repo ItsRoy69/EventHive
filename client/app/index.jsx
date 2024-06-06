@@ -19,6 +19,7 @@ import Floor from "./floor";
 import TabsLayout from "./tabs/_layout";
 import AddGuest from "./screens/addGuest";
 import Gallery from "./screens/gallery";
+import DMChatList from "./screens/dmChatList";
 import WorkingOn from "./screens/WorkingOn";
 import { GlobalProvider } from "./context/GlobalProvider";
 import * as Linking from "expo-linking";
@@ -74,6 +75,7 @@ const App = () => {
               <Stack.Screen name="AddGuest" component={AddGuest} />
               <Stack.Screen name="Gallery" component={Gallery} />
               <Stack.Screen name="WorkingOn" component={WorkingOn}/>
+              <Stack.Screen name="DMChatList" component={DMChatList}/>
             </Stack.Navigator>
           ) : null}
         </GestureHandlerRootView>
