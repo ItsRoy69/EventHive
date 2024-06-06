@@ -44,7 +44,7 @@ const SignIn = () => {
     return (
       
         <View className="flex-1 items-center bg-white">
-          {/* {loading && (<LoaderSpinner text={"Loading.."}/>)} */}
+          {loading && (<LoaderSpinner text={"Loading.."}/>)}
       <StyledView className="flex-row w-full mt-8">
         <StyledImage
           source={require("../../assets/images/signup/onboardingtop.png")}
