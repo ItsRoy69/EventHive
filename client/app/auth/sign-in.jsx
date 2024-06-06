@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 
 import { View, Text, TextInput, TouchableOpacity, Image, Alert } from "react-native";
 import { styled } from "nativewind";
+import LoaderSpinner from '../components/LoaderSpinner';
 import { useNavigation } from "@react-navigation/native";
 import { userApi } from '../../api/userApi';
 import { useGlobalContext } from '../context/GlobalProvider';
@@ -43,7 +44,7 @@ const SignIn = () => {
     return (
       
         <View className="flex-1 items-center bg-white">
-          {loading && (<View className='w-full h-full absolute flex items-center justify-center top-0 left-0 bg-slate-700/[0.5] z-10'><Text>Loading...</Text></View>)}
+          {loading && (<LoaderSpinner text={"Loading.."}/>)}
       <StyledView className="flex-row w-full mt-8">
         <StyledImage
           source={require("../../assets/images/signup/onboardingtop.png")}

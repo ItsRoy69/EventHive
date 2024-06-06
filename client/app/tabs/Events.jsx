@@ -316,7 +316,7 @@ const Events = () => {
               </TouchableOpacity>
             </View>
             <View className="h-[205px] mt-4 px-2">
-              {currentEvent.role === "host" ? (
+              {currentEvent.role === "host" && data.length != 0 ? (
                 <FlatList
                   data={data}
                   keyExtractor={(item) => item._id}
@@ -345,39 +345,9 @@ const Events = () => {
                   )}
                 />
               ) : (
-                <FlatList
-                  data={data}
-                  keyExtractor={(item) => item._id}
-                  renderItem={({ item, index }) => (
-                    <View>
-                      <View className="bg-[#FFAD65]/[0.14] mb-3 h-[56px] flex justify-between flex-row items-center px-2 rounded-md">
-                        <TouchableOpacity
-                          onPress={() => toggleExpand(item._id)}
-                        >
-                          <View className="flex flex-row gap-[7px]">
-                            <View className="w-[28px] h-[28px] rounded-md">
-                              <Image
-                                source={setChannelAvatar(index)}
-                                resizeMode="contain"
-                                className="w-full h-full"
-                              />
-                            </View>
-                            <Text className="text-lg font-bold">{item.name}</Text>
-                          </View>
-                        </TouchableOpacity>
-                      </View>
-                      {expandedItem === item._id && (
-                        <SectionList
-                          sections={[
-                            { title: "Channels", data: item.channels },
-                          ]}
-                          keyExtractor={(item) => item._id}
-                          renderItem={renderChannels}
-                        />
-                      )}
-                    </View>
-                  )}
-                />
+                <View className="flex justify-center items-center h-full">
+                  <Text className="text-lg font-bold">No Sub-Events Created so far</Text>
+                </View>
               )}
             </View>
             <TouchableOpacity
